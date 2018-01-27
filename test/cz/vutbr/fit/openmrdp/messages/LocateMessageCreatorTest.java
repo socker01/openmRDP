@@ -20,8 +20,8 @@ final class LocateMessageCreatorTest {
     private BaseMessage baseMessage;
 
     @BeforeEach
-    public void setUp(){
-        baseMessage = LocateMessageCreator.createLocateMessage(TEST_RESOURCE_NAME, TEST_CALLBACK_URI);
+    void setUp(){
+        baseMessage = MessageCreator.createLocateMessage(TEST_RESOURCE_NAME, TEST_CALLBACK_URI);
     }
 
     @Test
@@ -45,5 +45,4 @@ final class LocateMessageCreatorTest {
     void testCreateLocateMessageBody(){
         assertThat(baseMessage.getBody(), is(nullValue()));
     }
-
 }

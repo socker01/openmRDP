@@ -11,54 +11,17 @@ import java.util.Map;
 public class BaseMessage {
 
     private final OperationLine operationLine;
-    private final String resource;
     private final Map<HeaderType, String> headers;
     private final String body;
 
-    private BaseMessage(Builder builder){
-        this.operationLine = builder.operationLine;
-        this.resource = builder.resource;
-        this.headers = builder.headers;
-        this.body = builder.body;
-    }
-
-    public static class Builder{
-        private OperationLine operationLine;
-        private String resource;
-        private Map<HeaderType, String> headers;
-        private String body;
-
-        public Builder operationType(OperationLine operationLine){
-            this.operationLine = operationLine;
-            return this;
-        }
-
-        public Builder resource(String resource){
-            this.resource = resource;
-            return this;
-        }
-
-        public Builder headers(Map<HeaderType, String> headers){
-            this.headers = headers;
-            return this;
-        }
-
-        public Builder body(String body){
-            this.body = body;
-            return this;
-        }
-
-        public BaseMessage build(){
-            return new BaseMessage(this);
-        }
+    BaseMessage(OperationLine operationLine, Map<HeaderType, String> headers, String body){
+        this.operationLine = operationLine;
+        this.headers = headers;
+        this.body = body;
     }
 
     public OperationLine getOperationLine() {
         return operationLine;
-    }
-
-    public String getResource() {
-        return resource;
     }
 
     public Map<HeaderType, String> getHeaders() {
