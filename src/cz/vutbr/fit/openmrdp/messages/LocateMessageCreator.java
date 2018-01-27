@@ -7,14 +7,16 @@ import java.util.Map;
  * @author Jiri Koudelka
  * @since 26.01.2018.
  */
-public final class MessageCreator {
+public final class LocateMessageCreator {
 
     private static final long MAX_SEQUENCE_NUMBER = 2147483648L;    //TCP standard - 2^31
 
     public static BaseMessage createLocateMessage(String resourceName, String callbackURI){
         BaseMessage.Builder builder = new BaseMessage.Builder();
 
-        return builder.operationType(OperationType.LOCATE)
+        OperationLine operationLine = new OperationLine(OperationType.LOCATE, resourceName, MessageProtocol.MRDP);
+
+        return builder.operationType(operationLine)
                 .headers(createLocateMessageHeaders(callbackURI))
                 .resource(resourceName)
                 .build();

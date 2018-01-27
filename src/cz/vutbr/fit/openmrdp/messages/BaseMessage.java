@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.Map;
 
 /**
@@ -8,27 +10,26 @@ import java.util.Map;
  */
 public class BaseMessage {
 
-    private final OperationType operationType;
+    private final OperationLine operationLine;
     private final String resource;
     private final Map<HeaderType, String> headers;
     private final String body;
 
     private BaseMessage(Builder builder){
-        this.operationType = builder.operationType;
+        this.operationLine = builder.operationLine;
         this.resource = builder.resource;
         this.headers = builder.headers;
         this.body = builder.body;
     }
 
     public static class Builder{
-        private OperationType operationType;
+        private OperationLine operationLine;
         private String resource;
         private Map<HeaderType, String> headers;
-        private String callbackURI;
         private String body;
 
-        public Builder operationType(OperationType operationType){
-            this.operationType = operationType;
+        public Builder operationType(OperationLine operationLine){
+            this.operationLine = operationLine;
             return this;
         }
 
@@ -52,8 +53,8 @@ public class BaseMessage {
         }
     }
 
-    public OperationType getOperationType() {
-        return operationType;
+    public OperationLine getOperationLine() {
+        return operationLine;
     }
 
     public String getResource() {
@@ -64,6 +65,7 @@ public class BaseMessage {
         return headers;
     }
 
+    @Nullable
     public String getBody() {
         return body;
     }
