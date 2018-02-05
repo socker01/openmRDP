@@ -20,16 +20,16 @@ public class BaseMessage {
         this.body = body;
     }
 
-    public OperationLine getOperationLine() {
+    OperationLine getOperationLine() {
         return operationLine;
     }
 
-    public Map<HeaderType, String> getHeaders() {
+    Map<HeaderType, String> getHeaders() {
         return headers;
     }
 
     @Nullable
-    public String getBody() {
+    String getBody() {
         return body;
     }
 }

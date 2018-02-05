@@ -5,8 +5,18 @@ package cz.vutbr.fit.openmrdp.messages;
  * @since 26.01.2018.
  */
 enum HeaderType {
-    NSEQ,
-    CONTENT_TYPE,
-    CONTENT_LENGTH,
-    CALLBACK_URI
+    NSEQ("NSeq"),
+    CONTENT_TYPE("Content-Type"),
+    CONTENT_LENGTH("Content-Length"),
+    CALLBACK_URI("Callback-URI");
+
+    private final String headerCode;
+
+    HeaderType(String headerCode) {
+        this.headerCode = headerCode;
+    }
+
+    public String getHeaderCode() {
+        return headerCode;
+    }
 }
