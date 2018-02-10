@@ -12,19 +12,21 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 26.01.2018.
  */
-final class LocateMessageCreatorTestBase extends MessageTestBase {
+final class LocateMessageCreatorTestBase {
+
+    private BaseMessage message;
 
     @BeforeEach
     void setUp(){
-        message = MessageCreator.createLocateMessage(TEST_RESOURCE_NAME, TEST_CALLBACK_URI);
+        message = MessageCreator.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
     }
 
     @Test
     void testCreateLocateMessageOperationLine() {
-        OperationLine operationLine = new OperationLine(OperationType.LOCATE, TEST_RESOURCE_NAME, MessageProtocol.MRDP);
+        OperationLine operationLine = new OperationLine(OperationType.LOCATE, MessageTestConstants.TEST_RESOURCE_NAME, MessageProtocol.MRDP);
         assertThat(message.getOperationLine(), is(operationLine));
 
-        String operationLineString = OperationType.LOCATE.toString() + " " + TEST_RESOURCE_NAME + " " + MessageProtocol.MRDP.getProtocolCode();
+        String operationLineString = OperationType.LOCATE.toString() + " " + MessageTestConstants.TEST_RESOURCE_NAME + " " + MessageProtocol.MRDP.getProtocolCode();
         assertThat(message.getOperationLine().createOperationLineString(), is(operationLineString));
     }
 
@@ -33,7 +35,7 @@ final class LocateMessageCreatorTestBase extends MessageTestBase {
         assertThat(message.getHeaders().size(), is(2));
 
         assertThat(message.getHeaders().keySet(), hasItem(HeaderType.NSEQ));
-        assertThat(message.getHeaders().get(HeaderType.CALLBACK_URI), is(TEST_CALLBACK_URI));
+        assertThat(message.getHeaders().get(HeaderType.CALLBACK_URI), is(MessageTestConstants.TEST_CALLBACK_URI));
     }
 
     @Test

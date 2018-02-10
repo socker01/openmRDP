@@ -20,6 +20,7 @@ public final class MessageSerializer {
         }
 
         if(message.getBody() != null){
+            serializedMessage.append("\n");
             serializedMessage.append(message.getBody());
         }
 

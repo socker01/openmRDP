@@ -14,7 +14,7 @@ public class BaseMessage {
     private final Map<HeaderType, String> headers;
     private final String body;
 
-    BaseMessage(OperationLine operationLine, Map<HeaderType, String> headers, String body){
+    BaseMessage(OperationLine operationLine, Map<HeaderType, String> headers, @Nullable String body){
         this.operationLine = operationLine;
         this.headers = headers;
         this.body = body;

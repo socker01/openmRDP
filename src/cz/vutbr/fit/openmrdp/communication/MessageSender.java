@@ -15,9 +15,6 @@ import java.net.UnknownHostException;
  */
 public final class MessageSender {
 
-    private static final int PORT = 2773;
-    private static final String BROADCAST_ADDRESS = "224.0.24.1";
-
     public static void sendMessage(BaseMessage message) throws IOException {
         DatagramSocket udpSocket = new DatagramSocket();
 
@@ -35,8 +32,8 @@ public final class MessageSender {
         byte[] messageByteArray = rawMessage.getBytes();
 
         DatagramPacket packet = new DatagramPacket(messageByteArray, messageByteArray.length);
-        packet.setAddress(InetAddress.getByName(BROADCAST_ADDRESS));
-        packet.setPort(PORT);
+        packet.setAddress(InetAddress.getByName(NetworkCommunicationConstants.BROADCAST_ADDRESS));
+        packet.setPort(NetworkCommunicationConstants.PORT);
 
         return packet;
     }

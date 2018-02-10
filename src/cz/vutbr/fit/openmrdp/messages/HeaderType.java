@@ -16,7 +16,23 @@ enum HeaderType {
         this.headerCode = headerCode;
     }
 
-    public String getHeaderCode() {
+    static HeaderType fromString(String headerCode){
+        for (HeaderType headerType : HeaderType.values()){
+            if(headerType.getHeaderCode().equals(headerCode)){
+
+                return headerType;
+            }
+        }
+
+        throw new IllegalArgumentException(String.format("There is no value with name '%s' in Enum %s", headerCode, getEnumName()));
+    }
+
+    private static String getEnumName()
+    {
+        return "HeaderType";
+    }
+
+    String getHeaderCode() {
         return headerCode;
     }
 }

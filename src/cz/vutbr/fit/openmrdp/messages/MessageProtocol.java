@@ -19,4 +19,19 @@ enum MessageProtocol {
     String getProtocolCode(){
         return name + "/" + version;
     }
+
+    static MessageProtocol fromString(String protocolRaw){
+        for (MessageProtocol protocol : MessageProtocol.values()){
+            if(protocol.getProtocolCode().equals(protocolRaw)){
+
+                return protocol;
+            }
+        }
+
+        throw new IllegalArgumentException(String.format("There is no value '%s' in Enum %s", protocolRaw, getEnumName()));
+    }
+
+    private static String getEnumName(){
+        return "MessageProtocol";
+    }
 }

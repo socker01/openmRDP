@@ -10,14 +10,16 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 05.02.2018.
  */
-final class MessageSerializerTest extends MessageTestBase{
+final class MessageSerializerTest {
+
+    private BaseMessage message;
 
     private static final String EXPECTED_OPERATION_LINE = "LOCATE ?testResource mRDP/1.0";
-    private static final String EXPECTED_CALLBACK_HEADER = HeaderType.CALLBACK_URI.getHeaderCode() + ": " + TEST_CALLBACK_URI;
+    private static final String EXPECTED_CALLBACK_HEADER = HeaderType.CALLBACK_URI.getHeaderCode() + ": " + MessageTestConstants.TEST_CALLBACK_URI;
 
     @BeforeEach
     void setUp(){
-        message = MessageCreator.createLocateMessage(TEST_RESOURCE_NAME, TEST_CALLBACK_URI);
+        message = MessageCreator.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
     }
 
     @Test

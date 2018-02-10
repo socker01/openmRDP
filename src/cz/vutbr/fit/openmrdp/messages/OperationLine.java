@@ -19,19 +19,11 @@ final class OperationLine {
     }
 
     String createOperationLineString(){
-        return operationType.toString() + " " + resourceName + " " + protocol.getProtocolCode();
+        return operationType.getCode() + " " + resourceName + " " + protocol.getProtocolCode();
     }
 
     OperationType getOperationType() {
         return operationType;
-    }
-
-    String getResourceName() {
-        return resourceName;
-    }
-
-    MessageProtocol getProtocol() {
-        return protocol;
     }
 
     @Override
