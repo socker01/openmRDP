@@ -1,5 +1,9 @@
 package cz.vutbr.fit.openmrdp.communication;
 
+import cz.vutbr.fit.openmrdp.exceptions.MessageDeserializeException;
+import cz.vutbr.fit.openmrdp.messages.BaseMessage;
+import cz.vutbr.fit.openmrdp.messages.MessageDeserializer;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -19,6 +23,13 @@ public final class MessageReceiver {
 
         //TODO: make the receiving of socket better
         socket.receive(packet);
+
+        try {
+            BaseMessage receivedMessage = MessageDeserializer.deserializeMessage(new String(packet.getData()));
+            //TODO: vyssi logika -> do zvlastni tridy
+        } catch (MessageDeserializeException e) {
+            //TODO: zachycen chybny package
+        }
 
         closeSocket(ipAddress, socket);
     }

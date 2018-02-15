@@ -4,7 +4,7 @@ package cz.vutbr.fit.openmrdp.messages;
  * @author Jiri Koudelka
  * @since 27.01.2018.
  */
-enum ContentType {
+public enum ContentType {
     PLANT_QUERY("application/com.awareit.plant"),
     SPARQL_QUERY("application/sparql-query");
 

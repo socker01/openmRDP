@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 10.02.2018.
  */
-class MessageDeserializerTest {
+final class MessageDeserializerTest {
 
     @Test
     void testDeserializeLocateMessage() throws MessageDeserializeException {

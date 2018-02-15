@@ -8,23 +8,24 @@ import java.nio.charset.Charset;
  * @author Jiri Koudelka
  * @since 27.01.2018.
  */
-final class MessageBody {
+public final class MessageBody {
     private final String query;
     private final ContentType contentType;
 
     @VisibleForTesting
     static final String DEFAULT_QUERY_CHARSET = "UTF-8";
 
-    MessageBody(String query, ContentType contentType) {
+    @VisibleForTesting
+    public MessageBody(String query, ContentType contentType) {
         this.query = query;
         this.contentType = contentType;
     }
 
-    String getQuery() {
+    public String getQuery() {
         return query;
     }
 
-    ContentType getContentType() {
+    public ContentType getContentType() {
         return contentType;
     }
 
