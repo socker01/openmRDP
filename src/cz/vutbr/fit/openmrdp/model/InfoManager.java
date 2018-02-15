@@ -11,17 +11,26 @@ import java.util.List;
  */
 public final class InfoManager {
 
-    private List<RDFTriple> informationBase;
+    private static List<RDFTriple> informationBase = new ArrayList<>();
 
-    public InfoManager(){
-        informationBase = new ArrayList<>();
+    public static void createInformationBase(List<RDFTriple> newInformationBase){
+        informationBase.clear();
+        informationBase.addAll(newInformationBase);
     }
 
-    public void createInformationBase(){
-        //TODO: odkud se bude naplnovat baze znalosti a kde bude ulozena?
-    }
-
-    public void addInformationToBase(@NotNull RDFTriple triple){
+    public static void addInformationToBase(@NotNull RDFTriple triple){
         informationBase.add(triple);
+    }
+
+    static List<RDFTriple> findAllMatchingPatterns(List<String> variables){
+        List<RDFTriple> matchingPatterns = new ArrayList<>();
+
+        for (RDFTriple triple : informationBase){
+            if (variables.contains(triple.getObject()) || variables.contains(triple.getSubject())){
+                matchingPatterns.add(triple);
+            }
+        }
+
+        return matchingPatterns;
     }
 }
