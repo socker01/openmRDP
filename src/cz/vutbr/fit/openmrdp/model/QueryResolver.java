@@ -1,7 +1,10 @@
 package cz.vutbr.fit.openmrdp.model;
 
-import java.util.ArrayList;
+import com.google.common.annotations.VisibleForTesting;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Jiri Koudelka
@@ -9,15 +12,16 @@ import java.util.List;
  */
 public final class QueryResolver {
 
-    //TODO: otestovat nalazeni vsech relevantnich patternu pro danou query
+    private Set<String> variables;
+    private Set<RDFTriple> matchingPatterns;
+
     public void resolveQuery(Query query){
-        //TODO: odstranit duplicity
-        List<String> variables = identifyVariables(query.getQueryTriples());
-        List<RDFTriple> matchingPatterns = findAllMatchingPatterns(variables);
+        this.variables = identifyVariables(query.getQueryTriples());
+        this.matchingPatterns = findAllMatchingPatterns(variables);
     }
 
-    private List<String> identifyVariables(List<RDFTriple> triples){
-        List<String> variables = new ArrayList<>();
+    private Set<String> identifyVariables(List<RDFTriple> triples){
+        Set<String> variables = new HashSet<>();
         for(RDFTriple triple : triples){
             variables.addAll(findVariable(triple));
         }
@@ -25,8 +29,8 @@ public final class QueryResolver {
         return variables;
     }
 
-    private List<String> findVariable(RDFTriple triple) {
-        List<String> variables = new ArrayList<>();
+    private Set<String> findVariable(RDFTriple triple) {
+        Set<String> variables = new HashSet<>();
 
         if(triple.getSubject().startsWith("?")){
             variables.add(triple.getSubject());
@@ -39,7 +43,17 @@ public final class QueryResolver {
         return variables;
     }
 
-    private List<RDFTriple> findAllMatchingPatterns(List<String> variables) {
+    private Set<RDFTriple> findAllMatchingPatterns(Set<String> variables) {
         return InfoManager.findAllMatchingPatterns(variables);
+    }
+
+    @VisibleForTesting
+    Set<String> getVariables() {
+        return variables;
+    }
+
+    @VisibleForTesting
+    Set<RDFTriple> getMatchingPatterns() {
+        return matchingPatterns;
     }
 }

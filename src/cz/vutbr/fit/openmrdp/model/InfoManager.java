@@ -3,7 +3,9 @@ package cz.vutbr.fit.openmrdp.model;
 import com.sun.istack.internal.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Jiri Koudelka
@@ -22,8 +24,8 @@ public final class InfoManager {
         informationBase.add(triple);
     }
 
-    static List<RDFTriple> findAllMatchingPatterns(List<String> variables){
-        List<RDFTriple> matchingPatterns = new ArrayList<>();
+    static Set<RDFTriple> findAllMatchingPatterns(Set<String> variables){
+        Set<RDFTriple> matchingPatterns = new HashSet<>();
 
         for (RDFTriple triple : informationBase){
             if (variables.contains(triple.getObject()) || variables.contains(triple.getSubject())){

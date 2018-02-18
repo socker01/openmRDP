@@ -1,10 +1,12 @@
 package cz.vutbr.fit.openmrdp.model;
 
+import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -15,15 +17,15 @@ import static org.junit.Assert.assertThat;
  */
 final class InfoManagerTest {
 
-    private static final RDFTriple TEST_TRIPLE_1 = new RDFTriple("?room", "<name>", "serviceRoom");
-    private static final RDFTriple TEST_TRIPLE_2 = new RDFTriple("serviceRoom", "<contains>", "broom");
-    private static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("?room", "<locatedIn>", "?Building");
+    static final RDFTriple TEST_TRIPLE_1 = new RDFTriple("?room", "<name>", "serviceRoom");
+    static final RDFTriple TEST_TRIPLE_2 = new RDFTriple("serviceRoom", "<contains>", "broom");
+    static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("?room", "<locatedIn>", "?building");
 
     @Test
     void testFindMatchingPatternsForRoomVariable(){
         InfoManager.createInformationBase(createTestInformationBase());
 
-        List<RDFTriple> matchingPatterns = InfoManager.findAllMatchingPatterns(Collections.singletonList("?room"));
+        Set<RDFTriple> matchingPatterns = InfoManager.findAllMatchingPatterns(Sets.newHashSet("?room"));
         assertThat(matchingPatterns, hasSize(2));
         assertThat(matchingPatterns, containsInAnyOrder(TEST_TRIPLE_1, TEST_TRIPLE_3));
     }
@@ -32,7 +34,7 @@ final class InfoManagerTest {
     void testFindNonExistingMatchingPattern(){
         InfoManager.createInformationBase(createTestInformationBase());
 
-        List<RDFTriple> matchingPatterns = InfoManager.findAllMatchingPatterns(Collections.singletonList("?swimmingPool"));
+        Set<RDFTriple> matchingPatterns = InfoManager.findAllMatchingPatterns(Sets.newHashSet("?swimmingPool"));
         assertThat(matchingPatterns, hasSize(0));
     }
 

@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.model;
 
+import java.util.Objects;
+
 /**
  * @author Jiri Koudelka
  * @since 15.02.2018.
@@ -26,5 +28,20 @@ final class RDFTriple {
 
     String getObject() {
         return object;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RDFTriple triple = (RDFTriple) o;
+        return Objects.equals(subject, triple.subject) &&
+                Objects.equals(predicate, triple.predicate) &&
+                Objects.equals(object, triple.object);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(subject, predicate, object);
     }
 }
