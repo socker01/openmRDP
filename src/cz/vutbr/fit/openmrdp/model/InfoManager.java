@@ -13,18 +13,28 @@ import java.util.Set;
  */
 public final class InfoManager {
 
-    private static List<RDFTriple> informationBase = new ArrayList<>();
+    private boolean initialized = false;
+    private List<RDFTriple> informationBase = new ArrayList<>();
+    private final InformationBaseService informationBaseService;
 
-    public static void createInformationBase(List<RDFTriple> newInformationBase){
-        informationBase.clear();
-        informationBase.addAll(newInformationBase);
+    public InfoManager(InformationBaseService informationBaseService){
+        this.informationBaseService = informationBaseService;
     }
 
-    public static void addInformationToBase(@NotNull RDFTriple triple){
+    public void createInformationBase(){
+        if(!initialized)
+        {
+            this.informationBase = informationBaseService.loadInformationBase();
+            initialized = true;
+        }
+    }
+
+    public void addInformationToBase(@NotNull RDFTriple triple){
         informationBase.add(triple);
+        informationBaseService.addInformationToBase(triple);
     }
 
-    static Set<RDFTriple> findAllMatchingPatterns(Set<String> variables){
+    Set<RDFTriple> findAllMatchingPatterns(Set<String> variables){
         Set<RDFTriple> matchingPatterns = new HashSet<>();
 
         for (RDFTriple triple : informationBase){

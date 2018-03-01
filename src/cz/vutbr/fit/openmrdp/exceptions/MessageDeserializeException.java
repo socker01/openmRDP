@@ -6,7 +6,7 @@ package cz.vutbr.fit.openmrdp.exceptions;
  */
 public final class MessageDeserializeException extends Exception {
 
-    public MessageDeserializeException(String message){
+    public MessageDeserializeException(String message) {
         super(message);
     }
 }

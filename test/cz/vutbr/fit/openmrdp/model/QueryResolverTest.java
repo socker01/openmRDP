@@ -36,9 +36,9 @@ final class QueryResolverTest {
 
     private List<RDFTriple> initializeTestRDPTriples(){
         List<RDFTriple> triples = new ArrayList<>();
-        triples.add(InfoManagerTest.TEST_TRIPLE_1);
-        triples.add(InfoManagerTest.TEST_TRIPLE_2);
-        triples.add(InfoManagerTest.TEST_TRIPLE_3);
+        triples.add(InformationBaseTestService.TEST_TRIPLE_1);
+        triples.add(InformationBaseTestService.TEST_TRIPLE_2);
+        triples.add(InformationBaseTestService.TEST_TRIPLE_3);
 
         return triples;
     }
@@ -50,6 +50,6 @@ final class QueryResolverTest {
 
     private void assertMatchingPatterns(){
         assertThat(queryResolver.getMatchingPatterns(), hasSize(2));
-        assertThat(queryResolver.getMatchingPatterns(), containsInAnyOrder(InfoManagerTest.TEST_TRIPLE_1, InfoManagerTest.TEST_TRIPLE_3));
+        assertThat(queryResolver.getMatchingPatterns(), containsInAnyOrder(InformationBaseTestService.TEST_TRIPLE_1, InformationBaseTestService.TEST_TRIPLE_3));
     }
 }
