@@ -1,6 +1,6 @@
 package cz.vutbr.fit.openmrdp.model;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Jiri Koudelka
@@ -8,7 +8,7 @@ import java.util.List;
  */
 interface InformationBaseService {
 
-    List<RDFTriple> loadInformationBase();
+    Set<RDFTriple> loadInformationBase();
 
     void addInformationToBase(RDFTriple triple);
 }

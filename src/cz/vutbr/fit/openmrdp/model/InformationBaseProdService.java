@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.model;
 
+import com.google.common.collect.Sets;
 import cz.vutbr.fit.openmrdp.exceptions.InformationBaseException;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -11,27 +12,28 @@ import org.jdom.output.XMLOutputter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Jiri Koudelka
  * @since 01.03.2018.
  */
-final class InformationBaseProdService implements InformationBaseService {
+public final class InformationBaseProdService implements InformationBaseService {
 
+    private static final String INFORMATION_BASE_ROOT_NODE = "InformationBase";
     private static final String INFORMATION_NODE = "Information";
     private static final String OBJECT_PROPERTY = "Object";
     private static final String PREDICATE_PROPERTY = "Predicate";
     private static final String SUBJECT_PROPERTY = "Subject";
-    private static final String INFORMATION_BASE_FILE_PATH = "/config/informationBase.xml";
+    private static final String INFORMATION_BASE_FILE_PATH = System.getProperty("user.dir") + File.separator + "informationBase.xml";
 
     @Override
-    public List<RDFTriple> loadInformationBase() {
+    public Set<RDFTriple> loadInformationBase() {
         File xmlFile = new File(INFORMATION_BASE_FILE_PATH);
         if (!xmlFile.exists()) {
-            return Collections.emptyList();
+            return Sets.newHashSet();
         }
 
         Document document = getDocument(xmlFile);
@@ -55,8 +57,8 @@ final class InformationBaseProdService implements InformationBaseService {
         return document;
     }
 
-    private List<RDFTriple> loadTriplesFromDocument(List informationElements) {
-        List<RDFTriple> loadedTriples = new ArrayList<>();
+    private Set<RDFTriple> loadTriplesFromDocument(List informationElements) {
+        Set<RDFTriple> loadedTriples = new HashSet<>();
 
         for (Object nodeObject : informationElements) {
             Element node = (Element) nodeObject;
@@ -77,7 +79,7 @@ final class InformationBaseProdService implements InformationBaseService {
     public void addInformationToBase(RDFTriple triple) {
         File xmlFile = new File(INFORMATION_BASE_FILE_PATH);
         if (!xmlFile.exists()) {
-            //TODO: create new informationBase file
+            createNewInformationBaseFile(triple);
         }
 
         Document document = getDocument(xmlFile);
@@ -87,7 +89,6 @@ final class InformationBaseProdService implements InformationBaseService {
 
         //TODO: fix this warning
         list.add(createNewXMLElement(triple));
-
         writeChangesToFile(document);
     }
 
@@ -106,16 +107,35 @@ final class InformationBaseProdService implements InformationBaseService {
         newInformationElement.addContent(subject);
         newInformationElement.addContent(predicate);
         newInformationElement.addContent(object);
+
         return newInformationElement;
     }
 
     private void writeChangesToFile(Document document) {
         XMLOutputter xmlOutputter = new XMLOutputter();
         xmlOutputter.setFormat(Format.getPrettyFormat());
+
+        File xmlFile = new File(INFORMATION_BASE_FILE_PATH);
         try {
+            if (!xmlFile.exists()) {
+                if (!xmlFile.createNewFile()) {
+                    throw new IOException("The output file cannot be created.");
+                }
+
+            }
             xmlOutputter.output(document, new FileWriter(INFORMATION_BASE_FILE_PATH));
         } catch (IOException e) {
             throw new InformationBaseException("Exception during storing information base file.", e.getCause());
         }
+    }
+
+    private void createNewInformationBaseFile(RDFTriple triple) {
+        Element informationBaseElement = new Element(INFORMATION_BASE_ROOT_NODE);
+        Document document = new Document(informationBaseElement);
+
+        Element newInformationElement = createNewXMLElement(triple);
+        document.getRootElement().addContent(newInformationElement);
+
+        writeChangesToFile(document);
     }
 }
