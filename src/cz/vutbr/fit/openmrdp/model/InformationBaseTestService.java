@@ -7,11 +7,13 @@ import java.util.Set;
  * @author Jiri Koudelka
  * @since 01.03.2018.
  */
-final class InformationBaseTestService implements InformationBaseService{
+public final class InformationBaseTestService implements InformationBaseService{
 
-    static final RDFTriple TEST_TRIPLE_1 = new RDFTriple("?room", "<name>", "serviceRoom");
-    static final RDFTriple TEST_TRIPLE_2 = new RDFTriple("serviceRoom", "<contains>", "broom");
-    static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("?room", "<locatedIn>", "?building");
+    static final RDFTriple TEST_TRIPLE_1 = new RDFTriple("urn:uuid:drill", "loc:locatedIn", "urn:uuid:room1");
+    static final RDFTriple TEST_TRIPLE_2 = new RDFTriple("urn:uuid:box1", "loc:contains", "urn:uuid:fuel1");
+    static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("urn:uuid:box1", "loc:locatedIn", "urn:uuid:room1");
+    static final RDFTriple TEST_TRIPLE_4 = new RDFTriple("urn:uuid:fuel1", "loc:locatedIn", "urn:uuid:box1");
+    static final RDFTriple TEST_TRIPLE_5 = new RDFTriple("urn:uuid:fuel1", "loc:locatedIn", "urn:uuid:room1");
 
     @Override
     public Set<RDFTriple> loadInformationBase() {
@@ -20,6 +22,9 @@ final class InformationBaseTestService implements InformationBaseService{
         testInformationBase.add(TEST_TRIPLE_1);
         testInformationBase.add(TEST_TRIPLE_2);
         testInformationBase.add(TEST_TRIPLE_3);
+        testInformationBase.add(TEST_TRIPLE_4);
+        testInformationBase.add(TEST_TRIPLE_5);
+
 
         return testInformationBase;
     }

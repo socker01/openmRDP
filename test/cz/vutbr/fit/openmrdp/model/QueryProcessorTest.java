@@ -26,7 +26,7 @@ final class QueryProcessorTest {
     void testCreateQueryFromMessage() throws QuerySyntaxException {
         MessageBody messageBody = createMessageBody();
 
-        Query query = QueryProcessor.processQuery(messageBody);
+        Query query = IdentifyQueryProcessor.processQuery(messageBody);
 
         assertThat(query.getQueryTriples(), hasSize(2));
         assertFirstTriple(query.getQueryTriples().get(0));
@@ -38,7 +38,7 @@ final class QueryProcessorTest {
     void testIncorrectQueryFromMessage(){
         MessageBody messageBody = createMessageBodyWithIncorrectQuery();
 
-        assertThrows(QuerySyntaxException.class, () -> QueryProcessor.processQuery(messageBody));
+        assertThrows(QuerySyntaxException.class, () -> IdentifyQueryProcessor.processQuery(messageBody));
     }
 
     private void assertFirstTriple(RDFTriple rdfTriple) {

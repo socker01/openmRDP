@@ -12,7 +12,7 @@ import java.util.Scanner;
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
-public final class QueryProcessor {
+public final class IdentifyQueryProcessor {
 
     public static Query processQuery(MessageBody messageBody) throws QuerySyntaxException {
         List<RDFTriple> triples;
@@ -40,14 +40,14 @@ public final class QueryProcessor {
         List<RDFTriple> triples = new ArrayList<>();
 
         while (scanner.hasNextLine()){
-            RDFTriple triple = createRDFTrippleFromQueryLine(scanner.nextLine());
+            RDFTriple triple = createRDFTripleFromQueryLine(scanner.nextLine());
             triples.add(triple);
         }
 
         return triples;
     }
 
-    private static RDFTriple createRDFTrippleFromQueryLine(String queryLine) throws QuerySyntaxException {
+    private static RDFTriple createRDFTripleFromQueryLine(String queryLine) throws QuerySyntaxException {
         String subject = queryLine.substring(0, queryLine.indexOf(' '));
         String predicate = queryLine.substring(queryLine.indexOf(' ') + 1, queryLine.lastIndexOf(' '));
         String object = queryLine.substring(queryLine.lastIndexOf(' ') + 1);
