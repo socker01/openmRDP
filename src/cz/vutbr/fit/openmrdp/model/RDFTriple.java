@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.model;
 
+import com.sun.istack.internal.NotNull;
+
 import java.util.Objects;
 
 /**
@@ -8,11 +10,14 @@ import java.util.Objects;
  */
 final class RDFTriple {
 
+    @NotNull
     private final String subject;
+    @NotNull
     private final String predicate;
+    @NotNull
     private final String object;
 
-    RDFTriple(String subject, String predicate, String object) {
+    RDFTriple(@NotNull String subject, @NotNull String predicate, @NotNull String object) {
         this.subject = subject;
         this.predicate = predicate;
         this.object = object;

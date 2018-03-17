@@ -14,6 +14,7 @@ public final class InformationBaseTestService implements InformationBaseService{
     static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("urn:uuid:box1", "<loc:locatedIn>", "urn:uuid:room1");
     static final RDFTriple TEST_TRIPLE_4 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:box1");
     static final RDFTriple TEST_TRIPLE_5 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:room1");
+    static final RDFTriple TEST_TRIPLE_6 = new RDFTriple("urn:uuid:fuel1", "is", "flammable");
 
     @Override
     public Set<RDFTriple> loadInformationBase() {

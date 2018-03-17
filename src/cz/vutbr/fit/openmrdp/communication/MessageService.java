@@ -11,8 +11,13 @@ import java.io.IOException;
  */
 public final class MessageService {
 
-    private MessageSender messageSender = new MessageSenderImpl();
-    private MessageReceiver messageReceiver = new MessageReceiverImpl();
+    private final MessageSender messageSender;
+    private final MessageReceiver messageReceiver;
+
+    public MessageService(MessageSender messageSender, MessageReceiver messageReceiver) {
+        this.messageSender = messageSender;
+        this.messageReceiver = messageReceiver;
+    }
 
     public void sendMRDPMessage(BaseMessage baseMessage) throws NetworkCommunicationException {
         try {
