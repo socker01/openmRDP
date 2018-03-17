@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.model;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.sun.istack.internal.NotNull;
 
 import java.util.HashSet;
@@ -16,7 +17,8 @@ public final class InfoManager {
     private final InformationBaseService informationBaseService;
     private final LocationTreeService locationTreeService;
     //TODO: this constant should be specified in ontology
-    static final String LOCATION_PREDICATE = "loc:locatedIn";
+    static final String LOCATION_PREDICATE = "<loc:locatedIn>";
+    static final String PATH_PREDICATE = "<loc:contains>";
 
     public InfoManager(InformationBaseService informationBaseService) {
         this.informationBaseService = informationBaseService;

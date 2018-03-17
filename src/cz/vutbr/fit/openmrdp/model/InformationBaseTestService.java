@@ -9,11 +9,11 @@ import java.util.Set;
  */
 public final class InformationBaseTestService implements InformationBaseService{
 
-    static final RDFTriple TEST_TRIPLE_1 = new RDFTriple("urn:uuid:drill", "loc:locatedIn", "urn:uuid:room1");
-    static final RDFTriple TEST_TRIPLE_2 = new RDFTriple("urn:uuid:box1", "loc:contains", "urn:uuid:fuel1");
-    static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("urn:uuid:box1", "loc:locatedIn", "urn:uuid:room1");
-    static final RDFTriple TEST_TRIPLE_4 = new RDFTriple("urn:uuid:fuel1", "loc:locatedIn", "urn:uuid:box1");
-    static final RDFTriple TEST_TRIPLE_5 = new RDFTriple("urn:uuid:fuel1", "loc:locatedIn", "urn:uuid:room1");
+    static final RDFTriple TEST_TRIPLE_1 = new RDFTriple("urn:uuid:drill", "<loc:locatedIn>", "urn:uuid:room1");
+    static final RDFTriple TEST_TRIPLE_2 = new RDFTriple("urn:uuid:box1", "<loc:contains>", "urn:uuid:fuel1");
+    static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("urn:uuid:box1", "<loc:locatedIn>", "urn:uuid:room1");
+    static final RDFTriple TEST_TRIPLE_4 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:box1");
+    static final RDFTriple TEST_TRIPLE_5 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:room1");
 
     @Override
     public Set<RDFTriple> loadInformationBase() {

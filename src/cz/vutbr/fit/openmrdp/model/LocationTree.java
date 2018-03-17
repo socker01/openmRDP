@@ -106,6 +106,27 @@ final class LocationTree {
         return null;
     }
 
+    @Nullable
+    String findLocation(String resourceName){
+
+        Node foundedResource = findObjectInLocationTree(root, resourceName);
+
+        if(foundedResource == null){
+            return null;
+        }
+
+        return constructResourcePath(foundedResource);
+    }
+
+    private String constructResourcePath(Node locationNode){
+
+        if(root.getData().equals(locationNode.getParent().getData())){
+            return locationNode.getData();
+        }
+
+        return constructResourcePath(locationNode.getParent()) + InfoManager.PATH_PREDICATE + locationNode.getData();
+    }
+
     private static class Node {
         private String data;
         private Node parent;

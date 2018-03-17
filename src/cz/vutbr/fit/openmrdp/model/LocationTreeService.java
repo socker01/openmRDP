@@ -1,6 +1,8 @@
 package cz.vutbr.fit.openmrdp.model;
 
 import com.google.common.collect.Sets;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -68,5 +70,10 @@ final class LocationTreeService {
         objects.removeAll(subjects);
 
         return objects;
+    }
+
+    @Nullable
+    String findResourceLocation(String resourceName){
+        return locationTree.findLocation(resourceName);
     }
 }
