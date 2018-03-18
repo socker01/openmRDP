@@ -26,6 +26,10 @@ final class OperationLine {
         return operationType;
     }
 
+    String getResourceName() {
+        return resourceName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

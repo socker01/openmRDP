@@ -11,7 +11,12 @@ import java.io.IOException;
 public final class MessageSenderTestImpl implements MessageSender{
 
     @Override
-    public void sendMessage(BaseMessage message) throws IOException {
+    public void sendMRDPMessage(BaseMessage message) throws IOException {
+        //do nothing
+    }
+
+    @Override
+    public void sendReDELMessage(BaseMessage message) {
         //do nothing
     }
 }

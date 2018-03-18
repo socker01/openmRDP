@@ -25,12 +25,7 @@ final class MessageReceiverImpl implements MessageReceiver {
         //TODO: make the receiving of socket better
         socket.receive(packet);
 
-        BaseMessage receivedMessage;
-        try {
-            receivedMessage = MessageDeserializer.deserializeMessage(new String(packet.getData()));
-        } catch (MessageDeserializeException e) {
-            return null;
-        }
+        BaseMessage receivedMessage = MessageDeserializer.deserializeMessage(new String(packet.getData()));
         closeSocket(ipAddress, socket);
 
         return receivedMessage;

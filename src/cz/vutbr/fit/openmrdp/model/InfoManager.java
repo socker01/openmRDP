@@ -1,7 +1,8 @@
 package cz.vutbr.fit.openmrdp.model;
 
-import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -67,5 +68,11 @@ public final class InfoManager {
         }
 
         return matchingPatterns;
+    }
+
+    @Nullable
+    public String findResourceLocation(@NotNull String resourceName) {
+        Preconditions.checkNotNull(resourceName);
+        return locationTreeService.findResourceLocation(resourceName);
     }
 }

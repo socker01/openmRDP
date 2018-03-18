@@ -10,5 +10,7 @@ import java.io.IOException;
  */
 interface MessageSender {
 
-    void sendMessage(BaseMessage message) throws IOException;
+    void sendMRDPMessage(BaseMessage message) throws IOException;
+
+    void sendReDELMessage(BaseMessage message);
 }

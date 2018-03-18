@@ -21,10 +21,14 @@ public final class MessageService {
 
     public void sendMRDPMessage(BaseMessage baseMessage) throws NetworkCommunicationException {
         try {
-            messageSender.sendMessage(baseMessage);
+            messageSender.sendMRDPMessage(baseMessage);
         } catch (IOException e) {
             throw new NetworkCommunicationException(e.getMessage(), e.getCause());
         }
+    }
+
+    public void sendReDELMessage(BaseMessage baseMessage){
+        messageSender.sendReDELMessage(baseMessage);
     }
 
     public BaseMessage receiveMessage() throws NetworkCommunicationException {

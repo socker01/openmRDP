@@ -8,7 +8,8 @@ enum HeaderType {
     NSEQ("NSeq"),
     CONTENT_TYPE("Content-Type"),
     CONTENT_LENGTH("Content-Length"),
-    CALLBACK_URI("Callback-URI");
+    CALLBACK_URI("Callback-URI"),
+    HOST("Host");
 
     private final String headerCode;
 

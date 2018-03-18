@@ -4,9 +4,10 @@ package cz.vutbr.fit.openmrdp.messages;
  * @author Jiri Koudelka
  * @since 26.01.2018.
  */
-enum OperationType {
+public enum OperationType {
     IDENTIFY("IDENTIFY", 4),
-    LOCATE("LOCATE", 2);
+    LOCATE("LOCATE", 2),
+    POST("POST", 4);
 
     private final String code;
     private final int headersCount;

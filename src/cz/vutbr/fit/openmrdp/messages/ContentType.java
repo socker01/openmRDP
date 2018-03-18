@@ -6,7 +6,8 @@ package cz.vutbr.fit.openmrdp.messages;
  */
 public enum ContentType {
     PLANT_QUERY("application/com.awareit.plant"),
-    SPARQL_QUERY("application/sparql-query");
+    SPARQL_QUERY("application/sparql-query"),
+    REDEL("application/com.awareit.redel+xml");
 
     private final String code;
 

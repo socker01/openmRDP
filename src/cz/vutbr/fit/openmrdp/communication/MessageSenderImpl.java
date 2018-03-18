@@ -16,10 +16,10 @@ import java.net.UnknownHostException;
 final class MessageSenderImpl implements MessageSender{
 
     @Override
-    public void sendMessage(BaseMessage message) throws IOException {
+    public void sendMRDPMessage(BaseMessage message) throws IOException {
         DatagramSocket udpSocket = new DatagramSocket();
 
-        DatagramPacket packet = createPacket(message);
+        DatagramPacket packet = createMRDPPacket(message);
 
         for (int i = 0; i < 3; i++) {
             udpSocket.send(packet);
@@ -28,7 +28,12 @@ final class MessageSenderImpl implements MessageSender{
         udpSocket.close();
     }
 
-    private DatagramPacket createPacket(BaseMessage message) throws UnknownHostException {
+    @Override
+    public void sendReDELMessage(BaseMessage message) {
+        //TODO: send TCP packet to the specific address and endpoint
+    }
+
+    private DatagramPacket createMRDPPacket(BaseMessage message) throws UnknownHostException {
         String rawMessage = MessageSerializer.serializeMessage(message);
         byte[] messageByteArray = rawMessage.getBytes();
 

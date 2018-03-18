@@ -40,7 +40,10 @@ final class InfoManagerTest {
 
     @Test
     void testAddInformationToInformationModel(){
-        infoManager.addInformationToBase(InformationBaseTestService.TEST_TRIPLE_6);
+        infoManager.addInformationToBase(InformationBaseTestService.TEST_TRIPLE_6.getSubject(),
+                InformationBaseTestService.TEST_TRIPLE_6.getPredicate(),
+                InformationBaseTestService.TEST_TRIPLE_6.getObject()
+        );
         //TODO: test new information is in infoManager info list and in infoService as well.
     }
 }
