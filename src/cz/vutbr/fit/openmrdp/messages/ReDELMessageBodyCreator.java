@@ -4,7 +4,7 @@ package cz.vutbr.fit.openmrdp.messages;
  * @author Jiri Koudelka
  * @since 24.03.2018.
  */
-public final class ReDELMessageBodyCreator {
+final class ReDELMessageBodyCreator {
 
     private static final String XML_VERSION_AND_ENCODING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static final String REDEL_HEADER = "<redel xmlns=\"http://www.awareit.com/soam/2006/04/redel\">";

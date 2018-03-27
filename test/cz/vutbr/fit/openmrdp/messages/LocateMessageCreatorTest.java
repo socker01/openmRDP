@@ -40,6 +40,6 @@ final class LocateMessageCreatorTest {
 
     @Test
     void testCreateLocateMessageBody(){
-        assertThat(message.getBody(), is(nullValue()));
+        assertThat(message.getBodyQuery(), is(nullValue()));
     }
 }

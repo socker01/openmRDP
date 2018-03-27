@@ -19,9 +19,4 @@ public final class OpenmRDPServerAPITestImpl implements OpenmRDPServerAPI{
     public void receiveIncomingMessages() {
 
     }
-
-    @Override
-    public void addInformationToInformationModel(String subject, String predicate, String object) {
-        infoManager.addInformationToBase(subject, predicate, object);
-    }
 }

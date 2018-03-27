@@ -4,18 +4,16 @@ import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
-public final class IdentifyQueryProcessor {
+final class IdentifyQueryProcessor {
 
-    public static Query processQuery(MessageBody messageBody) throws QuerySyntaxException {
-        List<RDFTriple> triples;
+    static Query processQuery(MessageBody messageBody) throws QuerySyntaxException {
+        Set<RDFTriple> triples;
 
         try{
             if (messageBody.getContentType() == ContentType.SPARQL_QUERY){
@@ -30,14 +28,14 @@ public final class IdentifyQueryProcessor {
         return new Query(triples, messageBody.getContentType());
     }
 
-    private static List<RDFTriple> processSparqlQuery(String query){
+    private static Set<RDFTriple> processSparqlQuery(String query){
         //TODO: implement later
         return null;
     }
 
-    private static List<RDFTriple> processPlantQuery(String query) throws QuerySyntaxException {
+    private static Set<RDFTriple> processPlantQuery(String query) throws QuerySyntaxException {
         Scanner scanner = new Scanner(query);
-        List<RDFTriple> triples = new ArrayList<>();
+        Set<RDFTriple> triples = new HashSet<>();
 
         while (scanner.hasNextLine()){
             RDFTriple triple = createRDFTripleFromQueryLine(scanner.nextLine());

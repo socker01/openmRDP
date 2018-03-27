@@ -8,7 +8,6 @@ import java.util.Set;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.in;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -40,9 +39,9 @@ final class InfoManagerTest {
 
     @Test
     void testAddInformationToInformationModel(){
-        infoManager.addInformationToBase(InformationBaseTestService.TEST_TRIPLE_6.getSubject(),
-                InformationBaseTestService.TEST_TRIPLE_6.getPredicate(),
-                InformationBaseTestService.TEST_TRIPLE_6.getObject()
+        infoManager.addInformationToBase(InformationBaseTestService.TEST_TRIPLE_13.getSubject(),
+                InformationBaseTestService.TEST_TRIPLE_13.getPredicate(),
+                InformationBaseTestService.TEST_TRIPLE_13.getObject()
         );
         //TODO: test new information is in infoManager info list and in infoService as well.
     }

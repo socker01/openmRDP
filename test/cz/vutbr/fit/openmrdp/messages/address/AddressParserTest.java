@@ -3,11 +3,9 @@ package cz.vutbr.fit.openmrdp.messages.address;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Executable;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Jiri Koudelka
@@ -15,13 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 final class AddressParserTest {
 
-    private final String TEST_HOST_ADDRESS_WITH_PROTOCOL = "http://192.168.0.1/testendpoint";
-    private final String TEST_HOST_ADDRESS_WITHOUT_PROTOCOL = "192.168.0.1/testendpoint";
     private final String INCORRECT_HOST_ADDRESS = "endpointaddress";
 
     @Test
     void parseAddressWithProtocol() throws AddressSyntaxException {
-        Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS_WITH_PROTOCOL);
+        String testHostAddressWithProtocol = "http://192.168.0.1/testendpoint";
+        Address address = AddressParser.parseAddressHostAndEndpoint(testHostAddressWithProtocol);
 
         assertThat(address.getHostAddress(), is("192.168.0.1"));
         assertThat(address.getEndPoint(), is("testendpoint"));
@@ -29,7 +26,8 @@ final class AddressParserTest {
 
     @Test
     void parseAddressWithoutProtocol() throws AddressSyntaxException {
-        Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS_WITHOUT_PROTOCOL);
+        String testHostAddressWithoutProtocol = "192.168.0.1/testendpoint";
+        Address address = AddressParser.parseAddressHostAndEndpoint(testHostAddressWithoutProtocol);
 
         assertThat(address.getHostAddress(), is("192.168.0.1"));
         assertThat(address.getEndPoint(), is("testendpoint"));
@@ -37,7 +35,7 @@ final class AddressParserTest {
 
     @Test
     void parseIncorrectAddress() throws AddressSyntaxException {
-        assertThrows(AddressSyntaxException.class, () -> {AddressParser.parseAddressHostAndEndpoint(INCORRECT_HOST_ADDRESS);});
+        assertThrows(AddressSyntaxException.class, () -> AddressParser.parseAddressHostAndEndpoint(INCORRECT_HOST_ADDRESS));
     }
 
 }

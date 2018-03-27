@@ -1,6 +1,5 @@
 package cz.vutbr.fit.openmrdp.communication;
 
-import cz.vutbr.fit.openmrdp.exceptions.MessageDeserializeException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.MessageDeserializer;
 

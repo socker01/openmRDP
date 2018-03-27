@@ -48,7 +48,7 @@ public final class InfoManager {
         return locationInformation;
     }
 
-    public void addInformationToBase(String subject, String predicate, String object) {
+    void addInformationToBase(String subject, String predicate, String object) {
         RDFTriple triple = new RDFTriple(subject, predicate, object);
 
         if (!informationBase.contains(triple)) {

@@ -19,9 +19,9 @@ public final class MessageSerializer {
             serializedMessage.append("\n");
         }
 
-        if(message.getBody() != null){
+        if(message.getBodyQuery() != null){
             serializedMessage.append("\n");
-            serializedMessage.append(message.getBody());
+            serializedMessage.append(message.getBodyQuery());
         }
 
         return serializedMessage.toString();

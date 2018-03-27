@@ -5,6 +5,9 @@ import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -14,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
-final class QueryProcessorTest {
+final class IdentifyQueryProcessorTest {
 
     private static final ContentType TEST_CONTENT_TYPE = ContentType.PLANT_QUERY;
     private static final String TEST_PREDICATE = "<http://www.test.com/test/locatedIn>";
@@ -29,8 +32,7 @@ final class QueryProcessorTest {
         Query query = IdentifyQueryProcessor.processQuery(messageBody);
 
         assertThat(query.getQueryTriples(), hasSize(2));
-        assertFirstTriple(query.getQueryTriples().get(0));
-        assertSecondTriple(query.getQueryTriples().get(1));
+        assertExpectedTriples(query.getQueryTriples());
         assertThat(query.getQueryType(), is(TEST_CONTENT_TYPE));
     }
 
@@ -41,16 +43,12 @@ final class QueryProcessorTest {
         assertThrows(QuerySyntaxException.class, () -> IdentifyQueryProcessor.processQuery(messageBody));
     }
 
-    private void assertFirstTriple(RDFTriple rdfTriple) {
-        assertThat(rdfTriple.getSubject(), is("?room"));
-        assertThat(rdfTriple.getPredicate(), is(TEST_PREDICATE));
-        assertThat(rdfTriple.getObject(), is("?building"));
-    }
+    private void assertExpectedTriples(Set<RDFTriple> rdfTriples) {
+        RDFTriple expectedTriple1 = new RDFTriple("?room", TEST_PREDICATE, "?building");
+        RDFTriple expectedTriple2 = new RDFTriple("?building", TEST_PREDICATE, "testCity");
 
-    private void assertSecondTriple(RDFTriple rdfTriple) {
-        assertThat(rdfTriple.getSubject(), is("?building"));
-        assertThat(rdfTriple.getPredicate(), is(TEST_PREDICATE));
-        assertThat(rdfTriple.getObject(), is("testCity"));
+        assertThat(rdfTriples, hasItem(expectedTriple1));
+        assertThat(rdfTriples, hasItem(expectedTriple2));
     }
 
     private MessageBody createMessageBody(){

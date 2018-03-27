@@ -3,8 +3,8 @@ package cz.vutbr.fit.openmrdp.model;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
@@ -16,40 +16,43 @@ import static org.junit.Assert.assertThat;
  */
 final class QueryResolverTest {
 
+    private static final RDFTriple TEST_QUERY_TRIPLE_1 = new RDFTriple("?material", "loc:locatedIn", "?room");
+    private static final RDFTriple TEST_QUERY_TRIPLE_2 = new RDFTriple("?material", "rdf:type", "mat:inflammableThing");
+    private static final RDFTriple TEST_QUERY_TRIPLE_3 = new RDFTriple("<urn:uuid:drill1>", "loc:locatedIn", "?room");
+    private static final RDFTriple TEST_QUERY_TRIPLE_4 = new RDFTriple("<urn:uuid:drill1>", "task:drilling", "?sur");
+    private static final RDFTriple TEST_QUERY_TRIPLE_5 = new RDFTriple("?sur", "rdf:type", "mat:metallicThing");
+
     private QueryResolver queryResolver = new QueryResolver();
 
     @Test
-    void testFindAllRelevantPatternsForQuery(){
+    void testFindAllRelevantVariablesForQuery(){
         Query testQuery = createTestQuery();
 
-        queryResolver.resolveQuery(testQuery);
+        Set<String> foundedVariables = queryResolver.identifyVariables(testQuery.getQueryTriples());
 
-        assertVariables();
-        assertMatchingPatterns();
+        assertVariables(foundedVariables);
     }
 
     private Query createTestQuery(){
-        List<RDFTriple> triples = initializeTestRDPTriples();
+        Set<RDFTriple> triples = initializeTestRDPTriples();
 
         return new Query(triples, ContentType.PLANT_QUERY);
     }
 
-    private List<RDFTriple> initializeTestRDPTriples(){
-        List<RDFTriple> triples = new ArrayList<>();
-        triples.add(InformationBaseTestService.TEST_TRIPLE_1);
-        triples.add(InformationBaseTestService.TEST_TRIPLE_2);
-        triples.add(InformationBaseTestService.TEST_TRIPLE_3);
+    private Set<RDFTriple> initializeTestRDPTriples(){
+        Set<RDFTriple> triples = new HashSet<>();
+        triples.add(TEST_QUERY_TRIPLE_1);
+        triples.add(TEST_QUERY_TRIPLE_2);
+        triples.add(TEST_QUERY_TRIPLE_3);
+        triples.add(TEST_QUERY_TRIPLE_4);
+        triples.add(TEST_QUERY_TRIPLE_5);
 
         return triples;
     }
 
-    private void assertVariables(){
-        assertThat(queryResolver.getVariables(), hasSize(2));
-        assertThat(queryResolver.getVariables(), containsInAnyOrder("?room", "?building"));
+    private void assertVariables(Set<String> identifiedVariables){
+        assertThat(identifiedVariables, hasSize(3));
+        assertThat(identifiedVariables, containsInAnyOrder("?room", "?material", "?sur"));
     }
 
-    private void assertMatchingPatterns(){
-        assertThat(queryResolver.getMatchingPatterns(), hasSize(2));
-        assertThat(queryResolver.getMatchingPatterns(), containsInAnyOrder(InformationBaseTestService.TEST_TRIPLE_1, InformationBaseTestService.TEST_TRIPLE_3));
-    }
 }

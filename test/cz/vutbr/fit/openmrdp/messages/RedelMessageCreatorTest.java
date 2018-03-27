@@ -46,7 +46,7 @@ final class RedelMessageCreatorTest {
         assertThat(redelMessage.getHeaders().get(HeaderType.CONTENT_TYPE), is(ContentType.REDEL.getCode()));
         assertThat(redelMessage.getHeaders().get(HeaderType.CONTENT_LENGTH), is(String.valueOf(371)));
 
-        assertThat(redelMessage.getBody(), is(EXPECTED_MESSAGE_BODY));
+        assertThat(redelMessage.getBodyQuery(), is(EXPECTED_MESSAGE_BODY));
     }
 
     private ReDELResponseDTO createTestReDELMessage(Address address) throws AddressSyntaxException {

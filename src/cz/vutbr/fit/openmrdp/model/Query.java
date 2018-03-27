@@ -2,27 +2,27 @@ package cz.vutbr.fit.openmrdp.model;
 
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
-public final class Query {
+final class Query {
 
-    private List<RDFTriple> queryTriples;
+    private Set<RDFTriple> queryTriples;
     private final ContentType queryType;
 
-    public Query(List<RDFTriple> queryTriples, ContentType queryType) {
+    Query(Set<RDFTriple> queryTriples, ContentType queryType) {
         this.queryTriples = queryTriples;
         this.queryType = queryType;
     }
 
-    public List<RDFTriple> getQueryTriples() {
+    Set<RDFTriple> getQueryTriples() {
         return queryTriples;
     }
 
-    public ContentType getQueryType() {
+    ContentType getQueryType() {
         return queryType;
     }
 }

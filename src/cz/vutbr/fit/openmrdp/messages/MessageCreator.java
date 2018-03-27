@@ -39,7 +39,7 @@ public final class MessageCreator {
 
         Map<HeaderType, String> headers = createLocateMessageHeaders(callbackURI, body);
 
-        return new BaseMessage(operationLine, headers, body.getQuery());
+        return new BaseMessage(operationLine, headers, body);
     }
 
     private static Map<HeaderType, String> createLocateMessageHeaders(String callbackURI, MessageBody body){
@@ -51,7 +51,6 @@ public final class MessageCreator {
         return headers;
     }
 
-    //TODO: add test
     public static BaseMessage createReDELResponse(ReDELResponseDTO responseDTO){
         OperationLine operationLine = new OperationLine(OperationType.POST, responseDTO.getAddress().getEndPoint(), MessageProtocol.HTTP);
 
@@ -59,7 +58,7 @@ public final class MessageCreator {
 
         Map<HeaderType, String> headers = createReDELMessageHeaders(responseDTO, messageBody);
 
-        return new BaseMessage(operationLine, headers, messageBody.getQuery());
+        return new BaseMessage(operationLine, headers, messageBody);
     }
 
     private static Map<HeaderType, String> createReDELMessageHeaders(ReDELResponseDTO responseDTO, MessageBody messageBody){

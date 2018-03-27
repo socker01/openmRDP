@@ -34,7 +34,7 @@ final class MessageDeserializerTest {
 
         assertIdentifyOperationLine(deserializedMessage);
         assertIdentifyMessageHeaders(deserializedMessage.getHeaders(), messageBody.calculateBodyLength());
-        assertThat(deserializedMessage.getBody(), is(MessageTestConstants.TEST_QUERY));
+        assertThat(deserializedMessage.getBodyQuery(), is(MessageTestConstants.TEST_QUERY));
     }
 
     private void assertLocateOperationLine(BaseMessage deserializedMessage) {

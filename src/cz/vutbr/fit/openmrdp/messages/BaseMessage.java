@@ -15,9 +15,9 @@ public final class BaseMessage {
 
     private final OperationLine operationLine;
     private final Map<HeaderType, String> headers;
-    private final String body;
+    private final MessageBody body;
 
-    BaseMessage(OperationLine operationLine, Map<HeaderType, String> headers, @Nullable String body){
+    BaseMessage(OperationLine operationLine, Map<HeaderType, String> headers, @Nullable MessageBody body){
         this.operationLine = operationLine;
         this.headers = headers;
         this.body = body;
@@ -29,11 +29,6 @@ public final class BaseMessage {
 
     Map<HeaderType, String> getHeaders() {
         return headers;
-    }
-
-    @Nullable
-    String getBody() {
-        return body;
     }
 
     public OperationType getOperationType(){
@@ -50,5 +45,11 @@ public final class BaseMessage {
 
     public Address getHostAddress() throws AddressSyntaxException {
         return AddressParser.parseAddressHostAndEndpoint(headers.get(HeaderType.HOST));
+    }
+
+    @Nullable
+    String getBodyQuery()
+    {
+        return body == null ? null : body.getQuery();
     }
 }

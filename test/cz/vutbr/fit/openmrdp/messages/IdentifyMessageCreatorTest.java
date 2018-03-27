@@ -47,6 +47,6 @@ final class IdentifyMessageCreatorTest {
 
     @Test
     void testCreateLocateMessageBody(){
-        assertThat(message.getBody(), is(MessageTestConstants.TEST_QUERY));
+        assertThat(message.getBodyQuery(), is(MessageTestConstants.TEST_QUERY));
     }
 }

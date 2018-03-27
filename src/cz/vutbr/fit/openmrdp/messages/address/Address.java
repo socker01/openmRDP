@@ -9,7 +9,7 @@ public final class Address {
     private final String hostAddress;
     private final String endPoint;
 
-    public Address(String hostAddress, String endpoint) {
+    Address(String hostAddress, String endpoint) {
 
         this.hostAddress = hostAddress;
         this.endPoint = endpoint;

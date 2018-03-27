@@ -10,6 +10,4 @@ import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
 public interface OpenmRDPServerAPI {
 
     void receiveIncomingMessages() throws NetworkCommunicationException, AddressSyntaxException;
-
-    void addInformationToInformationModel(String subject, String predicate, String object);
 }

@@ -35,8 +35,19 @@ public final class MessageDeserializer {
             query = getMessageBody(scanner);
         }
 
+        MessageBody messageBody = createMessageBody(query);
 
-        return new BaseMessage(operationLine, messageHeaders, query);
+        return new BaseMessage(operationLine, messageHeaders, messageBody);
+    }
+
+    private static MessageBody createMessageBody(String query) {
+        MessageBody messageBody = null;
+        if(query != null) {
+            //TODO: Is here really plant query?
+            messageBody = new MessageBody(query, ContentType.PLANT_QUERY);
+        }
+
+        return messageBody;
     }
 
     private static OperationLine getOperationLine(String operationLineRaw){
