@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 27.01.2018.
  */
-final class IdentifyMessageCreatorTestBase{
+final class IdentifyMessageCreatorTest {
 
     private BaseMessage message;
     private MessageBody messageBody = new MessageBody(MessageTestConstants.TEST_QUERY, ContentType.PLANT_QUERY);

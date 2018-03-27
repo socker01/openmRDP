@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 26.01.2018.
  */
-final class LocateMessageCreatorTestBase {
+final class LocateMessageCreatorTest {
 
     private BaseMessage message;
 
@@ -32,7 +32,7 @@ final class LocateMessageCreatorTestBase {
 
     @Test
     void testCreateLocateMessageHeaders(){
-        assertThat(message.getHeaders().size(), is(2));
+        assertThat(message.getHeaders().size(), is(OperationType.LOCATE.getHeadersCount()));
 
         assertThat(message.getHeaders().keySet(), hasItem(HeaderType.NSEQ));
         assertThat(message.getHeaders().get(HeaderType.CALLBACK_URI), is(MessageTestConstants.TEST_CALLBACK_URI));

@@ -51,12 +51,11 @@ public final class MessageCreator {
         return headers;
     }
 
+    //TODO: add test
     public static BaseMessage createReDELResponse(ReDELResponseDTO responseDTO){
         OperationLine operationLine = new OperationLine(OperationType.POST, responseDTO.getAddress().getEndPoint(), MessageProtocol.HTTP);
 
-        //TODO: create response body with location information
-        String responseBody = "";
-        MessageBody messageBody = new MessageBody(responseBody, ContentType.REDEL);
+        MessageBody messageBody = ReDELMessageBodyCreator.createRedelMessage(responseDTO.getResourceUri(), responseDTO.getResourceLocation());
 
         Map<HeaderType, String> headers = createReDELMessageHeaders(responseDTO, messageBody);
 
@@ -67,7 +66,6 @@ public final class MessageCreator {
         Map<HeaderType, String> headers = new HashMap<>();
 
         headers.put(HeaderType.HOST, responseDTO.getAddress().getHostAddress());
-        //TODO: same nseq as is in request?
         headers.put(HeaderType.NSEQ, String.valueOf(responseDTO.getSequenceNumber()));
         headers.put(HeaderType.CONTENT_TYPE, messageBody.getContentType().getCode());
         headers.put(HeaderType.CONTENT_LENGTH, String.valueOf(messageBody.calculateBodyLength()));

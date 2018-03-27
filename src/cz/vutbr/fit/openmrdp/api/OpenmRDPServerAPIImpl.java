@@ -41,6 +41,7 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
                     .withAddress(receivedMessage.getHostAddress())
                     .withSequenceNumber(receivedMessage.getSequenceNumber())
                     .withResourceLocation(resourceLocation)
+                    .withResourceUri(receivedMessage.getResourceName())
                     .build();
 
             BaseMessage responseMessage = MessageCreator.createReDELResponse(responseDTO);
