@@ -12,16 +12,15 @@ public final class ReDELResponseDTO {
 
     @NotNull
     private final Address address;
-    @NotNull
     private final int sequenceNumber;
     private final String resourceLocation;
     private final String resourceUri;
 
     private ReDELResponseDTO(Builder builder) {
         this.address = Preconditions.checkNotNull(builder.address);
-        this.sequenceNumber = Preconditions.checkNotNull(builder.sequenceNumber);
+        this.sequenceNumber = builder.sequenceNumber;
         this.resourceLocation = builder.resourceLocation;
-        this.resourceUri = Preconditions.checkNotNull(builder.resourceUri);
+        this.resourceUri = builder.resourceUri;
     }
 
     public int getSequenceNumber() {

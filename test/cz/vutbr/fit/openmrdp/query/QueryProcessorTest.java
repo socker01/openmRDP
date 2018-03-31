@@ -1,8 +1,11 @@
-package cz.vutbr.fit.openmrdp.model;
+package cz.vutbr.fit.openmrdp.query;
 
 import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
+import cz.vutbr.fit.openmrdp.query.Query;
+import cz.vutbr.fit.openmrdp.model.RDFTriple;
+import cz.vutbr.fit.openmrdp.query.QueryProcessor;
 import org.junit.Test;
 
 import java.util.Set;
@@ -16,7 +19,7 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
-public final class IdentifyQueryProcessorTest {
+public final class QueryProcessorTest {
 
     private static final ContentType TEST_CONTENT_TYPE = ContentType.PLANT_QUERY;
     private static final String TEST_PREDICATE = "<http://www.test.com/test/locatedIn>";
@@ -28,7 +31,7 @@ public final class IdentifyQueryProcessorTest {
     public void testCreateQueryFromMessage() throws QuerySyntaxException {
         MessageBody messageBody = createMessageBody();
 
-        Query query = IdentifyQueryProcessor.processQuery(messageBody);
+        Query query = QueryProcessor.processQuery(messageBody);
 
         assertThat(query.getQueryTriples(), hasSize(2));
         assertExpectedTriples(query.getQueryTriples());
@@ -39,7 +42,7 @@ public final class IdentifyQueryProcessorTest {
     public void testIncorrectQueryFromMessage() throws QuerySyntaxException {
         MessageBody messageBody = createMessageBodyWithIncorrectQuery();
 
-        IdentifyQueryProcessor.processQuery(messageBody);
+        QueryProcessor.processQuery(messageBody);
     }
 
     private void assertExpectedTriples(Set<RDFTriple> rdfTriples) {

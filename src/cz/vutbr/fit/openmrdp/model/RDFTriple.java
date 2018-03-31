@@ -8,7 +8,7 @@ import java.util.Objects;
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
-final class RDFTriple {
+public final class RDFTriple {
 
     @NotNull
     private final String subject;
@@ -17,13 +17,13 @@ final class RDFTriple {
     @NotNull
     private final String object;
 
-    RDFTriple(@NotNull String subject, @NotNull String predicate, @NotNull String object) {
+    public RDFTriple(@NotNull String subject, @NotNull String predicate, @NotNull String object) {
         this.subject = subject;
         this.predicate = predicate;
         this.object = object;
     }
 
-    String getSubject() {
+    public String getSubject() {
         return subject;
     }
 
@@ -31,7 +31,7 @@ final class RDFTriple {
         return predicate;
     }
 
-    String getObject() {
+    public String getObject() {
         return object;
     }
 

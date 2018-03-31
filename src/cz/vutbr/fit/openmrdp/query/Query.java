@@ -1,6 +1,7 @@
-package cz.vutbr.fit.openmrdp.model;
+package cz.vutbr.fit.openmrdp.query;
 
 import cz.vutbr.fit.openmrdp.messages.ContentType;
+import cz.vutbr.fit.openmrdp.model.RDFTriple;
 
 import java.util.Set;
 

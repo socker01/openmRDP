@@ -8,7 +8,6 @@ public class Main {
     public static void main(String[] args) {
 
         InfoManager manager = new InfoManager(new InformationBaseTestService());
-        manager.createInformationBase();
 
         System.out.println("test");
     }

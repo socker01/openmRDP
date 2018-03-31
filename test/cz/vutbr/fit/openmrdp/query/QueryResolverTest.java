@@ -1,6 +1,9 @@
-package cz.vutbr.fit.openmrdp.model;
+package cz.vutbr.fit.openmrdp.query;
 
 import cz.vutbr.fit.openmrdp.messages.ContentType;
+import cz.vutbr.fit.openmrdp.model.InfoManager;
+import cz.vutbr.fit.openmrdp.model.InformationBaseTestService;
+import cz.vutbr.fit.openmrdp.model.RDFTriple;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -22,7 +25,8 @@ public final class QueryResolverTest {
     private static final RDFTriple TEST_QUERY_TRIPLE_4 = new RDFTriple("<urn:uuid:drill1>", "task:drilling", "?sur");
     private static final RDFTriple TEST_QUERY_TRIPLE_5 = new RDFTriple("?sur", "rdf:type", "mat:metallicThing");
 
-    private QueryResolver queryResolver = new QueryResolver();
+    private final InfoManager infoManager = new InfoManager(new InformationBaseTestService());
+    private final QueryResolver queryResolver = new QueryResolver(infoManager);
 
     @Test
     public void testFindAllRelevantVariablesForQuery(){

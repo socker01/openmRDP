@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.messages.dto.ReDELResponseDTO;
 
 import java.util.HashMap;
@@ -13,13 +14,13 @@ public final class MessageCreator {
 
     private static final long MAX_SEQUENCE_NUMBER = 2147483648L;    //TCP standard - 2^31
 
-    public static BaseMessage createLocateMessage(String resourceName, String callbackURI){
+    public static BaseMessage createLocateMessage(String resourceName, String callbackURI) {
         OperationLine operationLine = new OperationLine(OperationType.LOCATE, resourceName, MessageProtocol.MRDP);
 
         return new BaseMessage(operationLine, createBasicMessageHeaders(callbackURI), null);
     }
 
-    private static Map<HeaderType, String> createBasicMessageHeaders(String callbackURI){
+    private static Map<HeaderType, String> createBasicMessageHeaders(String callbackURI) {
         Map<HeaderType, String> headers = new HashMap<>();
 
         long sequenceNumber = generateSequenceNumber();
@@ -30,7 +31,7 @@ public final class MessageCreator {
         return headers;
     }
 
-    private static long generateSequenceNumber(){
+    private static long generateSequenceNumber() {
         return (long) (Math.random() * MAX_SEQUENCE_NUMBER + 1);
     }
 
@@ -42,7 +43,7 @@ public final class MessageCreator {
         return new BaseMessage(operationLine, headers, body);
     }
 
-    private static Map<HeaderType, String> createLocateMessageHeaders(String callbackURI, MessageBody body){
+    private static Map<HeaderType, String> createLocateMessageHeaders(String callbackURI, MessageBody body) {
         Map<HeaderType, String> headers = createBasicMessageHeaders(callbackURI);
 
         headers.put(HeaderType.CONTENT_TYPE, body.getContentType().getCode());
@@ -51,7 +52,7 @@ public final class MessageCreator {
         return headers;
     }
 
-    public static BaseMessage createReDELResponse(ReDELResponseDTO responseDTO){
+    public static BaseMessage createReDELResponse(ReDELResponseDTO responseDTO) {
         OperationLine operationLine = new OperationLine(OperationType.POST, responseDTO.getAddress().getEndPoint(), MessageProtocol.HTTP);
 
         MessageBody messageBody = ReDELMessageBodyCreator.createRedelMessage(responseDTO.getResourceUri(), responseDTO.getResourceLocation());
@@ -61,13 +62,13 @@ public final class MessageCreator {
         return new BaseMessage(operationLine, headers, messageBody);
     }
 
-    private static Map<HeaderType, String> createReDELMessageHeaders(ReDELResponseDTO responseDTO, MessageBody messageBody){
+    private static Map<HeaderType, String> createReDELMessageHeaders(ReDELResponseDTO responseDTO, @Nullable MessageBody messageBody) {
         Map<HeaderType, String> headers = new HashMap<>();
 
         headers.put(HeaderType.HOST, responseDTO.getAddress().getHostAddress());
         headers.put(HeaderType.NSEQ, String.valueOf(responseDTO.getSequenceNumber()));
         headers.put(HeaderType.CONTENT_TYPE, messageBody.getContentType().getCode());
-        headers.put(HeaderType.CONTENT_LENGTH, String.valueOf(messageBody.calculateBodyLength()));
+        headers.put(HeaderType.CONTENT_LENGTH, messageBody.getQuery() == null ? String.valueOf(0) : String.valueOf(messageBody.calculateBodyLength()));
 
         return headers;
     }

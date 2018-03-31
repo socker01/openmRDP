@@ -9,9 +9,9 @@ import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.OperationType;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.InformationBaseProdService;
-import cz.vutbr.fit.openmrdp.model.processor.IdentifyMessageProcessor;
-import cz.vutbr.fit.openmrdp.model.processor.LocateMessageProcessor;
-import cz.vutbr.fit.openmrdp.model.processor.MessageProcessor;
+import cz.vutbr.fit.openmrdp.processors.IdentifyMessageProcessor;
+import cz.vutbr.fit.openmrdp.processors.LocateMessageProcessor;
+import cz.vutbr.fit.openmrdp.processors.MessageProcessor;
 
 /**
  * @author Jiri Koudelka

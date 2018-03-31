@@ -25,9 +25,10 @@ public final class InfoManager {
         this.informationBaseService = informationBaseService;
         //TODO: apply IoC
         this.locationTreeService = new LocationTreeService();
+        createInformationBase();
     }
 
-    public void createInformationBase() {
+    private void createInformationBase() {
         if (!initialized) {
             this.informationBase = informationBaseService.loadInformationBase();
             initialized = true;
@@ -57,7 +58,7 @@ public final class InfoManager {
         }
     }
 
-    Set<RDFTriple> findAllMatchingPatterns(Set<String> variables) {
+    public Set<RDFTriple> findAllMatchingPatterns(Set<String> variables) {
         //TODO: this is wrong. Reimplement
         Set<RDFTriple> matchingPatterns = new HashSet<>();
 

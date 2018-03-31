@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
@@ -17,7 +18,7 @@ public final class BaseMessage {
     private final Map<HeaderType, String> headers;
     private final MessageBody body;
 
-    BaseMessage(OperationLine operationLine, Map<HeaderType, String> headers, @Nullable MessageBody body){
+    BaseMessage(OperationLine operationLine, Map<HeaderType, String> headers, @Nullable MessageBody body) {
         this.operationLine = operationLine;
         this.headers = headers;
         this.body = body;
@@ -27,29 +28,34 @@ public final class BaseMessage {
         return operationLine;
     }
 
-    Map<HeaderType, String> getHeaders() {
+    @VisibleForTesting
+    public Map<HeaderType, String> getHeaders() {
         return headers;
     }
 
-    public OperationType getOperationType(){
+    public OperationType getOperationType() {
         return operationLine.getOperationType();
     }
 
-    public String getResourceName(){
+    public String getResourceName() {
         return operationLine.getResourceName();
     }
 
-    public int getSequenceNumber(){
+    public int getSequenceNumber() {
         return new Integer(headers.get(HeaderType.NSEQ));
     }
 
     public Address getHostAddress() throws AddressSyntaxException {
-        return AddressParser.parseAddressHostAndEndpoint(headers.get(HeaderType.HOST));
+        return AddressParser.parseAddressHostAndEndpoint(headers.get(HeaderType.CALLBACK_URI));
     }
 
     @Nullable
-    String getBodyQuery()
-    {
+    public MessageBody getMessageBody() {
+        return body;
+    }
+
+    @Nullable
+    String getBodyQuery() {
         return body == null ? null : body.getQuery();
     }
 }

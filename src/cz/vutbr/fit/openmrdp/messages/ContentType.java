@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.google.common.annotations.VisibleForTesting;
+
 /**
  * @author Jiri Koudelka
  * @since 27.01.2018.
@@ -15,7 +17,8 @@ public enum ContentType {
         this.code = code;
     }
 
-    String getCode() {
+    @VisibleForTesting
+    public String getCode() {
         return code;
     }
 }

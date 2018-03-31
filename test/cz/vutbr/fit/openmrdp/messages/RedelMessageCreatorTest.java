@@ -6,6 +6,7 @@ import cz.vutbr.fit.openmrdp.messages.address.AddressParser;
 import cz.vutbr.fit.openmrdp.messages.dto.ReDELResponseDTO;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -35,7 +36,7 @@ public final class RedelMessageCreatorTest {
     @Test
     public void testCreateReDELMessage() throws AddressSyntaxException {
         Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS);
-        BaseMessage redelMessage = MessageCreator.createReDELResponse(createTestReDELMessage(address));
+        BaseMessage redelMessage = MessageCreator.createReDELResponse(createReDELResponseDTO(address));
 
         assertThat(redelMessage.getOperationType(), is(OperationType.POST));
 
@@ -49,13 +50,51 @@ public final class RedelMessageCreatorTest {
         assertThat(redelMessage.getBodyQuery(), is(EXPECTED_MESSAGE_BODY));
     }
 
-    private ReDELResponseDTO createTestReDELMessage(Address address) throws AddressSyntaxException {
+    @Test
+    public void createReDELMessageWithEmptyResourceLocation() throws AddressSyntaxException {
+        Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS);
+        BaseMessage redelMessage = MessageCreator.createReDELResponse(createReDELResponseWithEmptyResourceLocation(address));
+
+        assertThat(redelMessage.getHeaders().get(HeaderType.CONTENT_LENGTH), is(String.valueOf(0)));
+        assertThat(redelMessage.getBodyQuery(), is(nullValue()));
+    }
+
+    @Test
+    public void createReDELMessageWithEmptyResourceURI() throws AddressSyntaxException {
+        Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS);
+        BaseMessage redelMessage = MessageCreator.createReDELResponse(createReDELResponseWithEmptyResourceURI(address));
+
+        assertThat(redelMessage.getHeaders().get(HeaderType.CONTENT_LENGTH), is(String.valueOf(0)));
+        assertThat(redelMessage.getBodyQuery(), is(nullValue()));
+    }
+
+    private ReDELResponseDTO createReDELResponseDTO(Address address) {
 
         return new ReDELResponseDTO.Builder()
                 .withAddress(address)
                 .withSequenceNumber(TEST_SEQUENCE_NUMBER)
                 .withResourceLocation(TEST_RESOURCE_LOCATION)
                 .withResourceUri(TEST_RESOURCE_NAME)
+                .build();
+    }
+
+    private ReDELResponseDTO createReDELResponseWithEmptyResourceLocation(Address address){
+
+        return new ReDELResponseDTO.Builder()
+                .withAddress(address)
+                .withSequenceNumber(TEST_SEQUENCE_NUMBER)
+                .withResourceLocation(null)
+                .withResourceUri(TEST_RESOURCE_NAME)
+                .build();
+    }
+
+    private ReDELResponseDTO createReDELResponseWithEmptyResourceURI(Address address){
+
+        return new ReDELResponseDTO.Builder()
+                .withAddress(address)
+                .withSequenceNumber(TEST_SEQUENCE_NUMBER)
+                .withResourceLocation(TEST_RESOURCE_LOCATION)
+                .withResourceUri(null)
                 .build();
     }
 }

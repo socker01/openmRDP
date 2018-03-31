@@ -4,7 +4,7 @@ package cz.vutbr.fit.openmrdp.messages;
  * @author Jiri Koudelka
  * @since 26.01.2018.
  */
-enum HeaderType {
+public enum HeaderType {
     NSEQ("NSeq"),
     CONTENT_TYPE("Content-Type"),
     CONTENT_LENGTH("Content-Length"),

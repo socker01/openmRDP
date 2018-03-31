@@ -1,6 +1,11 @@
-package cz.vutbr.fit.openmrdp.model;
+package cz.vutbr.fit.openmrdp.query;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.sun.istack.internal.Nullable;
+import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
+import cz.vutbr.fit.openmrdp.messages.MessageBody;
+import cz.vutbr.fit.openmrdp.model.InfoManager;
+import cz.vutbr.fit.openmrdp.model.RDFTriple;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,13 +18,24 @@ public final class QueryResolver {
 
     private final InfoManager infoManager;
 
-    public QueryResolver() {
-        this.infoManager = new InfoManager(new InformationBaseProdService());
+    public QueryResolver(InfoManager infoManager) {
+        this.infoManager = infoManager;
     }
 
-    public void resolveQuery(Query query) {
+    @Nullable
+    public String resolveQuery(MessageBody messageBody, String resourceToSearchName) {
+
+        Query query;
+        try {
+            query = QueryProcessor.processQuery(messageBody);
+        } catch (QuerySyntaxException e) {
+            return null;
+        }
+
         Set<String> variables = identifyVariables(query.getQueryTriples());
         Set<RDFTriple> matchingPatterns = findAllMatchingPatterns(variables);
+
+        return "";
     }
 
     @VisibleForTesting
@@ -46,8 +62,7 @@ public final class QueryResolver {
         return variables;
     }
 
-    @VisibleForTesting
-    Set<RDFTriple> findAllMatchingPatterns(Set<String> variables) {
+    private Set<RDFTriple> findAllMatchingPatterns(Set<String> variables) {
         return infoManager.findAllMatchingPatterns(variables);
     }
 }

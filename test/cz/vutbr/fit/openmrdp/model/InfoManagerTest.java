@@ -21,7 +21,6 @@ public final class InfoManagerTest {
     @Before
     public void setUp(){
         infoManager = new InfoManager(new InformationBaseTestService());
-        infoManager.createInformationBase();
     }
 
     @Test

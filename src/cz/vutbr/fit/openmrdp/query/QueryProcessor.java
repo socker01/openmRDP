@@ -1,16 +1,19 @@
-package cz.vutbr.fit.openmrdp.model;
+package cz.vutbr.fit.openmrdp.query;
 
 import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
+import cz.vutbr.fit.openmrdp.model.RDFTriple;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 
 /**
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
-final class IdentifyQueryProcessor {
+final class QueryProcessor {
 
     static Query processQuery(MessageBody messageBody) throws QuerySyntaxException {
         Set<RDFTriple> triples;
