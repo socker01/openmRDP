@@ -1,8 +1,8 @@
 package cz.vutbr.fit.openmrdp.model;
 
 import com.google.common.collect.Sets;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Set;
 
@@ -14,31 +14,31 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
-final class InfoManagerTest {
+public final class InfoManagerTest {
 
     private InfoManager infoManager;
 
-    @BeforeEach
-    void setUp(){
+    @Before
+    public void setUp(){
         infoManager = new InfoManager(new InformationBaseTestService());
         infoManager.createInformationBase();
     }
 
     @Test
-    void testFindMatchingPatternsForRoomVariable(){
+    public void testFindMatchingPatternsForRoomVariable(){
         Set<RDFTriple> matchingPatterns = infoManager.findAllMatchingPatterns(Sets.newHashSet("?room"));
         assertThat(matchingPatterns, hasSize(2));
         assertThat(matchingPatterns, containsInAnyOrder(InformationBaseTestService.TEST_TRIPLE_1, InformationBaseTestService.TEST_TRIPLE_3));
     }
 
     @Test
-    void testFindNonExistingMatchingPattern(){
+    public void testFindNonExistingMatchingPattern(){
         Set<RDFTriple> matchingPatterns = infoManager.findAllMatchingPatterns(Sets.newHashSet("?swimmingPool"));
         assertThat(matchingPatterns, hasSize(0));
     }
 
     @Test
-    void testAddInformationToInformationModel(){
+    public void testAddInformationToInformationModel(){
         infoManager.addInformationToBase(InformationBaseTestService.TEST_TRIPLE_13.getSubject(),
                 InformationBaseTestService.TEST_TRIPLE_13.getPredicate(),
                 InformationBaseTestService.TEST_TRIPLE_13.getObject()

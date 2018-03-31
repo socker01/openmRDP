@@ -4,7 +4,7 @@ import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
 import cz.vutbr.fit.openmrdp.messages.address.AddressParser;
 import cz.vutbr.fit.openmrdp.messages.dto.ReDELResponseDTO;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 24.03.2018.
  */
-final class RedelMessageCreatorTest {
+public final class RedelMessageCreatorTest {
 
     private static final String TEST_HOST_ADDRESS = "http://169.254.0.2/testendpoint";
     private static final int TEST_SEQUENCE_NUMBER = 15;
@@ -33,7 +33,7 @@ final class RedelMessageCreatorTest {
             "/redel>\n";
 
     @Test
-    void testCreateReDELMessage() throws AddressSyntaxException {
+    public void testCreateReDELMessage() throws AddressSyntaxException {
         Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS);
         BaseMessage redelMessage = MessageCreator.createReDELResponse(createTestReDELMessage(address));
 

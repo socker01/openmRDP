@@ -1,7 +1,8 @@
 package cz.vutbr.fit.openmrdp.messages;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.charset.Charset;
 
@@ -13,18 +14,18 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 27.01.2018.
  */
-final class IdentifyMessageCreatorTest {
+public final class IdentifyMessageCreatorTest {
 
     private BaseMessage message;
     private MessageBody messageBody = new MessageBody(MessageTestConstants.TEST_QUERY, ContentType.PLANT_QUERY);
 
-    @BeforeEach
-    void setUp(){
+    @Before
+    public void setUp(){
         message = MessageCreator.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody);
     }
 
     @Test
-    void testCreateIdentifyMessageOperationLine() {
+    public void testCreateIdentifyMessageOperationLine() {
         OperationLine operationLine = new OperationLine(OperationType.IDENTIFY, MessageTestConstants.TEST_RESOURCE_NAME, MessageProtocol.MRDP);
         assertThat(message.getOperationLine(), is(operationLine));
 
@@ -33,7 +34,7 @@ final class IdentifyMessageCreatorTest {
     }
 
     @Test
-    void testCreateIdentifyMessageHeaders(){
+    public void testCreateIdentifyMessageHeaders(){
         assertThat(message.getHeaders().size(), is(4));
 
         assertThat(message.getHeaders().keySet(), hasItem(HeaderType.NSEQ));
@@ -46,7 +47,7 @@ final class IdentifyMessageCreatorTest {
     }
 
     @Test
-    void testCreateLocateMessageBody(){
+    public void testCreateLocateMessageBody(){
         assertThat(message.getBodyQuery(), is(MessageTestConstants.TEST_QUERY));
     }
 }

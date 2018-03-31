@@ -1,7 +1,7 @@
 package cz.vutbr.fit.openmrdp.messages;
 
 import cz.vutbr.fit.openmrdp.exceptions.MessageDeserializeException;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.Map;
 
@@ -13,10 +13,10 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 10.02.2018.
  */
-final class MessageDeserializerTest {
+public final class MessageDeserializerTest {
 
     @Test
-    void testDeserializeLocateMessage() throws MessageDeserializeException {
+    public void testDeserializeLocateMessage() throws MessageDeserializeException {
         BaseMessage message = MessageCreator.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
 
         BaseMessage deserializedMessage = makeSerializationAndDeserializationProcess(message);
@@ -26,7 +26,7 @@ final class MessageDeserializerTest {
     }
 
     @Test
-    void testDeserializeIdentifyMessage() throws MessageDeserializeException {
+    public void testDeserializeIdentifyMessage() throws MessageDeserializeException {
         MessageBody messageBody = new MessageBody(MessageTestConstants.TEST_QUERY, ContentType.PLANT_QUERY);
         BaseMessage message = MessageCreator.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody);
 

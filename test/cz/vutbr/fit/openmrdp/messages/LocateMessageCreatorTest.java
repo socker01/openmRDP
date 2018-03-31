@@ -1,7 +1,7 @@
 package cz.vutbr.fit.openmrdp.messages;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.nullValue;
@@ -12,17 +12,17 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 26.01.2018.
  */
-final class LocateMessageCreatorTest {
+public final class LocateMessageCreatorTest {
 
     private BaseMessage message;
 
-    @BeforeEach
-    void setUp(){
+    @Before
+    public void setUp(){
         message = MessageCreator.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
     }
 
     @Test
-    void testCreateLocateMessageOperationLine() {
+    public void testCreateLocateMessageOperationLine() {
         OperationLine operationLine = new OperationLine(OperationType.LOCATE, MessageTestConstants.TEST_RESOURCE_NAME, MessageProtocol.MRDP);
         assertThat(message.getOperationLine(), is(operationLine));
 
@@ -31,7 +31,7 @@ final class LocateMessageCreatorTest {
     }
 
     @Test
-    void testCreateLocateMessageHeaders(){
+    public void testCreateLocateMessageHeaders(){
         assertThat(message.getHeaders().size(), is(OperationType.LOCATE.getHeadersCount()));
 
         assertThat(message.getHeaders().keySet(), hasItem(HeaderType.NSEQ));
@@ -39,7 +39,7 @@ final class LocateMessageCreatorTest {
     }
 
     @Test
-    void testCreateLocateMessageBody(){
+    public void testCreateLocateMessageBody(){
         assertThat(message.getBodyQuery(), is(nullValue()));
     }
 }

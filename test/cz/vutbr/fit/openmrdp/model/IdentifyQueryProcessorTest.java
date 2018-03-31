@@ -3,7 +3,7 @@ package cz.vutbr.fit.openmrdp.model;
 import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.Set;
 
@@ -11,13 +11,12 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
-final class IdentifyQueryProcessorTest {
+public final class IdentifyQueryProcessorTest {
 
     private static final ContentType TEST_CONTENT_TYPE = ContentType.PLANT_QUERY;
     private static final String TEST_PREDICATE = "<http://www.test.com/test/locatedIn>";
@@ -26,7 +25,7 @@ final class IdentifyQueryProcessorTest {
     private static final String TEST_CITY = "testCity";
 
     @Test
-    void testCreateQueryFromMessage() throws QuerySyntaxException {
+    public void testCreateQueryFromMessage() throws QuerySyntaxException {
         MessageBody messageBody = createMessageBody();
 
         Query query = IdentifyQueryProcessor.processQuery(messageBody);
@@ -36,11 +35,11 @@ final class IdentifyQueryProcessorTest {
         assertThat(query.getQueryType(), is(TEST_CONTENT_TYPE));
     }
 
-    @Test
-    void testIncorrectQueryFromMessage(){
+    @Test(expected = QuerySyntaxException.class)
+    public void testIncorrectQueryFromMessage() throws QuerySyntaxException {
         MessageBody messageBody = createMessageBodyWithIncorrectQuery();
 
-        assertThrows(QuerySyntaxException.class, () -> IdentifyQueryProcessor.processQuery(messageBody));
+        IdentifyQueryProcessor.processQuery(messageBody);
     }
 
     private void assertExpectedTriples(Set<RDFTriple> rdfTriples) {

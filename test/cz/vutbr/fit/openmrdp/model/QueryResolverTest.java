@@ -1,7 +1,7 @@
 package cz.vutbr.fit.openmrdp.model;
 
 import cz.vutbr.fit.openmrdp.messages.ContentType;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 18.02.2018.
  */
-final class QueryResolverTest {
+public final class QueryResolverTest {
 
     private static final RDFTriple TEST_QUERY_TRIPLE_1 = new RDFTriple("?material", "loc:locatedIn", "?room");
     private static final RDFTriple TEST_QUERY_TRIPLE_2 = new RDFTriple("?material", "rdf:type", "mat:inflammableThing");
@@ -25,7 +25,7 @@ final class QueryResolverTest {
     private QueryResolver queryResolver = new QueryResolver();
 
     @Test
-    void testFindAllRelevantVariablesForQuery(){
+    public void testFindAllRelevantVariablesForQuery(){
         Query testQuery = createTestQuery();
 
         Set<String> foundedVariables = queryResolver.identifyVariables(testQuery.getQueryTriples());
