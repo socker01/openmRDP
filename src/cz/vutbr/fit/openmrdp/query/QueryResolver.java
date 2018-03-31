@@ -7,7 +7,9 @@ import cz.vutbr.fit.openmrdp.messages.MessageBody;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.RDFTriple;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -33,7 +35,8 @@ public final class QueryResolver {
         }
 
         Set<String> variables = identifyVariables(query.getQueryTriples());
-        Set<RDFTriple> matchingPatterns = findAllMatchingPatterns(variables);
+        Map<RDFTriple, Set<RDFTriple>> matchingPatterns = findAllMatchingPatterns(query.getQueryTriples());
+        //TODO: continue here
 
         return "";
     }
@@ -62,7 +65,16 @@ public final class QueryResolver {
         return variables;
     }
 
-    private Set<RDFTriple> findAllMatchingPatterns(Set<String> variables) {
-        return infoManager.findAllMatchingPatterns(variables);
+    //TODO: add test
+    private Map<RDFTriple, Set<RDFTriple>> findAllMatchingPatterns(Set<RDFTriple> locatingTriples) {
+
+        Map<RDFTriple, Set<RDFTriple>> allMatchingPatterns = new HashMap<>();
+
+        for(RDFTriple triple : locatingTriples){
+            Set<RDFTriple> matchingTriples = infoManager.findMatchingPatterns(triple);
+            allMatchingPatterns.put(triple, matchingTriples);
+        }
+
+        return allMatchingPatterns;
     }
 }

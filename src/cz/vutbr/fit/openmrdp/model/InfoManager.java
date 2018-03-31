@@ -58,12 +58,14 @@ public final class InfoManager {
         }
     }
 
-    public Set<RDFTriple> findAllMatchingPatterns(Set<String> variables) {
-        //TODO: this is wrong. Reimplement
+    public Set<RDFTriple> findMatchingPatterns(RDFTriple findingTriple) {
+
         Set<RDFTriple> matchingPatterns = new HashSet<>();
 
         for (RDFTriple triple : informationBase) {
-            if (variables.contains(triple.getObject()) || variables.contains(triple.getSubject())) {
+            if (triple.equals(findingTriple)
+                    || matchWithVariableInObject(triple, findingTriple)
+                    || matchWithVariableInSubject(triple, findingTriple)) {
                 matchingPatterns.add(triple);
             }
         }
@@ -75,5 +77,17 @@ public final class InfoManager {
     public String findResourceLocation(@NotNull String resourceName) {
         Preconditions.checkNotNull(resourceName);
         return locationTreeService.findResourceLocation(resourceName);
+    }
+
+    private boolean matchWithVariableInObject(RDFTriple referenceTriple, RDFTriple findingTriple) {
+        return referenceTriple.getObject().equals(findingTriple.getObject())
+                && referenceTriple.getPredicate().equals(findingTriple.getPredicate())
+                && findingTriple.getSubject().startsWith("?");
+    }
+
+    private boolean matchWithVariableInSubject(RDFTriple referenceTriple, RDFTriple findingTriple) {
+        return findingTriple.getObject().startsWith("?")
+                && referenceTriple.getPredicate().equals(findingTriple.getPredicate())
+                && referenceTriple.getSubject().equals(findingTriple.getSubject());
     }
 }

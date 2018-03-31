@@ -25,14 +25,14 @@ public final class InfoManagerTest {
 
     @Test
     public void testFindMatchingPatternsForRoomVariable(){
-        Set<RDFTriple> matchingPatterns = infoManager.findAllMatchingPatterns(Sets.newHashSet("?room"));
-        assertThat(matchingPatterns, hasSize(2));
-        assertThat(matchingPatterns, containsInAnyOrder(InformationBaseTestService.TEST_TRIPLE_1, InformationBaseTestService.TEST_TRIPLE_3));
+        Set<RDFTriple> matchingPatterns = infoManager.findMatchingPatterns(new RDFTriple("urn:uuid:drill1", "<loc:locatedIn>", "?room"));
+        assertThat(matchingPatterns, hasSize(1));
+        assertThat(matchingPatterns, containsInAnyOrder(InformationBaseTestService.TEST_TRIPLE_1));
     }
 
     @Test
     public void testFindNonExistingMatchingPattern(){
-        Set<RDFTriple> matchingPatterns = infoManager.findAllMatchingPatterns(Sets.newHashSet("?swimmingPool"));
+        Set<RDFTriple> matchingPatterns = infoManager.findMatchingPatterns(new RDFTriple("urn:uuid:drill1", "<loc:has>", "?room"));
         assertThat(matchingPatterns, hasSize(0));
     }
 
