@@ -2,6 +2,7 @@ package cz.vutbr.fit.openmrdp.model;
 
 import com.google.common.collect.Sets;
 import cz.vutbr.fit.openmrdp.exceptions.InformationBaseException;
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

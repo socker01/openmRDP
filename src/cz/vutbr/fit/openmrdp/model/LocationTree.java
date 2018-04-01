@@ -1,6 +1,7 @@
 package cz.vutbr.fit.openmrdp.model;
 
 import com.sun.istack.internal.Nullable;
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 
 import java.util.HashSet;
 import java.util.Set;

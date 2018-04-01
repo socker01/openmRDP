@@ -1,4 +1,4 @@
-package cz.vutbr.fit.openmrdp.model;
+package cz.vutbr.fit.openmrdp.model.base;
 
 import com.sun.istack.internal.NotNull;
 
@@ -27,12 +27,24 @@ public final class RDFTriple {
         return subject;
     }
 
-    String getPredicate() {
+    public String getPredicate() {
         return predicate;
     }
 
     public String getObject() {
         return object;
+    }
+
+    public boolean isSubjectVariable() {
+        return subject.startsWith("?");
+    }
+
+    public boolean isObjectVariable() {
+        return object.startsWith("?");
+    }
+
+    public boolean hasTwoVariables(){
+        return isObjectVariable() && isSubjectVariable();
     }
 
     @Override

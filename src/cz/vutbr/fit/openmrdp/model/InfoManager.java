@@ -3,6 +3,7 @@ package cz.vutbr.fit.openmrdp.model;
 import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -65,7 +66,8 @@ public final class InfoManager {
         for (RDFTriple triple : informationBase) {
             if (triple.equals(findingTriple)
                     || matchWithVariableInObject(triple, findingTriple)
-                    || matchWithVariableInSubject(triple, findingTriple)) {
+                    || matchWithVariableInSubject(triple, findingTriple)
+                    || matchWithTwoVariables(triple, findingTriple)) {
                 matchingPatterns.add(triple);
             }
         }
@@ -82,12 +84,22 @@ public final class InfoManager {
     private boolean matchWithVariableInObject(RDFTriple referenceTriple, RDFTriple findingTriple) {
         return referenceTriple.getObject().equals(findingTriple.getObject())
                 && referenceTriple.getPredicate().equals(findingTriple.getPredicate())
-                && findingTriple.getSubject().startsWith("?");
+                && findingTriple.isSubjectVariable();
     }
 
     private boolean matchWithVariableInSubject(RDFTriple referenceTriple, RDFTriple findingTriple) {
-        return findingTriple.getObject().startsWith("?")
+        return findingTriple.isObjectVariable()
                 && referenceTriple.getPredicate().equals(findingTriple.getPredicate())
                 && referenceTriple.getSubject().equals(findingTriple.getSubject());
+    }
+
+    private boolean matchWithTwoVariables(RDFTriple referenceTriple, RDFTriple findingTriple) {
+        return findingTriple.isObjectVariable()
+                && findingTriple.getPredicate().equals(referenceTriple.getPredicate())
+                && findingTriple.isSubjectVariable();
+    }
+
+    public boolean verifyFact(RDFTriple factToVerify){
+        return informationBase.contains(factToVerify);
     }
 }

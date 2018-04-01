@@ -2,6 +2,7 @@ package cz.vutbr.fit.openmrdp.model;
 
 import com.google.common.collect.Sets;
 import com.sun.istack.internal.Nullable;
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 
 import java.util.HashMap;
 import java.util.HashSet;

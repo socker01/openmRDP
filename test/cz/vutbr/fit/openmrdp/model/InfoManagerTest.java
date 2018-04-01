@@ -1,13 +1,12 @@
 package cz.vutbr.fit.openmrdp.model;
 
-import com.google.common.collect.Sets;
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Set;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -24,20 +23,39 @@ public final class InfoManagerTest {
     }
 
     @Test
-    public void testFindMatchingPatternsForRoomVariable(){
+    public void findMatchingPatternsForRoomVariable(){
         Set<RDFTriple> matchingPatterns = infoManager.findMatchingPatterns(new RDFTriple("urn:uuid:drill1", "<loc:locatedIn>", "?room"));
         assertThat(matchingPatterns, hasSize(1));
         assertThat(matchingPatterns, containsInAnyOrder(InformationBaseTestService.TEST_TRIPLE_1));
     }
 
     @Test
-    public void testFindNonExistingMatchingPattern(){
+    public void findMatchingPatternsForTwoVariables(){
+        Set<RDFTriple> matchingPattern = infoManager.findMatchingPatterns(new RDFTriple("?item", "<loc:locatedIn>", "?room"));
+
+        assertThat(matchingPattern, hasSize(4));
+        assertThat(matchingPattern, containsInAnyOrder(InformationBaseTestService.TEST_TRIPLE_1,
+                InformationBaseTestService.TEST_TRIPLE_3,
+                InformationBaseTestService.TEST_TRIPLE_4,
+                InformationBaseTestService.TEST_TRIPLE_5));
+    }
+
+    @Test
+    public void findNonExistingMatchingPattern(){
         Set<RDFTriple> matchingPatterns = infoManager.findMatchingPatterns(new RDFTriple("urn:uuid:drill1", "<loc:has>", "?room"));
         assertThat(matchingPatterns, hasSize(0));
     }
 
     @Test
-    public void testAddInformationToInformationModel(){
+    public void verifyFact(){
+        assertThat(infoManager.verifyFact(InformationBaseTestService.TEST_TRIPLE_1), is(true));
+
+        RDFTriple nonExistingTriple = new RDFTriple("aaa", "bbb", "ccc");
+        assertThat(infoManager.verifyFact(nonExistingTriple), is(false));
+    }
+
+    @Test
+    public void addInformationToInformationModel(){
         infoManager.addInformationToBase(InformationBaseTestService.TEST_TRIPLE_13.getSubject(),
                 InformationBaseTestService.TEST_TRIPLE_13.getPredicate(),
                 InformationBaseTestService.TEST_TRIPLE_13.getObject()

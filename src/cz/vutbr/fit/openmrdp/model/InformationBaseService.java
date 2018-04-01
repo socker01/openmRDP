@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.model;
 
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
+
 import java.util.Set;
 
 /**

@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.model;
 
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +25,8 @@ public final class InformationBaseTestService implements InformationBaseService{
     static final RDFTriple TEST_TRIPLE_11 = new RDFTriple("urn:uuid:fuel1", "rdf:type", "fur:chemicalFuel");
     static final RDFTriple TEST_TRIPLE_12 = new RDFTriple("fur:steelShelf", "rdf:subtype", "mat:metallicThing");
     static final RDFTriple TEST_TRIPLE_13 = new RDFTriple("fuel:chemicalFuel", "rdf:subtype", "mat:inflammableThing");
+    static final RDFTriple TEST_TRIPLE_14 = new RDFTriple("urn:uuid:fuel1", "rdf:type", "mat:inflammableThing");
+    static final RDFTriple TEST_TRIPLE_15 = new RDFTriple("urn:uuid:surface1", "rdf:type", "mat:metallicThing");
 
     @Override
     public Set<RDFTriple> loadInformationBase() {
@@ -41,6 +45,9 @@ public final class InformationBaseTestService implements InformationBaseService{
         testInformationBase.add(TEST_TRIPLE_11);
         testInformationBase.add(TEST_TRIPLE_12);
         testInformationBase.add(TEST_TRIPLE_13);
+        testInformationBase.add(TEST_TRIPLE_14);
+        testInformationBase.add(TEST_TRIPLE_15);
+
 
         return testInformationBase;
     }

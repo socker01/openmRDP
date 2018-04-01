@@ -3,9 +3,7 @@ package cz.vutbr.fit.openmrdp.query;
 import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
-import cz.vutbr.fit.openmrdp.query.Query;
-import cz.vutbr.fit.openmrdp.model.RDFTriple;
-import cz.vutbr.fit.openmrdp.query.QueryProcessor;
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import org.junit.Test;
 
 import java.util.Set;
