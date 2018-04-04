@@ -23,7 +23,7 @@ public final class IdentifyMessageProcessor implements MessageProcessor {
     public BaseMessage processMessage(BaseMessage receivedMessage) throws AddressSyntaxException {
 
         QueryResolver queryResolver = new QueryResolver(infoManager);
-        String foundedResource = queryResolver.resolveQuery(receivedMessage.getMessageBody(), receivedMessage.getResourceName());
+        String foundedResource = queryResolver.resolveQuery(receivedMessage.getMessageBody(), receivedMessage.getResourceName()).get(0);
 
         ReDELResponseDTO responseDTO;
 

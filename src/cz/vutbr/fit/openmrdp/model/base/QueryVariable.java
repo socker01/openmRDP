@@ -2,9 +2,9 @@ package cz.vutbr.fit.openmrdp.model.base;
 
 import com.sun.istack.internal.NotNull;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author Jiri Koudelka
@@ -14,7 +14,7 @@ public final class QueryVariable {
 
     private final String variableName;
     private boolean found = false;
-    private Set<String> resourceName = new HashSet<>();
+    private List<String> resourceName = new ArrayList<>();
 
     public QueryVariable(@NotNull String variableName) {
         this.variableName = variableName;
@@ -32,7 +32,7 @@ public final class QueryVariable {
         this.found = found;
     }
 
-    public Set<String> getResourceName() {
+    public List<String> getResourceName() {
         return resourceName;
     }
 

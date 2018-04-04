@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.model;
 
+import com.google.common.collect.Sets;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,10 +49,10 @@ public final class InfoManagerTest {
 
     @Test
     public void verifyFact(){
-        assertThat(infoManager.verifyFact(InformationBaseTestService.TEST_TRIPLE_1), is(true));
+        assertThat(infoManager.verifyFacts(Sets.newHashSet(InformationBaseTestService.TEST_TRIPLE_1)), is(true));
 
         RDFTriple nonExistingTriple = new RDFTriple("aaa", "bbb", "ccc");
-        assertThat(infoManager.verifyFact(nonExistingTriple), is(false));
+        assertThat(infoManager.verifyFacts(Sets.newHashSet(nonExistingTriple)), is(false));
     }
 
     @Test

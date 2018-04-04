@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.model;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
@@ -99,7 +100,17 @@ public final class InfoManager {
                 && findingTriple.isSubjectVariable();
     }
 
-    public boolean verifyFact(RDFTriple factToVerify){
+    private boolean verifyFact(RDFTriple factToVerify) {
         return informationBase.contains(factToVerify);
+    }
+
+    public boolean verifyFacts(Set<RDFTriple> factsToVerify) {
+        for (RDFTriple fact : factsToVerify) {
+            if (!verifyFact(fact)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
