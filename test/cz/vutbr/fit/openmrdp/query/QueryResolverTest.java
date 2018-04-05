@@ -1,6 +1,7 @@
 package cz.vutbr.fit.openmrdp.query;
 
 import com.google.common.collect.Sets;
+import cz.vutbr.fit.openmrdp.exceptions.QueryProcessingException;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
@@ -73,11 +74,9 @@ public final class QueryResolverTest {
         assertThat(foundedResources, containsInAnyOrder("urn:uuid:fuel1"));
     }
 
-    @Test
+    @Test(expected = QueryProcessingException.class)
     public void resolveQueryForNonExistingResource(){
         MessageBody messageBody = new MessageBody(TEST_QUERY, ContentType.PLANT_QUERY);
-        List<String> foundedResources = queryResolver.resolveQuery(messageBody, "?nonExists");
-
-        assertThat(foundedResources, hasSize(0));
+        queryResolver.resolveQuery(messageBody, "?nonExists");
     }
 }

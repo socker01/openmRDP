@@ -43,6 +43,13 @@ public final class QueryProcessorTest {
         QueryProcessor.processQuery(messageBody);
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void processSparqlQuery() throws QuerySyntaxException {
+        MessageBody messageBody = new MessageBody("Test query", ContentType.SPARQL_QUERY);
+
+        QueryProcessor.processQuery(messageBody);
+    }
+
     private void assertExpectedTriples(Set<RDFTriple> rdfTriples) {
         RDFTriple expectedTriple1 = new RDFTriple("?room", TEST_PREDICATE, "?building");
         RDFTriple expectedTriple2 = new RDFTriple("?building", TEST_PREDICATE, "testCity");

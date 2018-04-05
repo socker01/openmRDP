@@ -1,6 +1,8 @@
 package cz.vutbr.fit.openmrdp.messages;
 
-import com.sun.istack.internal.Nullable;
+import cz.vutbr.fit.openmrdp.model.base.Resource;
+
+import java.util.List;
 
 /**
  * @author Jiri Koudelka
@@ -9,35 +11,51 @@ import com.sun.istack.internal.Nullable;
 final class ReDELMessageBodyCreator {
 
     private static final String XML_VERSION_AND_ENCODING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-    private static final String REDEL_HEADER = "<redel xmlns=\"http://www.awareit.com/soam/2006/04/redel\">";
+    private static final String REDEL_HEADER = "<redel xmlns=\"http://www.awareit.com/soam/2006/04/redel\"";
     private static final String XSI_HEADER = "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"";
     private static final String SCHEMA_LOCATION_HEADER = "xsi:schemaLocation=\"http://www.awareit.com/soam/2006/04/redel\n" +
             "http://www.awareit.com/soam/2006/04/redel.xsd\">";
+    private static final String RESOURCE_TAG = "<resource uri";
 
-    static MessageBody createRedelMessage(@Nullable String resourceUri, @Nullable String resourceLocation) {
-        String builder;
+    static MessageBody createRedelMessage(List<Resource> resources) {
+        StringBuilder builder = new StringBuilder();
 
-        if (resourceUri == null || resourceLocation == null) {
-            builder = null;
-        } else {
-            builder = XML_VERSION_AND_ENCODING +
+        if (!resources.isEmpty()){
+            builder.append(XML_VERSION_AND_ENCODING +
                     "\n" +
                     REDEL_HEADER +
                     "\n" +
                     XSI_HEADER +
                     "\n" +
-                    SCHEMA_LOCATION_HEADER +
-                    "\n\n" +
-                    "<resource uri=\"" +
-                    resourceUri +
-                    "\">\n" +
-                    "location url=\"" +
-                    resourceLocation +
-                    "\"/>\n" +
-                    "/resource>\n\n" +
-                    "/redel>\n";
+                    SCHEMA_LOCATION_HEADER);
         }
 
-        return new MessageBody(builder, ContentType.REDEL);
+        for (Resource resource : resources){
+            if (resource.getResourceUri() != null && resource.getResourceLocation() != null) {
+                builder.append("\n\n" + "<resource uri=\"")
+                        .append(resource.getResourceUri())
+                        .append("\">\n")
+                        .append("<location url=\"")
+                        .append(resource.getResourceLocation())
+                        .append("\"/>\n")
+                        .append("</resource>");
+            }
+        }
+
+        if (!resources.isEmpty()){
+            builder.append("\n\n</redel>\n");
+        }
+
+        String finalMessage =  null;
+
+        if(hasResourceInformation(builder.toString())){
+            finalMessage = builder.toString();
+        }
+
+        return new MessageBody(finalMessage, ContentType.REDEL);
+    }
+
+    private static boolean hasResourceInformation(String finalMessage){
+        return finalMessage.contains(RESOURCE_TAG);
     }
 }

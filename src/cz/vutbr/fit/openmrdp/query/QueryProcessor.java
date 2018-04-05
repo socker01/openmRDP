@@ -31,9 +31,9 @@ final class QueryProcessor {
         return new Query(triples, messageBody.getContentType());
     }
 
+    @SuppressWarnings("unused")
     private static Set<RDFTriple> processSparqlQuery(String query){
-        //TODO: implement later
-        return null;
+        throw new UnsupportedOperationException("The library does not support SPARQL query yet");
     }
 
     private static Set<RDFTriple> processPlantQuery(String query) throws QuerySyntaxException {

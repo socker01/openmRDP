@@ -3,6 +3,9 @@ package cz.vutbr.fit.openmrdp.messages.dto;
 import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
+import cz.vutbr.fit.openmrdp.model.base.Resource;
+
+import java.util.List;
 
 /**
  * @author Jiri Koudelka
@@ -12,56 +15,47 @@ public final class ReDELResponseDTO {
 
     @NotNull
     private final Address address;
-    private final int sequenceNumber;
-    private final String resourceLocation;
-    private final String resourceUri;
+    private final Integer sequenceNumber;
+    @NotNull
+    private final List<Resource> resources;
 
     private ReDELResponseDTO(Builder builder) {
         this.address = Preconditions.checkNotNull(builder.address);
         this.sequenceNumber = builder.sequenceNumber;
-        this.resourceLocation = builder.resourceLocation;
-        this.resourceUri = builder.resourceUri;
+        this.resources = Preconditions.checkNotNull(builder.resources);
     }
 
     public int getSequenceNumber() {
         return sequenceNumber;
     }
 
-    public String getResourceLocation() {
-        return resourceLocation;
-    }
-
+    @NotNull
     public Address getAddress() {
         return address;
     }
 
-    public String getResourceUri() {
-        return resourceUri;
+    @NotNull
+    public List<Resource> getResources(){
+        return resources;
     }
 
     public static class Builder{
         private Address address;
-        private int sequenceNumber;
-        private String resourceLocation;
-        private String resourceUri;
+        private Integer sequenceNumber;
+        private List<Resource> resources;
 
         public Builder withAddress(Address address){
             this.address = address;
             return this;
         }
 
-        public Builder withSequenceNumber(int sequenceNumber){
+        public Builder withSequenceNumber(Integer sequenceNumber){
             this.sequenceNumber = sequenceNumber;
             return this;
         }
 
-        public Builder withResourceLocation(String resourceLocation){
-            this.resourceLocation = resourceLocation;
-            return this;
-        }
-
-        public Builder withResourceUri(String resourceUri){
-            this.resourceUri = resourceUri;
+        public Builder withResource(List<Resource> resource){
+            this.resources = resource;
             return this;
         }
 

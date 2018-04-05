@@ -77,6 +77,7 @@ public final class InformationBaseProdService implements InformationBaseService 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void addInformationToBase(RDFTriple triple) {
         File xmlFile = new File(INFORMATION_BASE_FILE_PATH);
         if (!xmlFile.exists()) {
@@ -88,7 +89,6 @@ public final class InformationBaseProdService implements InformationBaseService 
         Element rootNode = document.getRootElement();
         List list = rootNode.getChildren(INFORMATION_NODE);
 
-        //TODO: fix this warning
         list.add(createNewXMLElement(triple));
         writeChangesToFile(document);
     }

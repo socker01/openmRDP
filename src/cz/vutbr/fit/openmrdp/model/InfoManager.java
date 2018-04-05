@@ -25,7 +25,6 @@ public final class InfoManager {
 
     public InfoManager(InformationBaseService informationBaseService) {
         this.informationBaseService = informationBaseService;
-        //TODO: apply IoC
         this.locationTreeService = new LocationTreeService();
         createInformationBase();
     }

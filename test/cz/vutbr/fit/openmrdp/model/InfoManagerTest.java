@@ -36,9 +36,9 @@ public final class InfoManagerTest {
 
         assertThat(matchingPattern, hasSize(4));
         assertThat(matchingPattern, containsInAnyOrder(InformationBaseTestService.TEST_TRIPLE_1,
+                InformationBaseTestService.TEST_TRIPLE_2,
                 InformationBaseTestService.TEST_TRIPLE_3,
-                InformationBaseTestService.TEST_TRIPLE_4,
-                InformationBaseTestService.TEST_TRIPLE_5));
+                InformationBaseTestService.TEST_TRIPLE_4));
     }
 
     @Test
@@ -57,9 +57,9 @@ public final class InfoManagerTest {
 
     @Test
     public void addInformationToInformationModel(){
-        infoManager.addInformationToBase(InformationBaseTestService.TEST_TRIPLE_13.getSubject(),
-                InformationBaseTestService.TEST_TRIPLE_13.getPredicate(),
-                InformationBaseTestService.TEST_TRIPLE_13.getObject()
+        infoManager.addInformationToBase(InformationBaseTestService.TEST_TRIPLE_5.getSubject(),
+                InformationBaseTestService.TEST_TRIPLE_5.getPredicate(),
+                InformationBaseTestService.TEST_TRIPLE_5.getObject()
         );
         //TODO: test new information is in infoManager info list and in infoService as well.
     }
