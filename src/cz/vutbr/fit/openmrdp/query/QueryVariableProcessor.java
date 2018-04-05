@@ -16,7 +16,6 @@ import java.util.Set;
  */
 final class QueryVariableProcessor {
 
-    //TODO: add test
     static List<List<VariableResourcePair>> prepareVariableCombinations(Set<QueryVariable> variables) {
 
         int numberOfCombinations = 1;
