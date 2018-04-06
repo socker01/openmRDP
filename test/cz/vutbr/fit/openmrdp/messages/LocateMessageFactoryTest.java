@@ -12,17 +12,17 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 26.01.2018.
  */
-public final class LocateMessageCreatorTest {
+public final class LocateMessageFactoryTest {
 
     private BaseMessage message;
 
     @Before
     public void setUp(){
-        message = MessageCreator.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
+        message = MessageFactory.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
     }
 
     @Test
-    public void testCreateLocateMessageOperationLine() {
+    public void createLocateMessageOperationLine() {
         OperationLine operationLine = new OperationLine(OperationType.LOCATE, MessageTestConstants.TEST_RESOURCE_NAME, MessageProtocol.MRDP);
         assertThat(message.getOperationLine(), is(operationLine));
 
@@ -31,7 +31,7 @@ public final class LocateMessageCreatorTest {
     }
 
     @Test
-    public void testCreateLocateMessageHeaders(){
+    public void createLocateMessageHeaders(){
         assertThat(message.getHeaders().size(), is(OperationType.LOCATE.getHeadersCount()));
 
         assertThat(message.getHeaders().keySet(), hasItem(HeaderType.NSEQ));
@@ -39,7 +39,7 @@ public final class LocateMessageCreatorTest {
     }
 
     @Test
-    public void testCreateLocateMessageBody(){
+    public void createLocateMessageBody(){
         assertThat(message.getBodyQuery(), is(nullValue()));
     }
 }

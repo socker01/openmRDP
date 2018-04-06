@@ -14,18 +14,18 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 27.01.2018.
  */
-public final class IdentifyMessageCreatorTest {
+public final class IdentifyMessageFactoryTest {
 
     private BaseMessage message;
     private MessageBody messageBody = new MessageBody(MessageTestConstants.TEST_QUERY, ContentType.PLANT_QUERY);
 
     @Before
     public void setUp(){
-        message = MessageCreator.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody);
+        message = MessageFactory.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody);
     }
 
     @Test
-    public void testCreateIdentifyMessageOperationLine() {
+    public void createIdentifyMessageOperationLine() {
         OperationLine operationLine = new OperationLine(OperationType.IDENTIFY, MessageTestConstants.TEST_RESOURCE_NAME, MessageProtocol.MRDP);
         assertThat(message.getOperationLine(), is(operationLine));
 
@@ -34,7 +34,7 @@ public final class IdentifyMessageCreatorTest {
     }
 
     @Test
-    public void testCreateIdentifyMessageHeaders(){
+    public void createIdentifyMessageHeaders(){
         assertThat(message.getHeaders().size(), is(4));
 
         assertThat(message.getHeaders().keySet(), hasItem(HeaderType.NSEQ));
@@ -47,7 +47,7 @@ public final class IdentifyMessageCreatorTest {
     }
 
     @Test
-    public void testCreateLocateMessageBody(){
+    public void createLocateMessageBody(){
         assertThat(message.getBodyQuery(), is(MessageTestConstants.TEST_QUERY));
     }
 }

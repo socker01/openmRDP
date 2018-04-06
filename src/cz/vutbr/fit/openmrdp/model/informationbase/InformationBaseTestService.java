@@ -1,4 +1,4 @@
-package cz.vutbr.fit.openmrdp.model;
+package cz.vutbr.fit.openmrdp.model.informationbase;
 
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 
@@ -11,12 +11,11 @@ import java.util.Set;
  */
 public final class InformationBaseTestService implements InformationBaseService{
 
-    static final RDFTriple TEST_TRIPLE_1 = new RDFTriple("urn:uuid:drill1", "<loc:locatedIn>", "urn:uuid:room1");
-    static final RDFTriple TEST_TRIPLE_2 = new RDFTriple("urn:uuid:box1", "<loc:locatedIn>", "urn:uuid:room1");
-    static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:box1");
-    static final RDFTriple TEST_TRIPLE_4 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:room1");
-    static final RDFTriple TEST_TRIPLE_5 = new RDFTriple("fuel:chemicalFuel", "rdf:subtype", "mat:inflammableThing");
-
+    private static final RDFTriple TEST_TRIPLE_1 = new RDFTriple("urn:uuid:drill1", "<loc:locatedIn>", "urn:uuid:room1");
+    private static final RDFTriple TEST_TRIPLE_2 = new RDFTriple("urn:uuid:box1", "<loc:locatedIn>", "urn:uuid:room1");
+    private static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:box1");
+    private static final RDFTriple TEST_TRIPLE_4 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:room1");
+    private static final RDFTriple TEST_TRIPLE_5 = new RDFTriple("fuel:chemicalFuel", "rdf:subtype", "mat:inflammableThing");
     private static final RDFTriple TEST_TRIPLE_6 = new RDFTriple("urn:uuid:room1", "<loc:contains>", "urn:uuid:drill1");
     private static final RDFTriple TEST_TRIPLE_7 = new RDFTriple("urn:uuid:room1", "<loc:contains>", "urn:uuid:box1");
     private static final RDFTriple TEST_TRIPLE_8 = new RDFTriple("urn:uuid:room1", "<loc:contains>", "urn:uuid:fuel1");

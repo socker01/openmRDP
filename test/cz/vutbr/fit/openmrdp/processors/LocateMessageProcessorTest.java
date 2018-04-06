@@ -4,9 +4,9 @@ import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.HeaderType;
-import cz.vutbr.fit.openmrdp.messages.MessageCreator;
+import cz.vutbr.fit.openmrdp.messages.MessageFactory;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
-import cz.vutbr.fit.openmrdp.model.InformationBaseTestService;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,6 +63,6 @@ public final class LocateMessageProcessorTest {
     }
 
     private BaseMessage createLocateBaseMessage(String resourceName) {
-        return MessageCreator.createLocateMessage(resourceName, TEST_CALLBACK_URI + "/" + TEST_ENDPOINT);
+        return MessageFactory.createLocateMessage(resourceName, TEST_CALLBACK_URI + "/" + TEST_ENDPOINT);
     }
 }

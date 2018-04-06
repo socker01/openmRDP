@@ -5,7 +5,7 @@ import cz.vutbr.fit.openmrdp.communication.MessageSenderTestImpl;
 import cz.vutbr.fit.openmrdp.communication.MessageService;
 import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
-import cz.vutbr.fit.openmrdp.messages.MessageCreator;
+import cz.vutbr.fit.openmrdp.messages.MessageFactory;
 
 /**
  * @author Jiri Koudelka
@@ -24,7 +24,7 @@ public final class OpenmRDPApiImpl implements OpenmRDPClientApi {
 
     @Override
     public String locateResource(String resourceName) throws NetworkCommunicationException {
-        BaseMessage locateMessage = MessageCreator.createLocateMessage(resourceName, callbackURI);
+        BaseMessage locateMessage = MessageFactory.createLocateMessage(resourceName, callbackURI);
         messageService.sendMRDPMessage(locateMessage);
 
         //TODO: implement ReDeL messages and receive redel message. Then return URL

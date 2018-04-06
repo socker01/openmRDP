@@ -26,7 +26,7 @@ public final class QueryProcessorTest {
     private static final String TEST_CITY = "testCity";
 
     @Test
-    public void testCreateQueryFromMessage() throws QuerySyntaxException {
+    public void createQueryFromMessage() throws QuerySyntaxException {
         MessageBody messageBody = createMessageBody();
 
         Query query = QueryProcessor.processQuery(messageBody);
@@ -37,7 +37,7 @@ public final class QueryProcessorTest {
     }
 
     @Test(expected = QuerySyntaxException.class)
-    public void testIncorrectQueryFromMessage() throws QuerySyntaxException {
+    public void incorrectQueryFromMessage() throws QuerySyntaxException {
         MessageBody messageBody = createMessageBodyWithIncorrectQuery();
 
         QueryProcessor.processQuery(messageBody);

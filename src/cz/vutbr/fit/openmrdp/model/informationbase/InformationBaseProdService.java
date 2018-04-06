@@ -1,4 +1,4 @@
-package cz.vutbr.fit.openmrdp.model;
+package cz.vutbr.fit.openmrdp.model.informationbase;
 
 import com.google.common.collect.Sets;
 import cz.vutbr.fit.openmrdp.exceptions.InformationBaseException;

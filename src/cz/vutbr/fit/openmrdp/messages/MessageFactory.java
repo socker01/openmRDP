@@ -10,7 +10,7 @@ import java.util.Map;
  * @author Jiri Koudelka
  * @since 26.01.2018.
  */
-public final class MessageCreator {
+public final class MessageFactory {
 
     private static final long MAX_SEQUENCE_NUMBER = 2147483648L;    //TCP standard - 2^31
 

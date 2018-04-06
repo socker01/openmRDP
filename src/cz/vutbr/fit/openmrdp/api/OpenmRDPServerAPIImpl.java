@@ -8,7 +8,7 @@ import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.OperationType;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
-import cz.vutbr.fit.openmrdp.model.InformationBaseProdService;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseProdService;
 import cz.vutbr.fit.openmrdp.processors.IdentifyMessageProcessor;
 import cz.vutbr.fit.openmrdp.processors.LocateMessageProcessor;
 import cz.vutbr.fit.openmrdp.processors.MessageProcessor;

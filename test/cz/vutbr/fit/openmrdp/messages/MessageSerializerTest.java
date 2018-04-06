@@ -19,7 +19,7 @@ public final class MessageSerializerTest {
 
     @Before
     public void setUp(){
-        message = MessageCreator.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
+        message = MessageFactory.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
     }
 
     @Test

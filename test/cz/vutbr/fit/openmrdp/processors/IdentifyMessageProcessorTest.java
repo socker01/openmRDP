@@ -3,7 +3,7 @@ package cz.vutbr.fit.openmrdp.processors;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.*;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
-import cz.vutbr.fit.openmrdp.model.InformationBaseTestService;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,7 +61,7 @@ public final class IdentifyMessageProcessorTest {
     private BaseMessage createTestBaseMessage() {
         MessageBody messageBody = new MessageBody(TEST_QUERY, ContentType.PLANT_QUERY);
 
-        return MessageCreator.createIdentifyMessage("?material", "testCallBackUri/testEndpoint", messageBody);
+        return MessageFactory.createIdentifyMessage("?material", "testCallBackUri/testEndpoint", messageBody);
     }
 
 }

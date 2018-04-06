@@ -1,6 +1,8 @@
 package cz.vutbr.fit.openmrdp.model;
 
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseService;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import org.junit.Before;
 import org.junit.Test;
 

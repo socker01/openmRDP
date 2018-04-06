@@ -4,10 +4,9 @@ import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
-import cz.vutbr.fit.openmrdp.messages.MessageCreator;
+import cz.vutbr.fit.openmrdp.messages.MessageFactory;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
-import cz.vutbr.fit.openmrdp.model.InformationBaseTestService;
-import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.processors.IdentifyMessageProcessor;
 
 public class Main {
@@ -24,7 +23,7 @@ public class Main {
                 "?sur rdf:type mat:metallicThing";
 
         MessageBody body = new MessageBody(query, ContentType.PLANT_QUERY);
-        BaseMessage message = MessageCreator.createIdentifyMessage("?material", "test/end", body);
+        BaseMessage message = MessageFactory.createIdentifyMessage("?material", "test/end", body);
         try {
             processor.processMessage(message);
         } catch (AddressSyntaxException e) {

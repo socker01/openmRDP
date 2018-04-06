@@ -1,10 +1,10 @@
 package cz.vutbr.fit.openmrdp.model;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseService;
 
 import java.util.HashSet;
 import java.util.Set;

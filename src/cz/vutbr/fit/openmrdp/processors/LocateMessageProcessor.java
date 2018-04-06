@@ -2,7 +2,7 @@ package cz.vutbr.fit.openmrdp.processors;
 
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
-import cz.vutbr.fit.openmrdp.messages.MessageCreator;
+import cz.vutbr.fit.openmrdp.messages.MessageFactory;
 import cz.vutbr.fit.openmrdp.messages.dto.ReDELResponseDTO;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.base.Resource;
@@ -32,6 +32,6 @@ public final class LocateMessageProcessor implements MessageProcessor{
                 .withResource(Collections.singletonList(resource))
                 .build();
 
-        return MessageCreator.createReDELResponse(responseDTO);
+        return MessageFactory.createReDELResponse(responseDTO);
     }
 }

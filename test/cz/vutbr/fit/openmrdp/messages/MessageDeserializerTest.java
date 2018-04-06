@@ -16,8 +16,8 @@ import static org.junit.Assert.assertThat;
 public final class MessageDeserializerTest {
 
     @Test
-    public void testDeserializeLocateMessage() throws MessageDeserializeException {
-        BaseMessage message = MessageCreator.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
+    public void deserializeLocateMessage() throws MessageDeserializeException {
+        BaseMessage message = MessageFactory.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
 
         BaseMessage deserializedMessage = makeSerializationAndDeserializationProcess(message);
 
@@ -26,9 +26,9 @@ public final class MessageDeserializerTest {
     }
 
     @Test
-    public void testDeserializeIdentifyMessage() throws MessageDeserializeException {
+    public void deserializeIdentifyMessage() throws MessageDeserializeException {
         MessageBody messageBody = new MessageBody(MessageTestConstants.TEST_QUERY, ContentType.PLANT_QUERY);
-        BaseMessage message = MessageCreator.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody);
+        BaseMessage message = MessageFactory.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody);
 
         BaseMessage deserializedMessage = makeSerializationAndDeserializationProcess(message);
 

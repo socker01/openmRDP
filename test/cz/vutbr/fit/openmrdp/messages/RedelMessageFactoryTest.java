@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
  * @author Jiri Koudelka
  * @since 24.03.2018.
  */
-public final class RedelMessageCreatorTest {
+public final class RedelMessageFactoryTest {
 
     private static final String TEST_HOST_ADDRESS = "http://169.254.0.2/testendpoint";
     private static final int TEST_SEQUENCE_NUMBER = 15;
@@ -55,9 +55,9 @@ public final class RedelMessageCreatorTest {
             "</redel>\n";
 
     @Test
-    public void testCreateReDELMessage() throws AddressSyntaxException {
+    public void createReDELMessage() throws AddressSyntaxException {
         Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS);
-        BaseMessage redelMessage = MessageCreator.createReDELResponse(createReDELResponseDTO(address));
+        BaseMessage redelMessage = MessageFactory.createReDELResponse(createReDELResponseDTO(address));
 
         assertThat(redelMessage.getOperationType(), is(OperationType.POST));
 
@@ -74,7 +74,7 @@ public final class RedelMessageCreatorTest {
     @Test
     public void createReDELMessageWithEmptyResourceLocation() throws AddressSyntaxException {
         Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS);
-        BaseMessage redelMessage = MessageCreator.createReDELResponse(createReDELResponseWithEmptyResourceLocation(address));
+        BaseMessage redelMessage = MessageFactory.createReDELResponse(createReDELResponseWithEmptyResourceLocation(address));
 
         assertThat(redelMessage.getHeaders().get(HeaderType.CONTENT_LENGTH), is(String.valueOf(0)));
         assertThat(redelMessage.getBodyQuery(), is(nullValue()));
@@ -83,7 +83,7 @@ public final class RedelMessageCreatorTest {
     @Test
     public void createReDELMessageWithEmptyResourceURI() throws AddressSyntaxException {
         Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS);
-        BaseMessage redelMessage = MessageCreator.createReDELResponse(createReDELResponseWithEmptyResourceURI(address));
+        BaseMessage redelMessage = MessageFactory.createReDELResponse(createReDELResponseWithEmptyResourceURI(address));
 
         assertThat(redelMessage.getHeaders().get(HeaderType.CONTENT_LENGTH), is(String.valueOf(0)));
         assertThat(redelMessage.getBodyQuery(), is(nullValue()));
@@ -92,7 +92,7 @@ public final class RedelMessageCreatorTest {
     @Test
     public void createReDELMessageWithTwoResources() throws AddressSyntaxException {
         Address address = AddressParser.parseAddressHostAndEndpoint(TEST_HOST_ADDRESS);
-        BaseMessage redelMessage = MessageCreator.createReDELResponse(createReDELResponseWithTwoResources(address));
+        BaseMessage redelMessage = MessageFactory.createReDELResponse(createReDELResponseWithTwoResources(address));
 
         assertThat(redelMessage.getHeaders().get(HeaderType.CONTENT_LENGTH), is(String.valueOf(476)));
         assertThat(redelMessage.getBodyQuery(), is(EXPECTED_MESSAGE_BODY_WITH_TWO_WARIABLES));

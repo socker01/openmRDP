@@ -5,7 +5,7 @@ import cz.vutbr.fit.openmrdp.exceptions.QueryProcessingException;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
-import cz.vutbr.fit.openmrdp.model.InformationBaseTestService;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import org.junit.Test;
 

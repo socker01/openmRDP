@@ -1,7 +1,7 @@
 package cz.vutbr.fit.openmrdp.api;
 
 import cz.vutbr.fit.openmrdp.model.InfoManager;
-import cz.vutbr.fit.openmrdp.model.InformationBaseTestService;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 
 /**
  * @author Jiri Koudelka
