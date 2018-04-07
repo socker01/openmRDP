@@ -1,4 +1,4 @@
-package cz.vutbr.fit.openmrdp.processors;
+package cz.vutbr.fit.openmrdp.messageprocessors;
 
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;

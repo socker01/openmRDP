@@ -9,9 +9,10 @@ import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.OperationType;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseProdService;
-import cz.vutbr.fit.openmrdp.processors.IdentifyMessageProcessor;
-import cz.vutbr.fit.openmrdp.processors.LocateMessageProcessor;
-import cz.vutbr.fit.openmrdp.processors.MessageProcessor;
+import cz.vutbr.fit.openmrdp.messageprocessors.IdentifyMessageProcessor;
+import cz.vutbr.fit.openmrdp.messageprocessors.LocateMessageProcessor;
+import cz.vutbr.fit.openmrdp.messageprocessors.MessageProcessor;
+import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 
 /**
  * @author Jiri Koudelka
@@ -24,7 +25,8 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
     private final MessageProcessor identifyMessageProcessor;
 
     public OpenmRDPServerAPIImpl() {
-        InfoManager infoManager = new InfoManager(new InformationBaseProdService());
+        //TODO: replace with production service
+        InfoManager infoManager = new InfoManager(new InformationBaseProdService(), new OntologyTestService());
         messageService = new MessageService(new MessageSenderTestImpl(), new MessageReceiverTestImpl());
         locateMessageProcessor = new LocateMessageProcessor(infoManager);
         identifyMessageProcessor = new IdentifyMessageProcessor(infoManager);

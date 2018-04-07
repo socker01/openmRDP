@@ -4,7 +4,10 @@ import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseCreator;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseService;
+import cz.vutbr.fit.openmrdp.model.ontology.OntologyService;
+import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,19 +22,22 @@ public final class InfoManager {
     private Set<RDFTriple> informationBase = new HashSet<>();
     private final InformationBaseService informationBaseService;
     private final LocationTreeService locationTreeService;
+    private final OntologyService ontologyService;
     //TODO: this constant should be specified in ontology
     static final String LOCATION_PREDICATE = "<loc:locatedIn>";
     static final String PATH_PREDICATE = "<loc:contains>";
 
-    public InfoManager(InformationBaseService informationBaseService) {
+    public InfoManager(InformationBaseService informationBaseService, OntologyService ontologyService) {
         this.informationBaseService = informationBaseService;
         this.locationTreeService = new LocationTreeService();
+        this.ontologyService = ontologyService;
         createInformationBase();
     }
 
     private void createInformationBase() {
         if (!initialized) {
-            this.informationBase = informationBaseService.loadInformationBase();
+            InformationBaseCreator informationBaseCreator = new InformationBaseCreator(informationBaseService, ontologyService);
+            this.informationBase = informationBaseCreator.createInformationBase();
             initialized = true;
 
             locationTreeService.createLocationTree(getLocationInformation());

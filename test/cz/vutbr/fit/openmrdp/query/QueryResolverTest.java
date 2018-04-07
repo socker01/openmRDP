@@ -7,6 +7,7 @@ import cz.vutbr.fit.openmrdp.messages.MessageBody;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
+import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 import org.junit.Test;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public final class QueryResolverTest {
 
     private static final RDFTriple TEST_QUERY_FACT = new RDFTriple("<urn:uuid:fuel1>", "loc:locatedIn", "<urn:uuid:room1>");
 
-    private final InfoManager infoManager = new InfoManager(new InformationBaseTestService());
+    private final InfoManager infoManager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
     private final QueryResolver queryResolver = new QueryResolver(infoManager);
 
     @Test

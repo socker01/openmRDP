@@ -1,9 +1,10 @@
-package cz.vutbr.fit.openmrdp.processors;
+package cz.vutbr.fit.openmrdp.messageprocessors;
 
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.*;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
+import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public final class IdentifyMessageProcessorTest {
 
     @Before
     public void init(){
-        InfoManager infoManager = new InfoManager(new InformationBaseTestService());
+        InfoManager infoManager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
         identifyMessageProcessor = new IdentifyMessageProcessor(infoManager);
     }
 

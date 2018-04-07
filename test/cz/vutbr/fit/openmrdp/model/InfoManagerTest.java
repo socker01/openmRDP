@@ -3,6 +3,7 @@ package cz.vutbr.fit.openmrdp.model;
 import com.google.common.collect.Sets;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
+import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ public final class InfoManagerTest {
 
     @Before
     public void setUp(){
-        infoManager = new InfoManager(new InformationBaseTestService());
+        infoManager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
     }
 
     @Test

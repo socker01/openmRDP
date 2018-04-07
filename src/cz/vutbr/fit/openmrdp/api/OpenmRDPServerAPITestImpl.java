@@ -2,6 +2,7 @@ package cz.vutbr.fit.openmrdp.api;
 
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
+import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 
 /**
  * @author Jiri Koudelka
@@ -12,7 +13,7 @@ public final class OpenmRDPServerAPITestImpl implements OpenmRDPServerAPI{
     private final InfoManager infoManager;
 
     public OpenmRDPServerAPITestImpl() {
-        infoManager = new InfoManager(new InformationBaseTestService());
+        infoManager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
     }
 
     @Override

@@ -7,13 +7,14 @@ import cz.vutbr.fit.openmrdp.messages.MessageBody;
 import cz.vutbr.fit.openmrdp.messages.MessageFactory;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
-import cz.vutbr.fit.openmrdp.processors.IdentifyMessageProcessor;
+import cz.vutbr.fit.openmrdp.messageprocessors.IdentifyMessageProcessor;
+import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        InfoManager manager = new InfoManager(new InformationBaseTestService());
+        InfoManager manager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
         IdentifyMessageProcessor processor = new IdentifyMessageProcessor(manager);
 
         String query = "?material <loc:locatedIn> ?room" + "\n" +
