@@ -19,13 +19,16 @@ import static org.junit.Assert.assertThat;
  */
 public final class LocationTreeServiceTest {
 
-    private final LocationTreeService service = new LocationTreeService();
+    private static final String DEFAULT_LEVEL_DOWN_PATH_PREDICATE = "<loc:contains>";
+    private static final String DEFAULT_LEVEL_UP_PATH_PREDICATE = "<loc:locatedIn>";
     private static final String EXPECTED_PATH_FOR_FUEL1_RESOURCE = "urn:uuid:room1<loc:contains>urn:uuid:box1<loc:contains>urn:uuid:fuel1";
     private static final String FUEL_RESOURCE_NAME = "urn:uuid:fuel1";
     private static final String NON_EXISTING_RESOURCE_NAME = "urn:uuid:nonExistingResourceName";
 
+    private final LocationTreeService service = new LocationTreeService(DEFAULT_LEVEL_DOWN_PATH_PREDICATE);
+
     @Before
-    public void initializeLocationTree(){
+    public void initializeLocationTree() {
         service.createLocationTree(createLocationInformationTestSet());
     }
 
@@ -35,16 +38,16 @@ public final class LocationTreeServiceTest {
     }
 
     @Test
-    public void findLocationForNonExistingResource(){
+    public void findLocationForNonExistingResource() {
         assertThat(service.findResourceLocation(NON_EXISTING_RESOURCE_NAME), is(nullValue()));
     }
 
-    private Set<RDFTriple> createLocationInformationTestSet(){
+    private Set<RDFTriple> createLocationInformationTestSet() {
         Set<RDFTriple> locationInformation = new HashSet<>();
         InformationBaseService service = new InformationBaseTestService();
 
         for (RDFTriple triple : service.loadInformationBase()) {
-            if (triple.getPredicate().equals(InfoManager.LOCATION_PREDICATE)) {
+            if (triple.getPredicate().equals(DEFAULT_LEVEL_UP_PATH_PREDICATE)) {
                 locationInformation.add(triple);
             }
         }

@@ -32,10 +32,10 @@ public final class InformationBaseTestService implements InformationBaseService{
         Set<RDFTriple> testInformationBase = new HashSet<>();
 
         testInformationBase.add(TEST_TRIPLE_1);
-        testInformationBase.add(TEST_TRIPLE_16);
         testInformationBase.add(TEST_TRIPLE_2);
         testInformationBase.add(TEST_TRIPLE_3);
         testInformationBase.add(TEST_TRIPLE_4);
+        testInformationBase.add(TEST_TRIPLE_5);
         testInformationBase.add(TEST_TRIPLE_6);
         testInformationBase.add(TEST_TRIPLE_7);
         testInformationBase.add(TEST_TRIPLE_8);
@@ -43,9 +43,9 @@ public final class InformationBaseTestService implements InformationBaseService{
         testInformationBase.add(TEST_TRIPLE_10);
         testInformationBase.add(TEST_TRIPLE_11);
         testInformationBase.add(TEST_TRIPLE_12);
-        testInformationBase.add(TEST_TRIPLE_5);
         testInformationBase.add(TEST_TRIPLE_14);
         testInformationBase.add(TEST_TRIPLE_15);
+        testInformationBase.add(TEST_TRIPLE_16);
 
 
         return testInformationBase;

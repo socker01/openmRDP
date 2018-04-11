@@ -15,9 +15,9 @@ public final class OntologyInformation {
     private final String levelUpPredicate;
     @Nullable
     private final String levelDownPredicate;
-    private final List<Pair> transitivePredicates;
+    private final List<Pair<String, String>> transitivePredicates;
 
-    OntologyInformation(@Nullable String levelUpPredicate, @Nullable String levelDownPredicate, List<Pair> transitivePredicates) {
+    OntologyInformation(@Nullable String levelUpPredicate, @Nullable String levelDownPredicate, List<Pair<String, String>> transitivePredicates) {
         this.levelUpPredicate = levelUpPredicate;
         this.levelDownPredicate = levelDownPredicate;
         this.transitivePredicates = transitivePredicates;
@@ -33,7 +33,7 @@ public final class OntologyInformation {
         return levelDownPredicate;
     }
 
-    List<Pair> getTransitivePredicates() {
+    public List<Pair<String, String>> getTransitivePredicates() {
         return transitivePredicates;
     }
 }

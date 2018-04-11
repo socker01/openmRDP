@@ -18,8 +18,8 @@ final class LocationTreeService {
     private LocationTree locationTree;
     private Map<String, Set<RDFTriple>> objectLocationMap;
 
-    LocationTreeService() {
-        this.locationTree = new LocationTree("root");
+    LocationTreeService(String levelDownPathPredicate) {
+        this.locationTree = new LocationTree("root", levelDownPathPredicate);
         objectLocationMap = new HashMap<>();
     }
 

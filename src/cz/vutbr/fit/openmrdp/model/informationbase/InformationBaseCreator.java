@@ -16,7 +16,6 @@ public final class InformationBaseCreator {
 
     private static final String DEFAULT_LEVEL_UP_PATH_PREDICATE = "<loc:locatedIn>";
     private static final String DEFAULT_LEVEL_DOWN_PATH_PREDICATE = "<loc:contains>";
-    private static final String PREDICATE_TREE_ROOT_NAME = "Predicates";
 
     private final InformationBaseService informationBaseService;
     private OntologyInformation ontologyInformation;
@@ -29,18 +28,15 @@ public final class InformationBaseCreator {
     public Set<RDFTriple> createInformationBase(){
         Set<RDFTriple> informationBase = informationBaseService.loadInformationBase();
 
+        TransitivePredicateTree predicateTree = initializeTransitivePredicateTree();
+
+
         return informationBase;
 //        informationBase = addTransitivePredicates(informationBase);
     }
 
-    private Set<RDFTriple> addTransitivePredicates(Set<RDFTriple> informationBase) {
-        Set<RDFTriple> informationBaseWithTransitivePredicates = new HashSet<>();
-
-        return Sets.newHashSet();
-    }
-
     private TransitivePredicateTree initializeTransitivePredicateTree(){
-        return new TransitivePredicateTree(PREDICATE_TREE_ROOT_NAME);
+        return new TransitivePredicateTree(ontologyInformation.getTransitivePredicates());
     }
 
     public String getLevelUpPredicate(){

@@ -13,8 +13,11 @@ import java.util.Set;
  */
 final class LocationTree extends Tree {
 
-    LocationTree(String rootAddress) {
+    private final String levelDownPathPredicate;
+
+    LocationTree(String rootAddress, String levelDownPathPredicate) {
         super(rootAddress);
+        this.levelDownPathPredicate = levelDownPathPredicate;
     }
 
     void addTopLevelLocations(Set<String> locations) {
@@ -102,6 +105,6 @@ final class LocationTree extends Tree {
             return locationNode.getData();
         }
 
-        return constructResourcePath(locationNode.getParent()) + InfoManager.PATH_PREDICATE + locationNode.getData();
+        return constructResourcePath(locationNode.getParent()) + levelDownPathPredicate + locationNode.getData();
     }
 }

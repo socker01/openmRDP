@@ -7,7 +7,6 @@ import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseCreator;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseService;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyService;
-import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,21 +21,22 @@ public final class InfoManager {
     private Set<RDFTriple> informationBase = new HashSet<>();
     private final InformationBaseService informationBaseService;
     private final LocationTreeService locationTreeService;
-    private final OntologyService ontologyService;
-    //TODO: this constant should be specified in ontology
-    static final String LOCATION_PREDICATE = "<loc:locatedIn>";
-    static final String PATH_PREDICATE = "<loc:contains>";
+    private final InformationBaseCreator informationBaseCreator;
+    private final String locationPredicate;
+    private final String pathPredicate;
 
     public InfoManager(InformationBaseService informationBaseService, OntologyService ontologyService) {
         this.informationBaseService = informationBaseService;
-        this.locationTreeService = new LocationTreeService();
-        this.ontologyService = ontologyService;
+        this.informationBaseCreator = new InformationBaseCreator(informationBaseService, ontologyService);
+        this.locationPredicate = informationBaseCreator.getLevelUpPredicate();
+        this.pathPredicate = informationBaseCreator.getLevelDownPredicate();
+        this.locationTreeService = new LocationTreeService(pathPredicate);
+
         createInformationBase();
     }
 
     private void createInformationBase() {
         if (!initialized) {
-            InformationBaseCreator informationBaseCreator = new InformationBaseCreator(informationBaseService, ontologyService);
             this.informationBase = informationBaseCreator.createInformationBase();
             initialized = true;
 
@@ -48,7 +48,7 @@ public final class InfoManager {
         Set<RDFTriple> locationInformation = new HashSet<>();
 
         for (RDFTriple triple : informationBase) {
-            if (triple.getPredicate().equals(LOCATION_PREDICATE)) {
+            if (triple.getPredicate().equals(locationPredicate)) {
                 locationInformation.add(triple);
             }
         }
@@ -117,5 +117,13 @@ public final class InfoManager {
         }
 
         return true;
+    }
+
+    public String getPathPredicate() {
+        return pathPredicate;
+    }
+
+    public String getLocationPredicate() {
+        return locationPredicate;
     }
 }
