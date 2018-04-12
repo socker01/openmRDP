@@ -1,7 +1,14 @@
 package cz.vutbr.fit.openmrdp.model.informationbase;
 
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 import org.junit.Test;
+
+import java.util.Set;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public final class InformationBaseCreatorTest {
 
@@ -9,7 +16,12 @@ public final class InformationBaseCreatorTest {
     public void testCreateTransitivePredicateTree(){
         InformationBaseCreator informationBaseCreator = new InformationBaseCreator(new InformationBaseTestService(), new OntologyTestService());
 
-        informationBaseCreator.createInformationBase();
+        Set<RDFTriple> informationBase = informationBaseCreator.createInformationBase();
+
+        assertThat(informationBase, hasSize(15));
+
+        RDFTriple informationCreatedFromTransitiveRelation = new RDFTriple("urn:uuid:surface1", "rdf:type", "mat:metallicThing");
+        assertThat(informationBase.contains(informationCreatedFromTransitiveRelation), is(true));
     }
 
 }

@@ -24,7 +24,6 @@ public final class InformationBaseTestService implements InformationBaseService{
     private static final RDFTriple TEST_TRIPLE_11 = new RDFTriple("urn:uuid:fuel1", "rdf:type", "fur:chemicalFuel");
     private static final RDFTriple TEST_TRIPLE_12 = new RDFTriple("fur:steelShelf", "rdf:subtype", "mat:metallicThing");
     private static final RDFTriple TEST_TRIPLE_14 = new RDFTriple("urn:uuid:fuel1", "rdf:type", "mat:inflammableThing");
-    private static final RDFTriple TEST_TRIPLE_15 = new RDFTriple("urn:uuid:surface1", "rdf:type", "mat:metallicThing");
     private static final RDFTriple TEST_TRIPLE_16 = new RDFTriple("urn:uuid:box1", "<loc:contains>", "urn:uuid:fuel1");
 
     @Override
@@ -44,7 +43,6 @@ public final class InformationBaseTestService implements InformationBaseService{
         testInformationBase.add(TEST_TRIPLE_11);
         testInformationBase.add(TEST_TRIPLE_12);
         testInformationBase.add(TEST_TRIPLE_14);
-        testInformationBase.add(TEST_TRIPLE_15);
         testInformationBase.add(TEST_TRIPLE_16);
 
 
