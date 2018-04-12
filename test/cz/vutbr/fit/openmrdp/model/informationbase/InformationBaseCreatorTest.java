@@ -10,6 +10,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * @author Jiri Koudelka
+ * @since 12.04.2018
+ */
 public final class InformationBaseCreatorTest {
 
     @Test

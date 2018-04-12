@@ -10,6 +10,10 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
 
+/**
+ * @author Jiri Koudelka
+ * @since 12.04.2018
+ */
 public final class TransitivePredicateTreeTest {
 
     @Test
