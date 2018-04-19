@@ -1,21 +1,20 @@
 package cz.vutbr.fit.openmrdp;
 
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
+import cz.vutbr.fit.openmrdp.messageprocessors.IdentifyMessageProcessor;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
 import cz.vutbr.fit.openmrdp.messages.MessageFactory;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
-import cz.vutbr.fit.openmrdp.messageprocessors.IdentifyMessageProcessor;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyProdService;
-import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        InfoManager manager = new InfoManager(new InformationBaseTestService(), new OntologyProdService());
+        InfoManager manager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyProdService());
         IdentifyMessageProcessor processor = new IdentifyMessageProcessor(manager);
 
         String query = "?material <loc:locatedIn> ?room" + "\n" +

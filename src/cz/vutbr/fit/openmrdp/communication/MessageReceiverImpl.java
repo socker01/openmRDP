@@ -12,7 +12,7 @@ import java.net.MulticastSocket;
  * @author Jiri Koudelka
  * @since 05.02.2018.
  */
-final class MessageReceiverImpl implements MessageReceiver {
+public final class MessageReceiverImpl implements MessageReceiver {
 
     @Override
     public BaseMessage receiveMessages() throws IOException {

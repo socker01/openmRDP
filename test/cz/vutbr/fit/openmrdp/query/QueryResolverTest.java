@@ -36,7 +36,7 @@ public final class QueryResolverTest {
 
     private static final RDFTriple TEST_QUERY_FACT = new RDFTriple("<urn:uuid:fuel1>", "loc:locatedIn", "<urn:uuid:room1>");
 
-    private final InfoManager infoManager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
+    private final InfoManager infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyTestService());
     private final QueryResolver queryResolver = new QueryResolver(infoManager);
 
     @Test

@@ -17,22 +17,30 @@ import java.util.Set;
  */
 public final class InfoManager {
 
+    private static InfoManager instance = null;
+
     private boolean initialized = false;
     private Set<RDFTriple> informationBase = new HashSet<>();
     private final InformationBaseService informationBaseService;
     private final LocationTreeService locationTreeService;
     private final InformationBaseCreator informationBaseCreator;
     private final String locationPredicate;
-    private final String pathPredicate;
 
-    public InfoManager(InformationBaseService informationBaseService, OntologyService ontologyService) {
+    private InfoManager(InformationBaseService informationBaseService, OntologyService ontologyService) {
         this.informationBaseService = informationBaseService;
         this.informationBaseCreator = new InformationBaseCreator(informationBaseService, ontologyService);
         this.locationPredicate = informationBaseCreator.getLevelUpPredicate();
-        this.pathPredicate = informationBaseCreator.getLevelDownPredicate();
-        this.locationTreeService = new LocationTreeService(pathPredicate);
+        this.locationTreeService = new LocationTreeService(informationBaseCreator.getDelimiter(), informationBaseCreator.getLevelUpPredicate());
 
         createInformationBase();
+    }
+
+    public static InfoManager getInfoManager(InformationBaseService informationBaseService, OntologyService ontologyService) {
+        if (instance == null) {
+            instance = new InfoManager(informationBaseService, ontologyService);
+        }
+
+        return instance;
     }
 
     private void createInformationBase() {
@@ -56,12 +64,42 @@ public final class InfoManager {
         return locationInformation;
     }
 
-    void addInformationToBase(String subject, String predicate, String object) {
-        RDFTriple triple = new RDFTriple(subject, predicate, object);
+    private boolean isPredicateLocation(String predicate) {
+        return predicate.equals(locationPredicate) || predicate.equals(informationBaseCreator.getLevelDownPredicate());
+    }
 
-        if (!informationBase.contains(triple)) {
-            informationBase.add(triple);
-            informationBaseService.addInformationToBase(triple);
+    public void removeInformationFromBase(RDFTriple information){
+        if(isPredicateLocation(information.getPredicate())) {
+            RDFTriple symmetricalTriple = informationBaseCreator.createSymmetricalLocationInformation(information);
+            removeInformation(symmetricalTriple);
+        }
+
+        removeInformation(information);
+
+    }
+
+    private void removeInformation(RDFTriple information) {
+        if(informationBase.contains(information)){
+            informationBase.remove(information);
+            informationBaseService.removeInformationFromBase(information);
+            locationTreeService.removeLocationInformation(information);
+        }
+    }
+
+    public void addInformationToBase(RDFTriple information) {
+        if (isPredicateLocation(information.getPredicate())) {
+            RDFTriple symmetricalTriple = informationBaseCreator.createSymmetricalLocationInformation(information);
+            createAndAddInformation(symmetricalTriple);
+        }
+
+        createAndAddInformation(information);
+    }
+
+    private void createAndAddInformation(RDFTriple information) {
+        if (!informationBase.contains(information)) {
+            informationBase.add(information);
+            informationBaseService.addInformationToBase(information);
+            locationTreeService.addLocationInformation(information);
         }
     }
 
@@ -117,13 +155,5 @@ public final class InfoManager {
         }
 
         return true;
-    }
-
-    public String getPathPredicate() {
-        return pathPredicate;
-    }
-
-    public String getLocationPredicate() {
-        return locationPredicate;
     }
 }

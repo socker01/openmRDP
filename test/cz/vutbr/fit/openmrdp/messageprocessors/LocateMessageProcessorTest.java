@@ -31,7 +31,7 @@ public final class LocateMessageProcessorTest {
 
     @Before
     public void init() {
-        InfoManager infoManager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
+        InfoManager infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyTestService());
         locateMessageProcessor = new LocateMessageProcessor(infoManager);
     }
 

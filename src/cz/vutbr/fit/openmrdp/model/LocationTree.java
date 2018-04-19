@@ -13,11 +13,11 @@ import java.util.Set;
  */
 final class LocationTree extends Tree {
 
-    private final String levelDownPathPredicate;
+    private final String delimiter;
 
-    LocationTree(String rootAddress, String levelDownPathPredicate) {
+    LocationTree(String rootAddress, String delimiter) {
         super(rootAddress);
-        this.levelDownPathPredicate = levelDownPathPredicate;
+        this.delimiter = delimiter;
     }
 
     void addTopLevelLocations(Set<String> locations) {
@@ -64,6 +64,22 @@ final class LocationTree extends Tree {
         }
     }
 
+    void removeLocation(RDFTriple locationInformation){
+        Node location = findNodeInTree(root, locationInformation.getSubject());
+
+        if(location != null){
+            Set<Node> children = location.getChildren();
+            location.getParent().getChildren().remove(location);
+
+            for(Node child : children){
+                if(!child.getChildren().isEmpty()){
+                    child.setParent(root);
+                    root.getChildren().add(child);
+                }
+            }
+        }
+    }
+
     private void replaceLocation(RDFTriple locationInformation, Node location) {
         Node newParent = findNodeInTree(root, locationInformation.getObject());
         if (newParent != null) {
@@ -105,6 +121,6 @@ final class LocationTree extends Tree {
             return locationNode.getData();
         }
 
-        return constructResourcePath(locationNode.getParent()) + levelDownPathPredicate + locationNode.getData();
+        return constructResourcePath(locationNode.getParent()) + delimiter + locationNode.getData();
     }
 }

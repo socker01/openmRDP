@@ -16,6 +16,7 @@ public final class BaseMessage {
 
     private final OperationLine operationLine;
     private final Map<HeaderType, String> headers;
+    @Nullable
     private final MessageBody body;
 
     BaseMessage(OperationLine operationLine, Map<HeaderType, String> headers, @Nullable MessageBody body) {

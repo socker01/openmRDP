@@ -13,4 +13,6 @@ public interface InformationBaseService {
     Set<RDFTriple> loadInformationBase();
 
     void addInformationToBase(RDFTriple triple);
+
+    void removeInformationFromBase(RDFTriple triple);
 }

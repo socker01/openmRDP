@@ -2,6 +2,7 @@ package cz.vutbr.fit.openmrdp.api;
 
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 
 /**
  * @author Jiri Koudelka
@@ -9,5 +10,9 @@ import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
  */
 public interface OpenmRDPServerAPI {
 
-    void receiveIncomingMessages() throws NetworkCommunicationException, AddressSyntaxException;
+    void receiveMessages() throws NetworkCommunicationException, AddressSyntaxException;
+
+    void addInformationToInformationBase(RDFTriple information);
+
+    void removeInformationFromInformationBase(RDFTriple information);
 }

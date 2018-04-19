@@ -22,13 +22,14 @@ public final class InfoManagerTest {
     private static final RDFTriple TEST_TRIPLE_2 = new RDFTriple("urn:uuid:box1", "<loc:locatedIn>", "urn:uuid:room1");
     private static final RDFTriple TEST_TRIPLE_3 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:box1");
     private static final RDFTriple TEST_TRIPLE_4 = new RDFTriple("urn:uuid:fuel1", "<loc:locatedIn>", "urn:uuid:room1");
-    private static final RDFTriple TEST_TRIPLE_5 = new RDFTriple("fuel:chemicalFuel", "rdf:subtype", "mat:inflammableThing");
+    private static final RDFTriple TEST_TRIPLE_TO_ADD = new RDFTriple("urn:uuid:fuel1", "<loc:contains>", "urn:uuid:test");
+    private static final RDFTriple SYMMETRICAL_TEST_TRIPLE = new RDFTriple("urn:uuid:test", "<loc:locatedIn>", "urn:uuid:fuel1");
 
     private InfoManager infoManager;
 
     @Before
     public void setUp(){
-        infoManager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
+        infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyTestService());
     }
 
     @Test
@@ -65,10 +66,19 @@ public final class InfoManagerTest {
 
     @Test
     public void addInformationToInformationModel(){
-        infoManager.addInformationToBase(TEST_TRIPLE_5.getSubject(),
-                TEST_TRIPLE_5.getPredicate(),
-                TEST_TRIPLE_5.getObject()
-        );
-        //TODO: test new information is in infoManager info list and in infoService as well.
+        infoManager.addInformationToBase(TEST_TRIPLE_TO_ADD);
+
+        assertThat(infoManager.findResourceLocation("urn:uuid:test"), is("urn:uuid:room1\\urn:uuid:box1\\urn:uuid:fuel1\\urn:uuid:test"));
+
+        Set<RDFTriple> matchingPattern = infoManager.findMatchingPatterns(new RDFTriple("?item", "<loc:locatedIn>", "?room"));
+
+        assertThat(matchingPattern, hasSize(5));
+        assertThat(matchingPattern, containsInAnyOrder(TEST_TRIPLE_1,
+                TEST_TRIPLE_2,
+                TEST_TRIPLE_3,
+                TEST_TRIPLE_4,
+                SYMMETRICAL_TEST_TRIPLE));
+
+        infoManager.removeInformationFromBase(TEST_TRIPLE_TO_ADD);
     }
 }

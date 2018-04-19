@@ -15,10 +15,16 @@ public class OntologyTestService implements OntologyService {
     public OntologyInformation loadOntology() {
         String levelUpPredicate = "<loc:locatedIn>";
         String levelDownPredicate = "<loc:contains>";
+        String delimiter = "\\";
 
         List<Pair<String, String>> transitivePairs = createTransitivePairs();
 
-        return new OntologyInformation(levelUpPredicate, levelDownPredicate, transitivePairs);
+        return new OntologyInformation.Builder()
+                .withTransitivePredicates(transitivePairs)
+                .withLevelUpPredicate(levelUpPredicate)
+                .withLevelDownPredicate(levelDownPredicate)
+                .withDelimiter(delimiter)
+                .build();
     }
 
     private List<Pair<String, String>> createTransitivePairs(){

@@ -2,21 +2,19 @@ package cz.vutbr.fit.openmrdp.communication;
 
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 
-import java.io.IOException;
-
 /**
  * @author Jiri Koudelka
  * @since 17.03.2018.
  */
-public final class MessageSenderTestImpl implements MessageSender{
+public final class MessageSenderTestImpl implements MessageSender {
 
     @Override
-    public void sendMRDPMessage(BaseMessage message) throws IOException {
-        //do nothing
+    public void sendMRDPMessage(BaseMessage message) {
+        System.out.println("mRDP message was sent.");
     }
 
     @Override
     public void sendReDELMessage(BaseMessage message) {
-        //do nothing
+        System.out.println("ReDEL message was sent.");
     }
 }

@@ -19,13 +19,14 @@ import static org.junit.Assert.assertThat;
  */
 public final class LocationTreeServiceTest {
 
-    private static final String DEFAULT_LEVEL_DOWN_PATH_PREDICATE = "<loc:contains>";
     private static final String DEFAULT_LEVEL_UP_PATH_PREDICATE = "<loc:locatedIn>";
-    private static final String EXPECTED_PATH_FOR_FUEL1_RESOURCE = "urn:uuid:room1<loc:contains>urn:uuid:box1<loc:contains>urn:uuid:fuel1";
+    private static final String DEFAULT_DELIMITER = "\\";
+    private static final String EXPECTED_PATH_FOR_FUEL1_RESOURCE = "urn:uuid:room1\\urn:uuid:box1\\urn:uuid:fuel1";
     private static final String FUEL_RESOURCE_NAME = "urn:uuid:fuel1";
+    private static final String TEST_RESOURCE_NAME = "urn:uuid:test";
     private static final String NON_EXISTING_RESOURCE_NAME = "urn:uuid:nonExistingResourceName";
 
-    private final LocationTreeService service = new LocationTreeService(DEFAULT_LEVEL_DOWN_PATH_PREDICATE);
+    private final LocationTreeService service = new LocationTreeService(DEFAULT_DELIMITER, DEFAULT_LEVEL_UP_PATH_PREDICATE);
 
     @Before
     public void initializeLocationTree() {
@@ -53,5 +54,22 @@ public final class LocationTreeServiceTest {
         }
 
         return locationInformation;
+    }
+
+    @Test
+    public void addLocationInformation(){
+        RDFTriple newLocationInformation = new RDFTriple(TEST_RESOURCE_NAME, "<loc:locatedIn>", FUEL_RESOURCE_NAME);
+
+        service.addLocationInformation(newLocationInformation);
+
+        assertThat(service.findResourceLocation(TEST_RESOURCE_NAME), is("urn:uuid:room1\\urn:uuid:box1\\urn:uuid:fuel1\\urn:uuid:test"));
+    }
+
+    @Test
+    public void addLocationInformationWithContainsInfo(){
+        RDFTriple newLocationInformation = new RDFTriple(FUEL_RESOURCE_NAME, "<loc:contains>", TEST_RESOURCE_NAME);
+        service.addLocationInformation(newLocationInformation);
+
+        assertThat(service.findResourceLocation(TEST_RESOURCE_NAME), is(nullValue()));
     }
 }

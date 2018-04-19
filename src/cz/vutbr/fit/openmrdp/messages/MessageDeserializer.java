@@ -43,7 +43,6 @@ public final class MessageDeserializer {
     private static MessageBody createMessageBody(String query) {
         MessageBody messageBody = null;
         if(query != null) {
-            //TODO: Is here really plant query?
             messageBody = new MessageBody(query, ContentType.PLANT_QUERY);
         }
 

@@ -26,6 +26,7 @@ public final class OntologyProdService implements OntologyService {
     private static final String TRANSITIVE_PREDICATE = "TransitivePredicate";
     private static final String PARENT = "Parent";
     private static final String TRANSITIVE_RELATION = "TransitiveRelation";
+    private static final String DELIMITER = "Delimiter";
     private static final String ONTOLOGY_FILE_PATH = System.getProperty("user.dir") + File.separator + "ontology.xml";
 
     @Override
@@ -40,13 +41,19 @@ public final class OntologyProdService implements OntologyService {
         Element rootNode = document.getRootElement();
         String levelUpPredicate = rootNode.getChildText(LEVEL_UP_PREDICATE);
         String levelDownPredicate = rootNode.getChildText(LEVEL_DOWN_PREDICATE);
+        String delimiter = rootNode.getChildText(DELIMITER);
 
         Element transitivePredicatesNode = rootNode.getChild(TRANSITIVE_PREDICATES);
         List transitivePredicatesList = transitivePredicatesNode.getChildren(TRANSITIVE_PREDICATE);
 
         List<Pair<String, String>> transitivePredicates = createTransitivePredicates(transitivePredicatesList);
 
-        return new OntologyInformation(levelUpPredicate, levelDownPredicate, transitivePredicates);
+        return new OntologyInformation.Builder()
+                .withDelimiter(delimiter)
+                .withLevelDownPredicate(levelDownPredicate)
+                .withLevelUpPredicate(levelUpPredicate)
+                .withTransitivePredicates(transitivePredicates)
+                .build();
     }
 
     private List<Pair<String, String>> createTransitivePredicates(List transitivePredicatesList) {
@@ -66,7 +73,9 @@ public final class OntologyProdService implements OntologyService {
     }
 
     private OntologyInformation createEmptyOntology() {
-        return new OntologyInformation(null, null, Collections.emptyList());
+        return new OntologyInformation.Builder()
+                .withTransitivePredicates(Collections.emptyList())
+                .build();
     }
 
     private Document getDocument(File ontologyXml) {

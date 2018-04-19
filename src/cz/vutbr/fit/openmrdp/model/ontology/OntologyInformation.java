@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.model.ontology;
 
+import com.google.common.base.Preconditions;
 import com.sun.istack.internal.Nullable;
 import javafx.util.Pair;
 
@@ -15,12 +16,49 @@ public final class OntologyInformation {
     private final String levelUpPredicate;
     @Nullable
     private final String levelDownPredicate;
+    @Nullable
+    private final String delimiter;
     private final List<Pair<String, String>> transitivePredicates;
 
-    OntologyInformation(@Nullable String levelUpPredicate, @Nullable String levelDownPredicate, List<Pair<String, String>> transitivePredicates) {
-        this.levelUpPredicate = levelUpPredicate;
-        this.levelDownPredicate = levelDownPredicate;
-        this.transitivePredicates = transitivePredicates;
+    private OntologyInformation(Builder builder){
+        this.levelUpPredicate = builder.levelUpPredicate;
+        this.levelDownPredicate = builder.levelDownPredicate;
+        this.delimiter = builder.delimiter;
+        this.transitivePredicates = Preconditions.checkNotNull(builder.transitivePredicates);
+    }
+
+    static class Builder{
+        @Nullable
+        private String levelUpPredicate;
+        @Nullable
+        private String levelDownPredicate;
+        @Nullable
+        private String delimiter;
+        private List<Pair<String, String>> transitivePredicates;
+
+        Builder withLevelUpPredicate(String levelUpPredicate){
+            this.levelUpPredicate = levelUpPredicate;
+            return this;
+        }
+
+        Builder withLevelDownPredicate(String levelDownPredicate){
+            this.levelDownPredicate = levelDownPredicate;
+            return this;
+        }
+
+        Builder withDelimiter(String delimiter){
+            this.delimiter = delimiter;
+            return this;
+        }
+
+        Builder withTransitivePredicates(List<Pair<String, String>> transitivePredicates){
+            this.transitivePredicates = transitivePredicates;
+            return this;
+        }
+
+        OntologyInformation build(){
+            return new OntologyInformation(this);
+        }
     }
 
     @Nullable
@@ -31,6 +69,10 @@ public final class OntologyInformation {
     @Nullable
     public String getLevelDownPredicate() {
         return levelDownPredicate;
+    }
+
+    public String getDelimiter() {
+        return delimiter;
     }
 
     public List<Pair<String, String>> getTransitivePredicates() {

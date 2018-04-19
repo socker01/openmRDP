@@ -32,14 +32,14 @@ public final class IdentifyMessageProcessorTest {
             "http://www.awareit.com/soam/2006/04/redel.xsd\">\n" +
             "\n" +
             "<resource uri=\"urn:uuid:fuel1\">\n" +
-            "<location url=\"urn:uuid:room1<loc:contains>urn:uuid:box1<loc:contains>urn:uuid:fuel1\"/>\n" +
+            "<location url=\"urn:uuid:room1\\urn:uuid:box1\\urn:uuid:fuel1\"/>\n" +
             "</resource>\n" +
             "\n" +
             "</redel>\n";
 
     @Before
     public void init(){
-        InfoManager infoManager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
+        InfoManager infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyTestService());
         identifyMessageProcessor = new IdentifyMessageProcessor(infoManager);
     }
 
@@ -54,7 +54,7 @@ public final class IdentifyMessageProcessorTest {
 
     private void assertHeaders(BaseMessage responseMessage) {
         assertThat(responseMessage.getHeaders().keySet().size(), is(4));
-        assertThat(responseMessage.getHeaders().get(HeaderType.CONTENT_LENGTH), is(String.valueOf(403)));
+        assertThat(responseMessage.getHeaders().get(HeaderType.CONTENT_LENGTH), is(String.valueOf(377)));
         assertThat(responseMessage.getHeaders().get(HeaderType.HOST), is("testCallBackUri"));
         assertThat(responseMessage.getHeaders().get(HeaderType.CONTENT_TYPE), is(ContentType.REDEL.getCode()));
     }

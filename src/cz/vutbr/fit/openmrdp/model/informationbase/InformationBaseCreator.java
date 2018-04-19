@@ -17,6 +17,7 @@ public final class InformationBaseCreator {
 
     private static final String DEFAULT_LEVEL_UP_PATH_PREDICATE = "<loc:locatedIn>";
     private static final String DEFAULT_LEVEL_DOWN_PATH_PREDICATE = "<loc:contains>";
+    private static final String DEFAULT_DELIMITER = "\\";
 
     private final InformationBaseService informationBaseService;
     private OntologyInformation ontologyInformation;
@@ -33,7 +34,38 @@ public final class InformationBaseCreator {
 
         createInformationBaseWithTransitivePredicates(informationBase, predicateTree.getTransitivePredicatesList());
 
+        addSymmetricalLocationInformation(informationBase);
+
         return informationBase;
+    }
+
+    private void addSymmetricalLocationInformation(Set<RDFTriple> informationBase) {
+        Set<RDFTriple> newInformationBase = new HashSet<>();
+
+        for (RDFTriple information : informationBase){
+            if (isLocationInformation(information)){
+                RDFTriple symmetricalInformation = createSymmetricalLocationInformation(information);
+                newInformationBase.add(symmetricalInformation);
+            }
+        }
+
+        informationBase.addAll(newInformationBase);
+    }
+
+    public RDFTriple createSymmetricalLocationInformation(RDFTriple triple) {
+        String newPredicate;
+        if (triple.getPredicate().equals(getLevelUpPredicate())) {
+            newPredicate = getLevelDownPredicate();
+        } else {
+            newPredicate = getLevelUpPredicate();
+        }
+
+        return new RDFTriple(triple.getObject(), newPredicate, triple.getSubject());
+    }
+
+    private boolean isLocationInformation(RDFTriple information) {
+        return information.getPredicate().equals(getLevelUpPredicate())
+                || information.getPredicate().equals(getLevelDownPredicate());
     }
 
     private TransitivePredicateTree initializeTransitivePredicateTree() {
@@ -46,6 +78,10 @@ public final class InformationBaseCreator {
 
     public String getLevelDownPredicate() {
         return ontologyInformation.getLevelDownPredicate() == null ? DEFAULT_LEVEL_DOWN_PATH_PREDICATE : ontologyInformation.getLevelDownPredicate();
+    }
+
+    public String getDelimiter(){
+        return ontologyInformation.getDelimiter() == null ? DEFAULT_DELIMITER : ontologyInformation.getDelimiter();
     }
 
     private void createInformationBaseWithTransitivePredicates(Set<RDFTriple> informationBase, List<List<String>> transitivePredicates) {

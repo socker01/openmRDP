@@ -1,6 +1,7 @@
 package cz.vutbr.fit.openmrdp.api;
 
 import cz.vutbr.fit.openmrdp.model.InfoManager;
+import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 
@@ -13,11 +14,21 @@ public final class OpenmRDPServerAPITestImpl implements OpenmRDPServerAPI{
     private final InfoManager infoManager;
 
     public OpenmRDPServerAPITestImpl() {
-        infoManager = new InfoManager(new InformationBaseTestService(), new OntologyTestService());
+        infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyTestService());
     }
 
     @Override
-    public void receiveIncomingMessages() {
+    public void receiveMessages() {
 
+    }
+
+    @Override
+    public void addInformationToInformationBase(RDFTriple information) {
+        //TODO implement me
+    }
+
+    @Override
+    public void removeInformationFromInformationBase(RDFTriple information) {
+        //TODO implement me
     }
 }

@@ -16,17 +16,21 @@ import java.util.Set;
 final class LocationTreeService {
 
     private LocationTree locationTree;
+    private final String levelUpPredicate;
     private Map<String, Set<RDFTriple>> objectLocationMap;
 
-    LocationTreeService(String levelDownPathPredicate) {
-        this.locationTree = new LocationTree("root", levelDownPathPredicate);
+    LocationTreeService(String delimiter, String levelUpPredicate) {
+        this.locationTree = new LocationTree("locations", delimiter);
         objectLocationMap = new HashMap<>();
+        this.levelUpPredicate = levelUpPredicate;
     }
 
     void createLocationTree(Set<RDFTriple> locationInformation) {
         addTopLevelLocations(findTopLevelLocationInformation(locationInformation));
 
-        for(int i = 0 ; i < 5; i++){
+        //TODO: 5?!?!?
+        // Opakuj algoritmus od kroku 2, dokud se přidávají nové informace do stromu nebo se strom mení
+        for (int i = 0; i < 5; i++) {
             Set<String> locationLeafs = locationTree.getLeafs();
             Set<RDFTriple> leafLocationsInformation = findLocationsInformationForLeafs(locationLeafs);
 
@@ -40,7 +44,7 @@ final class LocationTreeService {
         Set<RDFTriple> locationsInformation = new HashSet<>();
 
         for (String locationLeaf : locationLeafs) {
-            if(objectLocationMap.containsKey(locationLeaf)){
+            if (objectLocationMap.containsKey(locationLeaf)) {
                 locationsInformation.addAll(objectLocationMap.get(locationLeaf));
             }
         }
@@ -73,7 +77,19 @@ final class LocationTreeService {
     }
 
     @Nullable
-    String findResourceLocation(String resourceName){
+    String findResourceLocation(String resourceName) {
         return locationTree.findLocation(resourceName);
+    }
+
+    void addLocationInformation(RDFTriple locationInformation) {
+        if (locationInformation.getPredicate().equals(levelUpPredicate)) {
+            locationTree.addLocation(locationInformation);
+        }
+    }
+
+    void removeLocationInformation(RDFTriple locationInformation){
+        if (locationInformation.getPredicate().equals(levelUpPredicate)){
+            locationTree.removeLocation(locationInformation);
+        }
     }
 }

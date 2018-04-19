@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
  * @author Jiri Koudelka
  * @since 05.02.2018.
  */
-final class MessageSenderImpl implements MessageSender{
+public final class MessageSenderImpl implements MessageSender{
 
     @Override
     public void sendMRDPMessage(BaseMessage message) throws IOException {
