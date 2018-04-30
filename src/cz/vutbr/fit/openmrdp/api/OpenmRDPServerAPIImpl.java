@@ -16,13 +16,12 @@ import cz.vutbr.fit.openmrdp.messages.OperationType;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
-import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseProdService;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyProdService;
 import cz.vutbr.fit.openmrdp.security.SecurityConfiguration;
-import cz.vutbr.fit.openmrdp.server.NonSecureServerHandler;
+import cz.vutbr.fit.openmrdp.security.UserAuthorizatorTestImpl;
+import cz.vutbr.fit.openmrdp.server.SecureServerHandler;
 import cz.vutbr.fit.openmrdp.server.ServerConfiguration;
-import sun.misc.Cleaner;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -139,7 +138,8 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
         InetSocketAddress address = new InetSocketAddress(2774);
         HttpServer server = HttpServer.create(address, 0);
 
-        server.createContext("/auth", new NonSecureServerHandler(preparedMessages));
+//        server.createContext("/auth", new NonSecureServerHandler(preparedMessages));
+        server.createContext("/auth", new SecureServerHandler(new HashMap<>(), new UserAuthorizatorTestImpl(), preparedMessages));
         server.setExecutor(null);
         server.start();
     }

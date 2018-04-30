@@ -6,6 +6,6 @@ import com.sun.istack.internal.NotNull;
  * @author Jiri Koudelka
  * @since 25.04.2018
  */
-public interface UserAuthenticator {
+public interface UserAuthorizator {
     boolean authorizeUser(@NotNull String login, @NotNull String password);
 }

@@ -6,15 +6,15 @@ package cz.vutbr.fit.openmrdp.security;
  */
 public final class SecurityConfiguration {
    private final boolean supportSecureConnection;
-   private final UserAuthenticator userAuthenticator;
+   private final UserAuthorizator userAuthorizator;
 
-    public SecurityConfiguration(boolean supportSecureConnection, UserAuthenticator userAuthenticator) {
+    public SecurityConfiguration(boolean supportSecureConnection, UserAuthorizator userAuthorizator) {
         this.supportSecureConnection = supportSecureConnection;
-        this.userAuthenticator = userAuthenticator;
+        this.userAuthorizator = userAuthorizator;
     }
 
     public boolean authorizeUser(String login, String password){
-        return userAuthenticator.authorizeUser(login, password);
+        return userAuthorizator.authorizeUser(login, password);
     }
 
     public boolean isSupportSecureConnection() {

@@ -6,6 +6,7 @@ package cz.vutbr.fit.openmrdp.messages;
  */
 public enum HeaderType {
     ACCESS_CONTROL_ALLOW_ORIGIN("Access-Control-Allow-Origin"),
+    AUTHORIZATION("Authorization"),
     NSEQ("NSeq"),
     CALLBACK_URI("Callback-URI"),
     CLIENT_ADDRESS("Client-Address"),

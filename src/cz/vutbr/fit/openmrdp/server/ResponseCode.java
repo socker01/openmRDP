@@ -5,7 +5,8 @@ package cz.vutbr.fit.openmrdp.server;
  * @since 30.04.2018
  */
 public enum ResponseCode {
-    OK(200);
+    OK(200),
+    FORBIDDEN(403);
 
     private final int code;
 
