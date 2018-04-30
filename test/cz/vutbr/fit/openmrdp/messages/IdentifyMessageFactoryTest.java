@@ -21,7 +21,7 @@ public final class IdentifyMessageFactoryTest {
 
     @Before
     public void setUp(){
-        message = MessageFactory.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody);
+        message = MessageFactory.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody, 1);
     }
 
     @Test

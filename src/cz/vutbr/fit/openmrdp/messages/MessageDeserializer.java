@@ -1,6 +1,8 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.MessageDeserializeException;
+import cz.vutbr.fit.openmrdp.security.AuthorizationLevel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,15 +15,23 @@ import java.util.Scanner;
  */
 public final class MessageDeserializer {
 
+    //TODO: move to the different class
+    public static final String SERVER_TAG = "SERVER";
+    public static final String SEQUENCE_NUMBER_TAG = "NSEQ";
+    public static final String PROTOCOL_TAG = "PROTOCOL";
+    public static final String AUTHORIZATION_TAG = "AUTHORIZATION";
+
     public static BaseMessage deserializeMessage(String serializedMessage) throws MessageDeserializeException {
-        try{
+        try {
             return deserialize(serializedMessage);
-        }catch (NoSuchElementException nse){
+        } catch (IllegalArgumentException iae) {
+            throw new MessageDeserializeException(iae.getMessage());
+        } catch (NoSuchElementException | StringIndexOutOfBoundsException exc) {
             throw new MessageDeserializeException("Message does not have expected body");
         }
     }
 
-    private static BaseMessage deserialize(String serializedMessage){
+    private static BaseMessage deserialize(String serializedMessage) {
 
         Scanner scanner = new Scanner(serializedMessage);
 
@@ -31,7 +41,7 @@ public final class MessageDeserializer {
         Map<HeaderType, String> messageHeaders = getHeadersForOperation(scanner, operationLine.getOperationType());
 
         String query = null;
-        if(operationLine.getOperationType() == OperationType.IDENTIFY){
+        if (operationLine.getOperationType() == OperationType.IDENTIFY) {
             query = getMessageBody(scanner);
         }
 
@@ -42,14 +52,14 @@ public final class MessageDeserializer {
 
     private static MessageBody createMessageBody(String query) {
         MessageBody messageBody = null;
-        if(query != null) {
+        if (query != null) {
             messageBody = new MessageBody(query, ContentType.PLANT_QUERY);
         }
 
         return messageBody;
     }
 
-    private static OperationLine getOperationLine(String operationLineRaw){
+    private static OperationLine getOperationLine(String operationLineRaw) {
         String operationRaw = operationLineRaw.substring(0, operationLineRaw.indexOf(' '));
         OperationType operationType = OperationType.fromString(operationRaw);
 
@@ -72,10 +82,10 @@ public final class MessageDeserializer {
         return MessageProtocol.fromString(messageProtocolRaw);
     }
 
-    private static Map<HeaderType, String> getHeadersForOperation(Scanner scanner, OperationType operationType){
+    private static Map<HeaderType, String> getHeadersForOperation(Scanner scanner, OperationType operationType) {
         Map<HeaderType, String> messageHeaders = new HashMap<>();
 
-        for (int i = 0; i < operationType.getHeadersCount(); i++){
+        for (int i = 0; i < operationType.getHeadersCount(); i++) {
             String headerLine = scanner.nextLine();
 
             HeaderType headerType = getHeaderType(headerLine);
@@ -87,13 +97,13 @@ public final class MessageDeserializer {
         return messageHeaders;
     }
 
-    private static HeaderType getHeaderType(String headerLine){
+    private static HeaderType getHeaderType(String headerLine) {
         String headerTypeRaw = headerLine.substring(0, headerLine.indexOf(':'));
 
         return HeaderType.fromString(headerTypeRaw);
     }
 
-    private static String getHeaderValue(String headerLine){
+    private static String getHeaderValue(String headerLine) {
         return headerLine.substring(headerLine.indexOf(' ') + 1);
     }
 
@@ -102,10 +112,54 @@ public final class MessageDeserializer {
 
         scanner.nextLine();
 
-        while (scanner.hasNextLine()){
+        while (scanner.hasNextLine()) {
             queryBuilder.append(scanner.nextLine());
         }
 
         return queryBuilder.toString();
+    }
+
+    @NotNull
+    public static MRDPServerResponseMessage deserializeMRDPServerResponseMessage(String message) {
+        checkMessageValidity(message);
+        String serverAddress = getServerAddress(message);
+        MessageProtocol protocol = getCommunicationProtocol(message);
+        AuthorizationLevel authorizationLevel = getAuthorizationLevel(message);
+
+        return new MRDPServerResponseMessage(serverAddress, protocol, authorizationLevel);
+    }
+
+    private static void checkMessageValidity(String message) {
+        if (!message.contains(SERVER_TAG)
+                || !message.contains(PROTOCOL_TAG)
+                || !message.contains(AUTHORIZATION_TAG)) {
+            throw new MessageDeserializeException("MRDPServerResponseMessage doesn't have expected body.");
+        }
+    }
+
+    @NotNull
+    private static MessageProtocol getCommunicationProtocol(String message) {
+        if (message.contains(PROTOCOL_TAG + ": HTTPS")) {
+            return MessageProtocol.HTTPS;
+        } else {
+            return MessageProtocol.HTTP;
+        }
+    }
+
+    @NotNull
+    private static AuthorizationLevel getAuthorizationLevel(String message) {
+        if (message.contains(AUTHORIZATION_TAG + ": " + AuthorizationLevel.NONE.getCode())) {
+            return AuthorizationLevel.NONE;
+        } else {
+            return AuthorizationLevel.REQUIRED;
+        }
+    }
+
+    @NotNull
+    private static String getServerAddress(String message) {
+        String parsedMessage = message.substring(SERVER_TAG.length() + 2);
+        int indexOfEnd = parsedMessage.indexOf(". ");
+
+        return parsedMessage.substring(0, indexOfEnd);
     }
 }

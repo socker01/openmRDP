@@ -21,7 +21,6 @@ public final class MessageReceiverImpl implements MessageReceiver {
 
         DatagramPacket packet = new DatagramPacket(new byte[NetworkCommunicationConstants.MAX_UDP_DATAGRAM_SIZE], NetworkCommunicationConstants.MAX_UDP_DATAGRAM_SIZE);
 
-        //TODO: make the receiving of socket better
         socket.receive(packet);
 
         BaseMessage receivedMessage = MessageDeserializer.deserializeMessage(new String(packet.getData()));
@@ -38,6 +37,7 @@ public final class MessageReceiverImpl implements MessageReceiver {
     private static MulticastSocket createAndConfigureSocket(InetAddress ipAddress) throws IOException {
         MulticastSocket socket = new MulticastSocket(NetworkCommunicationConstants.PORT);
         socket.joinGroup(ipAddress);
+
         return socket;
     }
 }

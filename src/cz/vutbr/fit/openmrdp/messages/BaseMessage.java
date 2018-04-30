@@ -43,7 +43,7 @@ public final class BaseMessage {
     }
 
     public int getSequenceNumber() {
-        return new Integer(headers.get(HeaderType.NSEQ));
+        return Integer.parseInt(headers.get(HeaderType.NSEQ).trim());
     }
 
     public Address getHostAddress() throws AddressSyntaxException {

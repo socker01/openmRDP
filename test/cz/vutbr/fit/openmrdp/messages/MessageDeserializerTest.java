@@ -17,7 +17,7 @@ public final class MessageDeserializerTest {
 
     @Test
     public void deserializeLocateMessage() throws MessageDeserializeException {
-        BaseMessage message = MessageFactory.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI);
+        BaseMessage message = MessageFactory.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, 1);
 
         BaseMessage deserializedMessage = makeSerializationAndDeserializationProcess(message);
 
@@ -28,7 +28,7 @@ public final class MessageDeserializerTest {
     @Test
     public void deserializeIdentifyMessage() throws MessageDeserializeException {
         MessageBody messageBody = new MessageBody(MessageTestConstants.TEST_QUERY, ContentType.PLANT_QUERY);
-        BaseMessage message = MessageFactory.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody);
+        BaseMessage message = MessageFactory.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody, 1);
 
         BaseMessage deserializedMessage = makeSerializationAndDeserializationProcess(message);
 

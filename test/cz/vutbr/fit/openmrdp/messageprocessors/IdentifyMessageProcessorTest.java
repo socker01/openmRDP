@@ -62,7 +62,7 @@ public final class IdentifyMessageProcessorTest {
     private BaseMessage createTestBaseMessage() {
         MessageBody messageBody = new MessageBody(TEST_QUERY, ContentType.PLANT_QUERY);
 
-        return MessageFactory.createIdentifyMessage("?material", "testCallBackUri/testEndpoint", messageBody);
+        return MessageFactory.createIdentifyMessage("?material", "testCallBackUri/testEndpoint", messageBody, 1);
     }
 
 }

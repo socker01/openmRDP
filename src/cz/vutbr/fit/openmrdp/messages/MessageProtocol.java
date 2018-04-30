@@ -4,9 +4,10 @@ package cz.vutbr.fit.openmrdp.messages;
  * @author Jiri Koudelka
  * @since 27.01.2018.
  */
-enum MessageProtocol {
-    HTTP("HTTP","1.0"),
-    MRDP("mRDP","1.0");
+public enum MessageProtocol {
+    HTTP("HTTP", "1.0"),
+    HTTPS("HTTPS", "1.0"),
+    MRDP("mRDP", "1.0");
 
     private final String name;
     private final String version;
@@ -33,5 +34,9 @@ enum MessageProtocol {
 
     private static String getEnumName(){
         return "MessageProtocol";
+    }
+
+    public String getName() {
+        return name;
     }
 }

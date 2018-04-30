@@ -64,6 +64,6 @@ public final class LocateMessageProcessorTest {
     }
 
     private BaseMessage createLocateBaseMessage(String resourceName) {
-        return MessageFactory.createLocateMessage(resourceName, TEST_CALLBACK_URI + "/" + TEST_ENDPOINT);
+        return MessageFactory.createLocateMessage(resourceName, TEST_CALLBACK_URI + "/" + TEST_ENDPOINT, 1);
     }
 }

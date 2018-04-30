@@ -16,6 +16,7 @@ final class ReDELMessageBodyCreator {
     private static final String SCHEMA_LOCATION_HEADER = "xsi:schemaLocation=\"http://www.awareit.com/soam/2006/04/redel\n" +
             "http://www.awareit.com/soam/2006/04/redel.xsd\">";
     private static final String RESOURCE_TAG = "<resource uri";
+    static final String LOCATION_TAG = "<location uri=";
 
     static MessageBody createRedelMessage(List<Resource> resources) {
         StringBuilder builder = new StringBuilder();

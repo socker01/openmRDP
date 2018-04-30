@@ -1,13 +1,18 @@
 package cz.vutbr.fit.openmrdp.communication;
 
+import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
+import cz.vutbr.fit.openmrdp.messages.MessageDeserializer;
+import cz.vutbr.fit.openmrdp.messages.MessageProtocol;
 import cz.vutbr.fit.openmrdp.messages.MessageSerializer;
+import cz.vutbr.fit.openmrdp.messages.address.Address;
+import cz.vutbr.fit.openmrdp.security.AuthorizationLevel;
+import cz.vutbr.fit.openmrdp.server.ServerConfiguration;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.PrintWriter;
+import java.net.*;
 
 /**
  * @author Jiri Koudelka
@@ -29,8 +34,77 @@ public final class MessageSenderImpl implements MessageSender{
     }
 
     @Override
-    public void sendReDELMessage(BaseMessage message) {
-        //TODO: send TCP packet to the specific address and endpoint
+    public void sendReDELMessage(BaseMessage message) throws IOException {
+        URL url;
+        try {
+            String rawUrl = message.getHostAddress().getCompleteAddress();
+            url = new URL(rawUrl);
+        } catch (AddressSyntaxException e) {
+            throw new MalformedURLException(e.getMessage());
+        }
+
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+        connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+        connection.setDoOutput(true);
+        DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
+        writer.writeBytes(message.getMessageBody().getQuery());
+        writer.flush();
+        writer.close();
+    }
+
+    @Override
+    public void sendInformationAboutNonSecureConnection(Address clientAddress, ServerConfiguration serverConfiguration, int sequenceNumber) throws IOException {
+        String hostAddress = clientAddress.getHostAddress();
+
+        int delimiterIndex = hostAddress.indexOf(":");
+
+        String ipAddress = hostAddress.substring(0, delimiterIndex);
+        int port = Integer.parseInt(hostAddress.substring(delimiterIndex+1));
+
+        Socket socket = new Socket(ipAddress, port);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
+        String message = generateConnectionMessage(serverConfiguration, sequenceNumber, MessageProtocol.HTTP, AuthorizationLevel.NONE);
+
+        out.println(message);
+
+        out.close();
+        socket.close();
+    }
+
+    private String generateConnectionMessage(ServerConfiguration serverConfiguration, int sequenceNumber, MessageProtocol http, AuthorizationLevel none) {
+        String message = MessageDeserializer.SERVER_TAG + ": " + serverConfiguration.getIpAddress() + ":" + serverConfiguration.getPort() + ". has information for you.";
+        message += "\n" + MessageDeserializer.SEQUENCE_NUMBER_TAG + ": " + sequenceNumber;
+        message += "\n" + MessageDeserializer.PROTOCOL_TAG + ": " + http.getName();
+        message += "\n" + MessageDeserializer.AUTHORIZATION_TAG + ": " + none.getCode();
+        return message;
+    }
+
+    @Override
+    public void sendInformationAboutSecureConnection(Address clientAddress, ServerConfiguration serverConfiguration, int sequenceNumber) throws IOException {
+        String hostAddress = clientAddress.getHostAddress();
+
+        int delimiterIndex = hostAddress.indexOf(":");
+
+        String ipAddress = hostAddress.substring(0, delimiterIndex);
+        int port = Integer.parseInt(hostAddress.substring(delimiterIndex+1));
+
+        Socket socket = new Socket(ipAddress, port);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
+        String message = generateSecureConnectionMessage(serverConfiguration, sequenceNumber);
+
+        out.println(message);
+
+        out.close();
+        socket.close();
+    }
+
+    private String generateSecureConnectionMessage(ServerConfiguration serverConfiguration, int sequenceNumber) {
+        return generateConnectionMessage(serverConfiguration, sequenceNumber, MessageProtocol.HTTPS, AuthorizationLevel.REQUIRED);
     }
 
     private DatagramPacket createMRDPPacket(BaseMessage message) throws UnknownHostException {

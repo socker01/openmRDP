@@ -10,7 +10,6 @@ public final class Address {
     private final String endPoint;
 
     Address(String hostAddress, String endpoint) {
-
         this.hostAddress = hostAddress;
         this.endPoint = endpoint;
     }
@@ -21,5 +20,9 @@ public final class Address {
 
     public String getEndPoint() {
         return endPoint;
+    }
+
+    public String getCompleteAddress(){
+        return hostAddress + "/" + endPoint;
     }
 }

@@ -5,11 +5,14 @@ package cz.vutbr.fit.openmrdp.messages;
  * @since 26.01.2018.
  */
 public enum HeaderType {
+    ACCESS_CONTROL_ALLOW_ORIGIN("Access-Control-Allow-Origin"),
     NSEQ("NSeq"),
-    CONTENT_TYPE("Content-Type"),
-    CONTENT_LENGTH("Content-Length"),
     CALLBACK_URI("Callback-URI"),
-    HOST("Host");
+    CLIENT_ADDRESS("Client-Address"),
+    CONTENT_LENGTH("Content-Length"),
+    CONTENT_TYPE("Content-Type"),
+    HOST("Host"),
+    USER_AGENT("User-Agent");
 
     private final String headerCode;
 
@@ -33,7 +36,7 @@ public enum HeaderType {
         return "HeaderType";
     }
 
-    String getHeaderCode() {
+    public String getHeaderCode() {
         return headerCode;
     }
 }
