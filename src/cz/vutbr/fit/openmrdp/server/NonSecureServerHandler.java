@@ -29,7 +29,7 @@ public final class NonSecureServerHandler implements HttpHandler {
         String clientAddress = String.valueOf(httpExchange.getRequestHeaders().get(HeaderType.CLIENT_ADDRESS.getHeaderCode()).get(0));
         int sequenceNumber = Integer.parseInt(httpExchange.getRequestHeaders().get(HeaderType.NSEQ.getHeaderCode()).get(0));
 
-        ClientEntry key = new ClientEntry(clientAddress, sequenceNumber - NON_SECURE_GET_MESSAGES_COUNT);
+        ClientEntry key = new ClientEntry(clientAddress.substring(0, clientAddress.length()-1), sequenceNumber - NON_SECURE_GET_MESSAGES_COUNT);
         String response = preparedMessages.get(key).getMessageBody().getQuery();
 
         httpExchange.getResponseHeaders().add(HeaderType.ACCESS_CONTROL_ALLOW_ORIGIN.getHeaderCode(), "*");

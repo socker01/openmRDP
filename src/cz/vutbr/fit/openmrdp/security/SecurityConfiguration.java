@@ -1,14 +1,17 @@
 package cz.vutbr.fit.openmrdp.security;
 
+import com.sun.istack.internal.Nullable;
+
 /**
  * @author Jiri Koudelka
  * @since 29.04.2018
  */
 public final class SecurityConfiguration {
    private final boolean supportSecureConnection;
+   @Nullable
    private final UserAuthorizator userAuthorizator;
 
-    public SecurityConfiguration(boolean supportSecureConnection, UserAuthorizator userAuthorizator) {
+    SecurityConfiguration(boolean supportSecureConnection, @Nullable UserAuthorizator userAuthorizator) {
         this.supportSecureConnection = supportSecureConnection;
         this.userAuthorizator = userAuthorizator;
     }
@@ -17,7 +20,7 @@ public final class SecurityConfiguration {
         return userAuthorizator.authorizeUser(login, password);
     }
 
-    public boolean isSupportSecureConnection() {
+    public boolean isSecureConnectionSupported() {
         return supportSecureConnection;
     }
 }

@@ -12,7 +12,6 @@ public final class MessageReceiverTestImpl implements MessageReceiver{
 
     @Override
     public BaseMessage receiveMessages() throws IOException {
-        //TODO: random return locate or identify message
         return null;
     }
 }

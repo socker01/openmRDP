@@ -14,6 +14,8 @@ public final class ClientEntry {
     private final String address;
     private final int sequenceNumber;
 
+    //TODO doplnit a o cas a promazavat mapu + dopsat do textu DP
+
     public ClientEntry(@NotNull String address, int sequenceNumber) {
         this.address = Preconditions.checkNotNull(address);
         this.sequenceNumber = sequenceNumber;

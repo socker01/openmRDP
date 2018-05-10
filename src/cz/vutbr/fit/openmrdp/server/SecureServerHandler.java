@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public final class SecureServerHandler implements HttpHandler {
 
+    //TODO udrzovat nejen IP a login ale take samotny hash kvuli podvrzeni
+    //TODO platnost 1 hodinu
     private final Map<String, List<String>> authorizedUsers;
     private final UserAuthorizator userAuthorizator;
     private final Map<ClientEntry, BaseMessage> preparedMessages;
@@ -39,7 +41,7 @@ public final class SecureServerHandler implements HttpHandler {
         httpExchange.getResponseHeaders().add(HeaderType.NSEQ.getHeaderCode(), String.valueOf(sequenceNumber + 1));
 
         String authorizationString = getDecodedAuthorizationString(httpExchange);
-        
+
         String response;
         if (authenticateUser(authorizationString, clientAddress)) {
             ClientEntry key = new ClientEntry(clientAddress, sequenceNumber - 2);

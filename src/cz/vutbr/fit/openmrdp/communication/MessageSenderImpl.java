@@ -2,12 +2,8 @@ package cz.vutbr.fit.openmrdp.communication;
 
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
-import cz.vutbr.fit.openmrdp.messages.MessageDeserializer;
-import cz.vutbr.fit.openmrdp.messages.MessageProtocol;
 import cz.vutbr.fit.openmrdp.messages.MessageSerializer;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
-import cz.vutbr.fit.openmrdp.security.AuthorizationLevel;
-import cz.vutbr.fit.openmrdp.server.ServerConfiguration;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -56,55 +52,23 @@ public final class MessageSenderImpl implements MessageSender{
     }
 
     @Override
-    public void sendInformationAboutNonSecureConnection(Address clientAddress, ServerConfiguration serverConfiguration, int sequenceNumber) throws IOException {
+    public void sendInformationAboutConnection(Address clientAddress, String message) throws IOException {
         String hostAddress = clientAddress.getHostAddress();
 
         int delimiterIndex = hostAddress.indexOf(":");
 
         String ipAddress = hostAddress.substring(0, delimiterIndex);
         int port = Integer.parseInt(hostAddress.substring(delimiterIndex+1));
-
+        System.out.println("Send response to :" + ipAddress + " : port :" + port);
         Socket socket = new Socket(ipAddress, port);
+        System.out.println("socket created");
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
-        String message = generateConnectionMessage(serverConfiguration, sequenceNumber, MessageProtocol.HTTP, AuthorizationLevel.NONE);
 
         out.println(message);
 
+        System.out.println("message seded");
         out.close();
         socket.close();
-    }
-
-    private String generateConnectionMessage(ServerConfiguration serverConfiguration, int sequenceNumber, MessageProtocol http, AuthorizationLevel none) {
-        String message = MessageDeserializer.SERVER_TAG + ": " + serverConfiguration.getIpAddress() + ":" + serverConfiguration.getPort() + ". has information for you.";
-        message += "\n" + MessageDeserializer.SEQUENCE_NUMBER_TAG + ": " + sequenceNumber;
-        message += "\n" + MessageDeserializer.PROTOCOL_TAG + ": " + http.getName();
-        message += "\n" + MessageDeserializer.AUTHORIZATION_TAG + ": " + none.getCode();
-        return message;
-    }
-
-    @Override
-    public void sendInformationAboutSecureConnection(Address clientAddress, ServerConfiguration serverConfiguration, int sequenceNumber) throws IOException {
-        String hostAddress = clientAddress.getHostAddress();
-
-        int delimiterIndex = hostAddress.indexOf(":");
-
-        String ipAddress = hostAddress.substring(0, delimiterIndex);
-        int port = Integer.parseInt(hostAddress.substring(delimiterIndex+1));
-
-        Socket socket = new Socket(ipAddress, port);
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
-        String message = generateSecureConnectionMessage(serverConfiguration, sequenceNumber);
-
-        out.println(message);
-
-        out.close();
-        socket.close();
-    }
-
-    private String generateSecureConnectionMessage(ServerConfiguration serverConfiguration, int sequenceNumber) {
-        return generateConnectionMessage(serverConfiguration, sequenceNumber, MessageProtocol.HTTPS, AuthorizationLevel.REQUIRED);
     }
 
     private DatagramPacket createMRDPPacket(BaseMessage message) throws UnknownHostException {
@@ -112,7 +76,7 @@ public final class MessageSenderImpl implements MessageSender{
         byte[] messageByteArray = rawMessage.getBytes();
 
         DatagramPacket packet = new DatagramPacket(messageByteArray, messageByteArray.length);
-        packet.setAddress(InetAddress.getByName(NetworkCommunicationConstants.BROADCAST_ADDRESS));
+        packet.setAddress(InetAddress.getByName(NetworkCommunicationConstants.MULTICAST_ADDRESS));
         packet.setPort(NetworkCommunicationConstants.PORT);
 
         return packet;

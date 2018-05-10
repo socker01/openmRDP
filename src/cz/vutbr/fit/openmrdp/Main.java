@@ -1,23 +1,13 @@
 package cz.vutbr.fit.openmrdp;
 
-import cz.vutbr.fit.openmrdp.api.OpenmRDPClientAPI;
-import cz.vutbr.fit.openmrdp.api.OpenmRDPClientApiImpl;
 import cz.vutbr.fit.openmrdp.api.OpenmRDPServerAPI;
 import cz.vutbr.fit.openmrdp.api.OpenmRDPServerAPIImpl;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
-import cz.vutbr.fit.openmrdp.messageprocessors.IdentifyMessageProcessor;
-import cz.vutbr.fit.openmrdp.messages.BaseMessage;
-import cz.vutbr.fit.openmrdp.messages.ContentType;
-import cz.vutbr.fit.openmrdp.messages.MessageBody;
-import cz.vutbr.fit.openmrdp.messages.MessageFactory;
-import cz.vutbr.fit.openmrdp.model.InfoManager;
-import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
-import cz.vutbr.fit.openmrdp.model.ontology.OntologyProdService;
+import cz.vutbr.fit.openmrdp.logger.MrdpTestLoggerImpl;
 import cz.vutbr.fit.openmrdp.security.SecurityConfiguration;
+import cz.vutbr.fit.openmrdp.security.SecurityConfigurationFactory;
 import cz.vutbr.fit.openmrdp.server.ServerConfiguration;
-
-import java.net.ServerSocket;
 
 public class Main {
 
@@ -44,9 +34,9 @@ public class Main {
 
 //        OpenmRDPClientAPI api = new OpenmRDPClientApiImpl("testCallbackURI");
 
-        SecurityConfiguration securityConfiguration = new SecurityConfiguration(false, null);
-        ServerConfiguration serverConfiguration = new ServerConfiguration("127.0.0.1", 2774);
-        OpenmRDPServerAPI api = new OpenmRDPServerAPIImpl(securityConfiguration, serverConfiguration);
+        SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createNonSecureSecurityConfiguration();
+        ServerConfiguration serverConfiguration = new ServerConfiguration("192.168.1.53", 2774);
+        OpenmRDPServerAPI api = new OpenmRDPServerAPIImpl(securityConfiguration, serverConfiguration, new MrdpTestLoggerImpl());
 
         try {
             api.receiveMessages();

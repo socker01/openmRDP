@@ -16,7 +16,7 @@ public final class MessageReceiverImpl implements MessageReceiver {
 
     @Override
     public BaseMessage receiveMessages() throws IOException {
-        InetAddress ipAddress = InetAddress.getByName(NetworkCommunicationConstants.BROADCAST_ADDRESS);
+        InetAddress ipAddress = InetAddress.getByName(NetworkCommunicationConstants.MULTICAST_ADDRESS);
         MulticastSocket socket = createAndConfigureSocket(ipAddress);
 
         DatagramPacket packet = new DatagramPacket(new byte[NetworkCommunicationConstants.MAX_UDP_DATAGRAM_SIZE], NetworkCommunicationConstants.MAX_UDP_DATAGRAM_SIZE);

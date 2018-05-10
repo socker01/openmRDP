@@ -15,12 +15,6 @@ import java.util.Scanner;
  */
 public final class MessageDeserializer {
 
-    //TODO: move to the different class
-    public static final String SERVER_TAG = "SERVER";
-    public static final String SEQUENCE_NUMBER_TAG = "NSEQ";
-    public static final String PROTOCOL_TAG = "PROTOCOL";
-    public static final String AUTHORIZATION_TAG = "AUTHORIZATION";
-
     public static BaseMessage deserializeMessage(String serializedMessage) throws MessageDeserializeException {
         try {
             return deserialize(serializedMessage);
@@ -121,7 +115,7 @@ public final class MessageDeserializer {
 
     @NotNull
     public static MRDPServerResponseMessage deserializeMRDPServerResponseMessage(String message) {
-        checkMessageValidity(message);
+        MessageValidator.validateMRDPServerResponseMessage(message);
         String serverAddress = getServerAddress(message);
         MessageProtocol protocol = getCommunicationProtocol(message);
         AuthorizationLevel authorizationLevel = getAuthorizationLevel(message);
@@ -129,17 +123,9 @@ public final class MessageDeserializer {
         return new MRDPServerResponseMessage(serverAddress, protocol, authorizationLevel);
     }
 
-    private static void checkMessageValidity(String message) {
-        if (!message.contains(SERVER_TAG)
-                || !message.contains(PROTOCOL_TAG)
-                || !message.contains(AUTHORIZATION_TAG)) {
-            throw new MessageDeserializeException("MRDPServerResponseMessage doesn't have expected body.");
-        }
-    }
-
     @NotNull
     private static MessageProtocol getCommunicationProtocol(String message) {
-        if (message.contains(PROTOCOL_TAG + ": HTTPS")) {
+        if (message.contains(MessageFactory.PROTOCOL_TAG + ": HTTPS")) {
             return MessageProtocol.HTTPS;
         } else {
             return MessageProtocol.HTTP;
@@ -148,7 +134,7 @@ public final class MessageDeserializer {
 
     @NotNull
     private static AuthorizationLevel getAuthorizationLevel(String message) {
-        if (message.contains(AUTHORIZATION_TAG + ": " + AuthorizationLevel.NONE.getCode())) {
+        if (message.contains(MessageFactory.AUTHORIZATION_TAG + ": " + AuthorizationLevel.NONE.getCode())) {
             return AuthorizationLevel.NONE;
         } else {
             return AuthorizationLevel.REQUIRED;
@@ -157,7 +143,7 @@ public final class MessageDeserializer {
 
     @NotNull
     private static String getServerAddress(String message) {
-        String parsedMessage = message.substring(SERVER_TAG.length() + 2);
+        String parsedMessage = message.substring(MessageFactory.SERVER_TAG.length() + 2);
         int indexOfEnd = parsedMessage.indexOf(". ");
 
         return parsedMessage.substring(0, indexOfEnd);

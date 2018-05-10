@@ -7,6 +7,7 @@ package cz.vutbr.fit.openmrdp.server;
 public final class ServerConfiguration {
     private final String ipAddress;
     private final int port;
+    //TODO: add security configuration
 
     public ServerConfiguration(String ipAddress, int port) {
         this.ipAddress = ipAddress;

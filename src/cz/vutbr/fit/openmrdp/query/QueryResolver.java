@@ -35,7 +35,7 @@ public final class QueryResolver {
         Set<QueryVariable> variables = QueryVariableProcessor.identifyVariables(query.getQueryTriples());
         Map<RDFTriple, Set<RDFTriple>> matchingPatterns = findAllMatchingPatterns(query.getQueryTriples());
 
-        //TODO: upravit asi
+        //TODO: maybe some refactor
         if (setPossibleValuesToVariables(variables, matchingPatterns)) {
             return Collections.emptyList();
         }

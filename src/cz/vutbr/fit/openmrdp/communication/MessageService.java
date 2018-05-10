@@ -3,7 +3,6 @@ package cz.vutbr.fit.openmrdp.communication;
 import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
-import cz.vutbr.fit.openmrdp.server.ServerConfiguration;
 
 import java.io.IOException;
 
@@ -41,11 +40,7 @@ public final class MessageService {
         }
     }
 
-    public void sendInfoAboutSecureConnection(Address clientAddress, ServerConfiguration serverConfiguration, int sequenceNumber) throws IOException {
-        messageSender.sendInformationAboutSecureConnection(clientAddress, serverConfiguration, sequenceNumber);
-    }
-
-    public void sendInfoAboutNonSecureConnection(Address clientAddress, ServerConfiguration serverConfiguration, int sequenceNumber) throws IOException {
-        messageSender.sendInformationAboutNonSecureConnection(clientAddress, serverConfiguration, sequenceNumber);
+    public void sendInfoAboutConnection(Address clientAddress, String message) throws IOException {
+        messageSender.sendInformationAboutConnection(clientAddress, message);
     }
 }

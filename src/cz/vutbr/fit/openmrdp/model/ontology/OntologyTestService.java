@@ -15,7 +15,7 @@ public class OntologyTestService implements OntologyService {
     public OntologyInformation loadOntology() {
         String levelUpPredicate = "<loc:locatedIn>";
         String levelDownPredicate = "<loc:contains>";
-        String delimiter = "\\";
+        String delimiter = "/";
 
         List<Pair<String, String>> transitivePairs = createTransitivePairs();
 

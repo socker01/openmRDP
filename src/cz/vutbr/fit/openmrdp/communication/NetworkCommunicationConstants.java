@@ -7,6 +7,6 @@ package cz.vutbr.fit.openmrdp.communication;
 final class NetworkCommunicationConstants {
 
     static final int PORT = 2773;
-    static final String BROADCAST_ADDRESS = "224.0.24.1";
+    static final String MULTICAST_ADDRESS = "224.0.24.1";
     static final int MAX_UDP_DATAGRAM_SIZE = 1024;
 }

@@ -24,11 +24,11 @@ public final class OpenmRDPServerAPITestImpl implements OpenmRDPServerAPI{
 
     @Override
     public void addInformationToInformationBase(RDFTriple information) {
-        //TODO implement me
+        infoManager.addInformationToBase(information);
     }
 
     @Override
     public void removeInformationFromInformationBase(RDFTriple information) {
-        //TODO implement me
+        infoManager.removeInformationFromBase(information);
     }
 }

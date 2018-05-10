@@ -2,7 +2,6 @@ package cz.vutbr.fit.openmrdp.communication;
 
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
-import cz.vutbr.fit.openmrdp.server.ServerConfiguration;
 
 import java.io.IOException;
 
@@ -16,7 +15,5 @@ interface MessageSender {
 
     void sendReDELMessage(BaseMessage message) throws IOException;
 
-    void sendInformationAboutNonSecureConnection(Address clientAddress, ServerConfiguration serverConfiguration, int sequenceNumber) throws IOException;
-
-    void sendInformationAboutSecureConnection(Address clientAddress, ServerConfiguration serverConfiguration, int sequenceNumber) throws IOException;
+    void sendInformationAboutConnection(Address clientAddress, String message) throws IOException;
 }
