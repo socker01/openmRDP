@@ -6,7 +6,7 @@ import cz.vutbr.fit.openmrdp.messages.MessageFactory;
 import cz.vutbr.fit.openmrdp.messages.dto.ReDELResponseDTO;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.base.Resource;
-import cz.vutbr.fit.openmrdp.server.ServerAddressRetriever;
+import cz.vutbr.fit.openmrdp.server.AddressRetriever;
 
 import java.net.SocketException;
 import java.util.Collections;
@@ -29,7 +29,7 @@ public final class LocateMessageProcessor implements MessageProcessor{
         try {
             resourceLocation = infoManager.findResourceLocation(locateMessage.getResourceName());
             if(resourceLocation != null){
-                resourceLocation = ServerAddressRetriever.getLocalIpAddress() + "/" + resourceLocation;
+                resourceLocation = AddressRetriever.getLocalIpAddress() + "/" + resourceLocation;
             }
         } catch (SocketException e) {
             resourceLocation = infoManager.findResourceLocation(locateMessage.getResourceName());

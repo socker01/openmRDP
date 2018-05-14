@@ -21,7 +21,6 @@ import java.util.Set;
  * @author Jiri Koudelka
  * @since 01.03.2018.
  */
-//TODO: add exception checks
 public final class InformationBaseProdService implements InformationBaseService {
 
     private static final String INFORMATION_BASE_ROOT_NODE = "InformationBase";
@@ -33,17 +32,21 @@ public final class InformationBaseProdService implements InformationBaseService 
 
     @Override
     public Set<RDFTriple> loadInformationBase() {
-        File xmlFile = new File(INFORMATION_BASE_FILE_PATH);
-        if (!xmlFile.exists()) {
+        try {
+            File xmlFile = new File(INFORMATION_BASE_FILE_PATH);
+            if (!xmlFile.exists()) {
+                return Sets.newHashSet();
+            }
+
+            Document document = getDocument(xmlFile);
+
+            Element rootNode = document.getRootElement();
+            List list = rootNode.getChildren(INFORMATION_NODE);
+
+            return loadTriplesFromDocument(list);
+        } catch (InformationBaseException ibe){
             return Sets.newHashSet();
         }
-
-        Document document = getDocument(xmlFile);
-
-        Element rootNode = document.getRootElement();
-        List list = rootNode.getChildren(INFORMATION_NODE);
-
-        return loadTriplesFromDocument(list);
     }
 
     private Document getDocument(File xmlFile) {

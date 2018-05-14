@@ -10,5 +10,7 @@ public interface OpenmRDPClientAPI {
 
     String locateResource(String resourceName) throws NetworkCommunicationException;
 
+    String locateResource(String resourceName, String login, String password) throws NetworkCommunicationException;
+
     String identifyResource(String query);
 }

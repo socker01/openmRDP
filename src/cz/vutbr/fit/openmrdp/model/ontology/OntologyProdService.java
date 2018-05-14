@@ -17,7 +17,6 @@ import java.util.List;
  * @author Jiri Koudelka
  * @since 12.04.2018
  */
-//TODO: add exception checks
 public final class OntologyProdService implements OntologyService {
 
     private static final String LEVEL_UP_PREDICATE = "LevelUpPredicate";
@@ -31,39 +30,48 @@ public final class OntologyProdService implements OntologyService {
 
     @Override
     public OntologyInformation loadOntology() {
-        File ontologyXml = new File(ONTOLOGY_FILE_PATH);
-        if (!ontologyXml.exists()) {
-            return createEmptyOntology();
+        try {
+            File ontologyXml = new File(ONTOLOGY_FILE_PATH);
+            if (!ontologyXml.exists()) {
+                return createEmptyOntology();
+            }
+
+            Document document = getDocument(ontologyXml);
+
+            Element rootNode = document.getRootElement();
+            String levelUpPredicate = rootNode.getChildText(LEVEL_UP_PREDICATE);
+            String levelDownPredicate = rootNode.getChildText(LEVEL_DOWN_PREDICATE);
+            String delimiter = rootNode.getChildText(DELIMITER);
+
+            Element transitivePredicatesNode = rootNode.getChild(TRANSITIVE_PREDICATES);
+            List transitivePredicatesList = transitivePredicatesNode.getChildren(TRANSITIVE_PREDICATE);
+
+            List<Pair<String, String>> transitivePredicates = createTransitivePredicates(transitivePredicatesList);
+
+            return new OntologyInformation.Builder()
+                    .withDelimiter(delimiter)
+                    .withLevelDownPredicate(levelDownPredicate)
+                    .withLevelUpPredicate(levelUpPredicate)
+                    .withTransitivePredicates(transitivePredicates)
+                    .build();
+        }catch (OntologyException oe){
+            return new OntologyInformation.Builder()
+                    .withDelimiter(null)
+                    .withLevelDownPredicate(null)
+                    .withLevelUpPredicate(null)
+                    .withTransitivePredicates(null)
+                    .build();
         }
-
-        Document document = getDocument(ontologyXml);
-
-        Element rootNode = document.getRootElement();
-        String levelUpPredicate = rootNode.getChildText(LEVEL_UP_PREDICATE);
-        String levelDownPredicate = rootNode.getChildText(LEVEL_DOWN_PREDICATE);
-        String delimiter = rootNode.getChildText(DELIMITER);
-
-        Element transitivePredicatesNode = rootNode.getChild(TRANSITIVE_PREDICATES);
-        List transitivePredicatesList = transitivePredicatesNode.getChildren(TRANSITIVE_PREDICATE);
-
-        List<Pair<String, String>> transitivePredicates = createTransitivePredicates(transitivePredicatesList);
-
-        return new OntologyInformation.Builder()
-                .withDelimiter(delimiter)
-                .withLevelDownPredicate(levelDownPredicate)
-                .withLevelUpPredicate(levelUpPredicate)
-                .withTransitivePredicates(transitivePredicates)
-                .build();
     }
 
     private List<Pair<String, String>> createTransitivePredicates(List transitivePredicatesList) {
         List<Pair<String, String>> transitivePredicates = new ArrayList<>();
 
         for (Object transitivePredicate : transitivePredicatesList){
-            Element transPredElement = (Element) transitivePredicate;
+            Element transPredicateElement = (Element) transitivePredicate;
 
-            String parent = transPredElement.getChildText(PARENT);
-            String transitiveRelation = transPredElement.getChildText(TRANSITIVE_RELATION);
+            String parent = transPredicateElement.getChildText(PARENT);
+            String transitiveRelation = transPredicateElement.getChildText(TRANSITIVE_RELATION);
 
             Pair<String, String> transitiveRelationPair = new Pair<>(parent, transitiveRelation);
             transitivePredicates.add(transitiveRelationPair);

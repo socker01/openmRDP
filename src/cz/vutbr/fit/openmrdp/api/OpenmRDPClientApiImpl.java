@@ -6,19 +6,19 @@ import cz.vutbr.fit.openmrdp.communication.MessageService;
 import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
 import cz.vutbr.fit.openmrdp.logger.MrdpLogger;
 import cz.vutbr.fit.openmrdp.messages.*;
+import cz.vutbr.fit.openmrdp.messages.address.AddressParser;
+import cz.vutbr.fit.openmrdp.server.AddressRetriever;
 import cz.vutbr.fit.openmrdp.server.MessageType;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.URL;
+import java.net.*;
+import java.util.Base64;
 
 /**
  * @author Jiri Koudelka
  * @since 17.03.2018.
  */
-//TODO add methods with password
 public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
     private final MessageService messageService;
@@ -35,71 +35,118 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
     @Override
     public String locateResource(String resourceName) throws NetworkCommunicationException {
-        BaseMessage locateMessage = MessageFactory.createLocateMessage(resourceName, callbackURI, getNextSequenceNumber());
-        messageService.sendMRDPMessage(locateMessage);
-        sequenceNumber++;
+        createAndSendLocateMessage(resourceName);
 
         try {
-            String response = getResponseFromServer(logger);
-            ConnectionInformationMessage responseMessage = MessageDeserializer.deserializeMRDPServerResponseMessage(response);
+            ConnectionInformationMessage responseMessage = receiveConnectionInformation();
 
-            HttpURLConnection connection;
-            try {
-//                URL url = new URL("http://" + responseMessage.getServerAddress() + "/auth");
-                URL url = new URL("http",   "192.168.1.53", 27774, "/auth");
-                logger.logDebug("url: " + url.toString());
-                connection = (HttpURLConnection) url.openConnection();
-            }catch (NullPointerException e){
-                return "fuu1u124";
-            }
+            URL url = createServerURL(responseMessage);
 
-            logger.logDebug("connection created." + responseMessage.getServerAddress());
-            sequenceNumber++;
-            connection.setRequestMethod(MessageType.GET.getCode());
-            connection.setRequestProperty(HeaderType.USER_AGENT.getHeaderCode(), "Mozilla/5.0");
-            connection.setRequestProperty(HeaderType.NSEQ.getHeaderCode(), String.valueOf(sequenceNumber));
-            connection.setRequestProperty(HeaderType.CLIENT_ADDRESS.getHeaderCode(), callbackURI);
-            connection.setRequestProperty("Host", "192.168.1.53");
+            HttpURLConnection connection = initializeConnection(url);
 
-            logger.logDebug("headers setted" + responseMessage.getServerAddress());
-            try{
-                connection.getResponseCode();
-            } catch (NullPointerException e){
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-                return sw.toString();
-            }
+            connection.getResponseCode();
+            String mRDPResponseRaw = getConnectionInformationString(connection.getInputStream());
 
-            logger.logDebug("response code." + responseMessage.getServerAddress());
-
-            String mRDPResponseRaw;
-            try {
-                mRDPResponseRaw = getMRDPResponseFromServer(connection.getInputStream());
-            }
-            catch (NullPointerException e){
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-                return sw.toString();
-            }
-            logger.logDebug("get data from message");
-
-            try {
-                return ReDELMessageParser.parseLocationFromRedelMessage(mRDPResponseRaw);
-            } catch (NullPointerException e){
-                return "fuuu";
-            }
+            return ReDELMessageParser.parseLocationFromRedelMessage(mRDPResponseRaw);
         } catch (InterruptedIOException e) {
             return "No info about resource: " + resourceName;
         } catch (IOException e) {
-            logger.logError("e1" + e.getMessage());
-            logger.logError("e2" + e.toString());
-            return  e.getMessage();
+            logger.logError("Message: " + e.getMessage());
+            logger.logError("Body: " + e.toString());
+            return e.getMessage();
         }
     }
 
-    private String getMRDPResponseFromServer(InputStream inputStream) throws IOException {
+    @Override
+    public String locateResource(String resourceName, String login, String password) throws NetworkCommunicationException {
+        createAndSendLocateMessage(resourceName);
+        try {
+            ConnectionInformationMessage responseMessage = receiveConnectionInformation();
+
+            URL url = createServerURL(responseMessage);
+
+            HttpsURLConnection connection = initializeSecureConnection(url, login, password);
+
+            connection.getResponseCode();
+            String mRDPResponseRaw = getConnectionInformationString(connection.getInputStream());
+
+            return ReDELMessageParser.parseLocationFromRedelMessage(mRDPResponseRaw);
+        } catch (InterruptedIOException e) {
+            return "No info about resource: " + resourceName;
+        } catch (IOException e) {
+            logger.logError("Message: " + e.getMessage());
+            logger.logError("Body: " + e.toString());
+            return e.getMessage();
+        }
+    }
+
+    private void createAndSendLocateMessage(String resourceName) throws NetworkCommunicationException {
+        BaseMessage locateMessage = MessageFactory.createLocateMessage(resourceName, callbackURI, getNextSequenceNumber());
+        messageService.sendMRDPMessage(locateMessage);
+        sequenceNumber++;
+    }
+
+    private ConnectionInformationMessage receiveConnectionInformation() throws IOException {
+        String response = getResponseFromServer();
+
+        return MessageDeserializer.deserializeMRDPServerResponseMessage(response);
+    }
+
+    private URL createServerURL(ConnectionInformationMessage responseMessage) throws MalformedURLException {
+        String serverAddress = responseMessage.getServerAddress();
+
+        String serverURL = AddressParser.parseAddressWithoutPort(serverAddress);
+        Integer port = AddressParser.parsePort(serverAddress);
+        String endpoint = AddressParser.parseEndpoint(serverAddress);
+
+        URL url;
+        if (port != null) {
+            url = new URL(responseMessage.getMessageProtocol().getName(), serverURL, port, endpoint);
+        } else {
+            url = new URL(responseMessage.getMessageProtocol().getName(), serverURL, endpoint);
+        }
+
+        return url;
+    }
+
+    private HttpURLConnection initializeConnection(URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        sequenceNumber++;
+        connection.setRequestMethod(MessageType.GET.getCode());
+        connection.setRequestProperty(HeaderType.USER_AGENT.getHeaderCode(), "Mozilla/5.0");
+        connection.setRequestProperty(HeaderType.NSEQ.getHeaderCode(), String.valueOf(sequenceNumber));
+        connection.setRequestProperty(HeaderType.CLIENT_ADDRESS.getHeaderCode(), callbackURI);
+        connection.setRequestProperty(HeaderType.HOST.getHeaderCode(), AddressRetriever.getLocalIpAddress());
+
+        return connection;
+    }
+
+    private HttpsURLConnection initializeSecureConnection(URL url, String login, String password) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+        sequenceNumber++;
+        connection.setRequestMethod(MessageType.GET.getCode());
+        connection.setRequestProperty(HeaderType.USER_AGENT.getHeaderCode(), "Mozilla/5.0");
+        connection.setRequestProperty(HeaderType.NSEQ.getHeaderCode(), String.valueOf(sequenceNumber));
+        connection.setRequestProperty(HeaderType.CLIENT_ADDRESS.getHeaderCode(), callbackURI);
+        connection.setRequestProperty(HeaderType.HOST.getHeaderCode(), AddressRetriever.getLocalIpAddress());
+        connection.setRequestProperty(HeaderType.AUTHORIZATION.getHeaderCode(), encodeCredentials(login, password));
+
+        return connection;
+    }
+
+    private String encodeCredentials(String login, String password) {
+        try {
+            return Base64.getEncoder().encodeToString((login + ":" + password).getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            logger.logError(e.getMessage());
+        }
+
+        return null;
+    }
+
+    private String getConnectionInformationString(InputStream inputStream) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         String inputLine;
         StringBuilder response = new StringBuilder();
@@ -112,24 +159,23 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         return response.toString();
     }
 
-    private String getResponseFromServer(MrdpLogger logger) throws IOException {
+    private String getResponseFromServer() throws IOException {
         ServerSocket serverSocket = new ServerSocket(27741);
-        logger.logDebug("socket created");
         serverSocket.setSoTimeout(10000);
-        Socket clientSocket;
+        Socket clientSocket = null;
+        String serverResponse;
         try {
             clientSocket = serverSocket.accept();
-        }catch (InterruptedIOException exc){
-            logger.logError("No response from servers.");
+            serverResponse = parseResponse(clientSocket);
+        } catch (InterruptedIOException exc) {
+            logger.logInfo("No response from servers.");
             throw exc;
+        } finally {
+            if (clientSocket != null) {
+                clientSocket.close();
+            }
+            serverSocket.close();
         }
-        logger.logDebug("socket accept");
-
-        String serverResponse = parseResponse(clientSocket);
-        logger.logDebug("response parsed");
-
-        clientSocket.close();
-        serverSocket.close();
 
         return serverResponse;
     }

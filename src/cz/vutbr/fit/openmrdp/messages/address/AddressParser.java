@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.messages.address;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 
 /**
@@ -39,5 +41,59 @@ public final class AddressParser {
         String endPoint = hostAddress.substring(endpointDelimiterIndex + 1);
 
         return new Address(hostName, endPoint);
+    }
+
+    @Nullable
+    public static Integer parsePort(@NotNull String address){
+        address = removeProtocol(address);
+        address = removeEndpoint(address);
+        int delimiterIndex = address.indexOf(":");
+
+        if(delimiterIndex != -1){
+            return Integer.parseInt(address.substring(delimiterIndex + 1));
+        }
+
+        return null;
+    }
+
+    private static String removeEndpoint(String address) {
+        int endpointDelimiter = address.indexOf("/");
+        if (endpointDelimiter != -1){
+            return address.substring(0, endpointDelimiter);
+        }
+
+        return address;
+    }
+
+    public static String parseAddressWithoutPort(@NotNull String address){
+        address = removeProtocol(address);
+
+        int delimiterIndex = address.indexOf(":");
+        if (delimiterIndex != -1){
+            return address.substring(0, delimiterIndex);
+        }
+
+        return address;
+    }
+
+    public static String parseEndpoint(@NotNull String address){
+        address = removeProtocol(address);
+
+        int endpointDelimiter = address.indexOf("/");
+        if (endpointDelimiter != -1){
+            return address.substring(endpointDelimiter);
+        }
+
+        return "/";
+
+    }
+
+    private static String removeProtocol(@NotNull String address) {
+        int protocolDelimiter = address.indexOf("//");
+        if (protocolDelimiter != -1){
+            return address.substring(protocolDelimiter + 2);
+        }
+
+        return address;
     }
 }

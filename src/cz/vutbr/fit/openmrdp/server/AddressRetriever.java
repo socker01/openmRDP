@@ -7,7 +7,7 @@ import java.util.Enumeration;
  * @author Jiri Koudelka
  * @since 10.05.2018
  */
-public final class ServerAddressRetriever {
+public final class AddressRetriever {
 
     public static String getLocalIpAddress() throws SocketException {
         String resultIpv6 = "";

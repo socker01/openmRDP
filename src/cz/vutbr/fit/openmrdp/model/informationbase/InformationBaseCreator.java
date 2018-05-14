@@ -17,7 +17,7 @@ public final class InformationBaseCreator {
 
     private static final String DEFAULT_LEVEL_UP_PATH_PREDICATE = "<loc:locatedIn>";
     private static final String DEFAULT_LEVEL_DOWN_PATH_PREDICATE = "<loc:contains>";
-    private static final String DEFAULT_DELIMITER = "\\";
+    private static final String DEFAULT_DELIMITER = "/";
 
     private final InformationBaseService informationBaseService;
     private OntologyInformation ontologyInformation;
