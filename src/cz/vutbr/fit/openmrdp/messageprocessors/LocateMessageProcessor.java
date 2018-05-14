@@ -27,7 +27,10 @@ public final class LocateMessageProcessor implements MessageProcessor{
     public BaseMessage processMessage(BaseMessage locateMessage) throws AddressSyntaxException {
         String resourceLocation;
         try {
-            resourceLocation = ServerAddressRetriever.getLocalIpAddress() + "/" + infoManager.findResourceLocation(locateMessage.getResourceName());
+            resourceLocation = infoManager.findResourceLocation(locateMessage.getResourceName());
+            if(resourceLocation != null){
+                resourceLocation = ServerAddressRetriever.getLocalIpAddress() + "/" + resourceLocation;
+            }
         } catch (SocketException e) {
             resourceLocation = infoManager.findResourceLocation(locateMessage.getResourceName());
         }

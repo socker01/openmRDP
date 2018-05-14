@@ -18,6 +18,7 @@ import java.net.URL;
  * @author Jiri Koudelka
  * @since 17.03.2018.
  */
+//TODO add methods with password
 public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
     private final MessageService messageService;
@@ -40,12 +41,12 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
         try {
             String response = getResponseFromServer(logger);
-            MRDPServerResponseMessage responseMessage = MessageDeserializer.deserializeMRDPServerResponseMessage(response);
+            ConnectionInformationMessage responseMessage = MessageDeserializer.deserializeMRDPServerResponseMessage(response);
 
             HttpURLConnection connection;
             try {
 //                URL url = new URL("http://" + responseMessage.getServerAddress() + "/auth");
-                URL url = new URL("http",   "192.168.1.53", 2774, "/auth");
+                URL url = new URL("http",   "192.168.1.53", 27774, "/auth");
                 logger.logDebug("url: " + url.toString());
                 connection = (HttpURLConnection) url.openConnection();
             }catch (NullPointerException e){

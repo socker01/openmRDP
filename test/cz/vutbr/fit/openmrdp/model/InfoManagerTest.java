@@ -68,7 +68,7 @@ public final class InfoManagerTest {
     public void addInformationToInformationModel(){
         infoManager.addInformationToBase(TEST_TRIPLE_TO_ADD);
 
-        assertThat(infoManager.findResourceLocation("urn:uuid:test"), is("urn:uuid:room1\\urn:uuid:box1\\urn:uuid:fuel1\\urn:uuid:test"));
+        assertThat(infoManager.findResourceLocation("urn:uuid:test"), is("urn:uuid:room1/urn:uuid:box1/urn:uuid:fuel1/urn:uuid:test"));
 
         Set<RDFTriple> matchingPattern = infoManager.findMatchingPatterns(new RDFTriple("?item", "<loc:locatedIn>", "?room"));
 

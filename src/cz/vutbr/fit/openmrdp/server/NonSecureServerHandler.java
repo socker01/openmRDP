@@ -8,6 +8,7 @@ import cz.vutbr.fit.openmrdp.messages.HeaderType;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Instant;
 import java.util.Map;
 
 /**
@@ -29,7 +30,7 @@ public final class NonSecureServerHandler implements HttpHandler {
         String clientAddress = String.valueOf(httpExchange.getRequestHeaders().get(HeaderType.CLIENT_ADDRESS.getHeaderCode()).get(0));
         int sequenceNumber = Integer.parseInt(httpExchange.getRequestHeaders().get(HeaderType.NSEQ.getHeaderCode()).get(0));
 
-        ClientEntry key = new ClientEntry(clientAddress.substring(0, clientAddress.length()-1), sequenceNumber - NON_SECURE_GET_MESSAGES_COUNT);
+        ClientEntry key = new ClientEntry(clientAddress.substring(0, clientAddress.length()-1), sequenceNumber - NON_SECURE_GET_MESSAGES_COUNT, Instant.now());
         String response = preparedMessages.get(key).getMessageBody().getQuery();
 
         httpExchange.getResponseHeaders().add(HeaderType.ACCESS_CONTROL_ALLOW_ORIGIN.getHeaderCode(), "*");

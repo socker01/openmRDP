@@ -1,14 +1,28 @@
 package cz.vutbr.fit.openmrdp.security;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Jiri Koudelka
  * @since 25.04.2018
  */
 public final class UserAuthorizatorTestImpl implements UserAuthorizator {
 
-    //TODO static array of users
+    private static final Map<String, String> users = new HashMap<>();
+    static {
+        users.put("testUser", "Password123");
+        users.put("testUser1", "pass123456");
+    }
+
     @Override
     public boolean authorizeUser(String login, String password) {
-        return login.equals("testUser") && password.equals("Password123");
+        for (String userName : users.keySet()){
+            if(users.get(userName).equals(password)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

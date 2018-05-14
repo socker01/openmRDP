@@ -18,7 +18,7 @@ final class MessageValidator {
         if (!message.contains(MessageFactory.SERVER_TAG)
                 || !message.contains(MessageFactory.PROTOCOL_TAG)
                 || !message.contains(MessageFactory.AUTHORIZATION_TAG)) {
-            throw new MessageDeserializeException("MRDPServerResponseMessage doesn't have expected body.");
+            throw new MessageDeserializeException("ConnectionInformationMessage doesn't have expected body.");
         }
     }
 }

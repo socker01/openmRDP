@@ -32,7 +32,7 @@ public final class IdentifyMessageProcessorTest {
             "http://www.awareit.com/soam/2006/04/redel.xsd\">\n" +
             "\n" +
             "<resource uri=\"urn:uuid:fuel1\">\n" +
-            "<location url=\"urn:uuid:room1\\urn:uuid:box1\\urn:uuid:fuel1\"/>\n" +
+            "<location url=\"urn:uuid:room1/urn:uuid:box1/urn:uuid:fuel1\"/>\n" +
             "</resource>\n" +
             "\n" +
             "</redel>\n";

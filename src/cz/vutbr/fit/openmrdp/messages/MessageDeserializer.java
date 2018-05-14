@@ -114,13 +114,13 @@ public final class MessageDeserializer {
     }
 
     @NotNull
-    public static MRDPServerResponseMessage deserializeMRDPServerResponseMessage(String message) {
+    public static ConnectionInformationMessage deserializeMRDPServerResponseMessage(String message) {
         MessageValidator.validateMRDPServerResponseMessage(message);
         String serverAddress = getServerAddress(message);
         MessageProtocol protocol = getCommunicationProtocol(message);
         AuthorizationLevel authorizationLevel = getAuthorizationLevel(message);
 
-        return new MRDPServerResponseMessage(serverAddress, protocol, authorizationLevel);
+        return new ConnectionInformationMessage(serverAddress, protocol, authorizationLevel);
     }
 
     @NotNull

@@ -35,8 +35,8 @@ public class Main {
 //        OpenmRDPClientAPI api = new OpenmRDPClientApiImpl("testCallbackURI");
 
         SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createNonSecureSecurityConfiguration();
-        ServerConfiguration serverConfiguration = new ServerConfiguration("192.168.1.53", 2774);
-        OpenmRDPServerAPI api = new OpenmRDPServerAPIImpl(securityConfiguration, serverConfiguration, new MrdpTestLoggerImpl());
+        ServerConfiguration serverConfiguration = new ServerConfiguration("192.168.1.53", 27774, securityConfiguration);
+        OpenmRDPServerAPI api = new OpenmRDPServerAPIImpl(serverConfiguration, new MrdpTestLoggerImpl());
 
         try {
             api.receiveMessages();

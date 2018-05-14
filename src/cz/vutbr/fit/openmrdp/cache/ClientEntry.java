@@ -3,6 +3,7 @@ package cz.vutbr.fit.openmrdp.cache;
 import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
 
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -13,12 +14,16 @@ public final class ClientEntry {
     @NotNull
     private final String address;
     private final int sequenceNumber;
+    private Instant created;
 
-    //TODO doplnit a o cas a promazavat mapu + dopsat do textu DP
-
-    public ClientEntry(@NotNull String address, int sequenceNumber) {
+    public ClientEntry(@NotNull String address, int sequenceNumber, Instant created) {
         this.address = Preconditions.checkNotNull(address);
         this.sequenceNumber = sequenceNumber;
+        this.created = created;
+    }
+
+    public Instant getCreated() {
+        return created;
     }
 
     @Override
@@ -32,7 +37,6 @@ public final class ClientEntry {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(address, sequenceNumber);
     }
 }

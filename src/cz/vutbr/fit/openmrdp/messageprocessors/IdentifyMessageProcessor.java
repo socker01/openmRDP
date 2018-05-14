@@ -52,7 +52,6 @@ public final class IdentifyMessageProcessor implements MessageProcessor {
 
     private ReDELResponseDTO createReDELResponseForFoundedResource(BaseMessage receivedMessage, String foundedResource) throws AddressSyntaxException {
         String foundedResourceLocation = infoManager.findResourceLocation(foundedResource);
-        //TODO: resourceLocation null is valid state
         Resource resource = new Resource(foundedResource, foundedResourceLocation);
 
         return new ReDELResponseDTO.Builder()

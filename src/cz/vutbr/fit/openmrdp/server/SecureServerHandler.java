@@ -3,6 +3,7 @@ package cz.vutbr.fit.openmrdp.server;
 import com.google.common.collect.Lists;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import cz.vutbr.fit.openmrdp.cache.ClientAccessMetadata;
 import cz.vutbr.fit.openmrdp.cache.ClientEntry;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.HeaderType;
@@ -10,9 +11,9 @@ import cz.vutbr.fit.openmrdp.security.UserAuthorizator;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 /**
  * @author Jiri Koudelka
@@ -20,20 +21,19 @@ import java.util.Map;
  */
 public final class SecureServerHandler implements HttpHandler {
 
-    //TODO udrzovat nejen IP a login ale take samotny hash kvuli podvrzeni
-    //TODO platnost 1 hodinu
-    private final Map<String, List<String>> authorizedUsers;
+    private final Map<String, List<ClientAccessMetadata>> authorizedUsers;
     private final UserAuthorizator userAuthorizator;
     private final Map<ClientEntry, BaseMessage> preparedMessages;
 
-    public SecureServerHandler(Map<String, List<String>> authorizedUsers, UserAuthorizator userAuthorizator, Map<ClientEntry, BaseMessage> preparedMessages) {
-        this.authorizedUsers = authorizedUsers;
+    public SecureServerHandler(UserAuthorizator userAuthorizator, Map<ClientEntry, BaseMessage> preparedMessages) {
+        this.authorizedUsers = new HashMap<>();
         this.userAuthorizator = userAuthorizator;
         this.preparedMessages = preparedMessages;
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+        invalidateLongTimeLoggedUsers();
         String clientAddress = String.valueOf(httpExchange.getRequestHeaders().get(HeaderType.CLIENT_ADDRESS.getHeaderCode()).get(0));
         int sequenceNumber = Integer.parseInt(httpExchange.getRequestHeaders().get(HeaderType.NSEQ.getHeaderCode()).get(0));
 
@@ -44,7 +44,7 @@ public final class SecureServerHandler implements HttpHandler {
 
         String response;
         if (authenticateUser(authorizationString, clientAddress)) {
-            ClientEntry key = new ClientEntry(clientAddress, sequenceNumber - 2);
+            ClientEntry key = new ClientEntry(clientAddress, sequenceNumber - 2, Instant.now());
             response = preparedMessages.get(key).getMessageBody().getQuery();
             httpExchange.sendResponseHeaders(ResponseCode.OK.getCode(), response.length());
         } else {
@@ -55,6 +55,21 @@ public final class SecureServerHandler implements HttpHandler {
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
+    }
+
+    private void invalidateLongTimeLoggedUsers() {
+        for (String clientAddress : authorizedUsers.keySet()) {
+            List<ClientAccessMetadata> clientAccessMetadataList = authorizedUsers.get(clientAddress);
+
+            List<ClientAccessMetadata> metadataToRemove = new ArrayList<>();
+            for (ClientAccessMetadata clientAccessMetadata : clientAccessMetadataList) {
+                if (clientAccessMetadata.getLastAccess().toEpochMilli() < Instant.now().minus(30, ChronoUnit.MINUTES).toEpochMilli()) {
+                    metadataToRemove.add(clientAccessMetadata);
+                }
+            }
+
+            clientAccessMetadataList.removeAll(metadataToRemove);
+        }
     }
 
     private String getDecodedAuthorizationString(HttpExchange httpExchange) {
@@ -68,17 +83,19 @@ public final class SecureServerHandler implements HttpHandler {
         String login = authString.substring(0, delimiterIndex);
         String password = authString.substring(delimiterIndex + 1);
 
+        ClientAccessMetadata clientAccessMetadata = new ClientAccessMetadata(login, authString, Instant.now());
+
         if (authorizedUsers.containsKey(clientAddress)) {
-            if (authorizedUsers.get(clientAddress).contains(login)) {
+            if (authorizedUsers.get(clientAddress).contains(clientAccessMetadata)) {
                 return true;
             }
         }
 
         if (userAuthorizator.authorizeUser(login, password)) {
             if (authorizedUsers.containsKey(clientAddress)) {
-                authorizedUsers.get(clientAddress).add(login);
+                authorizedUsers.get(clientAddress).add(clientAccessMetadata);
             } else {
-                authorizedUsers.put(clientAddress, Lists.newArrayList(login));
+                authorizedUsers.put(clientAddress, Lists.newArrayList(clientAccessMetadata));
             }
 
             return true;
