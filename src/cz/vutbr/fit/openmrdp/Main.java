@@ -7,11 +7,15 @@ import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
 import cz.vutbr.fit.openmrdp.logger.MrdpTestLoggerImpl;
 import cz.vutbr.fit.openmrdp.security.SecurityConfiguration;
 import cz.vutbr.fit.openmrdp.security.SecurityConfigurationFactory;
+import cz.vutbr.fit.openmrdp.security.UserAuthorizatorTestImpl;
+import cz.vutbr.fit.openmrdp.server.AddressRetriever;
 import cz.vutbr.fit.openmrdp.server.ServerConfiguration;
+
+import java.net.SocketException;
 
 public class Main {
 
-    public static void main(String[] args) throws NetworkCommunicationException {
+    public static void main(String[] args) throws NetworkCommunicationException, SocketException {
 
 //        InfoManager manager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyProdService());
 //        IdentifyMessageProcessor processor = new IdentifyMessageProcessor(manager);
@@ -34,8 +38,9 @@ public class Main {
 
 //        OpenmRDPClientAPI api = new OpenmRDPClientApiImpl("testCallbackURI");
 
-        SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createNonSecureSecurityConfiguration();
-        ServerConfiguration serverConfiguration = new ServerConfiguration("192.168.1.53", 27774, securityConfiguration);
+//        SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createNonSecureSecurityConfiguration();
+        SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createSecureSecurityConfiguration(new UserAuthorizatorTestImpl());
+        ServerConfiguration serverConfiguration = new ServerConfiguration(AddressRetriever.getLocalIpAddress(), 27774, securityConfiguration);
         OpenmRDPServerAPI api = new OpenmRDPServerAPIImpl(serverConfiguration, new MrdpTestLoggerImpl());
 
         try {

@@ -67,6 +67,7 @@ public final class AddressParser {
 
     public static String parseAddressWithoutPort(@NotNull String address){
         address = removeProtocol(address);
+        System.out.println("addressWithoutProtocol: " + address);
 
         int delimiterIndex = address.indexOf(":");
         if (delimiterIndex != -1){

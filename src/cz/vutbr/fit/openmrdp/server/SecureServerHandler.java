@@ -44,7 +44,7 @@ public final class SecureServerHandler implements HttpHandler {
 
         String response;
         if (authenticateUser(authorizationString, clientAddress)) {
-            ClientEntry key = new ClientEntry(clientAddress, sequenceNumber - 2, Instant.now());
+            ClientEntry key = new ClientEntry(clientAddress.substring(0, clientAddress.length() - 1), sequenceNumber - 2, Instant.now());
             response = preparedMessages.get(key).getMessageBody().getQuery();
             httpExchange.sendResponseHeaders(ResponseCode.OK.getCode(), response.length());
         } else {

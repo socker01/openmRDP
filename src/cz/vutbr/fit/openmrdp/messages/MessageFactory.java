@@ -74,7 +74,7 @@ public final class MessageFactory {
     }
 
     public static String generateConnectionMessage(ServerConfiguration serverConfiguration, int sequenceNumber, String protocol, String authorizationLevel){
-        String message = SERVER_TAG + ": " + serverConfiguration.getIpAddress() + ":" + serverConfiguration.getPort() + ". has information for you.";
+        String message = SERVER_TAG + ": " + serverConfiguration.getIpAddress() + ":" + serverConfiguration.getPort() + "/auth. has information for you.";
         message += "\n" + SEQUENCE_NUMBER_TAG + ": " + sequenceNumber;
         message += "\n" + PROTOCOL_TAG + ": " + protocol;
         message += "\n" + AUTHORIZATION_TAG + ": " + authorizationLevel;

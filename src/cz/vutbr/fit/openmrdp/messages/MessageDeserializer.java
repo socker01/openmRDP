@@ -107,7 +107,13 @@ public final class MessageDeserializer {
         scanner.nextLine();
 
         while (scanner.hasNextLine()) {
-            queryBuilder.append(scanner.nextLine());
+            String line = scanner.nextLine();
+            if(!line.equals("")){
+                queryBuilder.append(line);
+                if(scanner.hasNextLine()){
+                    queryBuilder.append("\n");
+                }
+            }
         }
 
         return queryBuilder.toString();
@@ -143,7 +149,7 @@ public final class MessageDeserializer {
 
     @NotNull
     private static String getServerAddress(String message) {
-        String parsedMessage = message.substring(MessageFactory.SERVER_TAG.length() + 2);
+        String parsedMessage = message.substring(MessageFactory.SERVER_TAG.length() + 3);
         int indexOfEnd = parsedMessage.indexOf(". ");
 
         return parsedMessage.substring(0, indexOfEnd);

@@ -1,6 +1,9 @@
 package cz.vutbr.fit.openmrdp.api;
 
 import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpsConfigurator;
+import com.sun.net.httpserver.HttpsParameters;
+import com.sun.net.httpserver.HttpsServer;
 import cz.vutbr.fit.openmrdp.cache.ClientEntry;
 import cz.vutbr.fit.openmrdp.communication.MessageReceiverImpl;
 import cz.vutbr.fit.openmrdp.communication.MessageSenderImpl;
@@ -23,12 +26,17 @@ import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyProdService;
 import cz.vutbr.fit.openmrdp.security.AuthorizationLevel;
 import cz.vutbr.fit.openmrdp.security.UserAuthorizatorTestImpl;
+import cz.vutbr.fit.openmrdp.server.AddressRetriever;
 import cz.vutbr.fit.openmrdp.server.NonSecureServerHandler;
 import cz.vutbr.fit.openmrdp.server.SecureServerHandler;
 import cz.vutbr.fit.openmrdp.server.ServerConfiguration;
 
+import javax.net.ssl.*;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -143,7 +151,11 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
     private void startHttpServer() throws NetworkCommunicationException {
         try {
             if (serverConfiguration.getSecurityConfiguration().isSecureConnectionSupported()) {
-                startSecureServerListener();
+                try {
+                    startSecureServerListener();
+                } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException | CertificateException | KeyManagementException e) {
+                    logger.logError("Exception during start of secure server listener");
+                }
             } else {
                 startNonSecureServerListener();
             }
@@ -169,9 +181,41 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
         return sequenceNumber != null && receivedSeqNum <= sequenceNumber;
     }
 
-    private void startSecureServerListener() throws IOException {
-        InetSocketAddress address = new InetSocketAddress(27774);
-        HttpServer server = HttpServer.create(address, 0);
+    private void startSecureServerListener() throws IOException, NoSuchAlgorithmException, KeyStoreException, CertificateException, UnrecoverableKeyException, KeyManagementException {
+        InetSocketAddress address = new InetSocketAddress(AddressRetriever.getLocalIpAddress(),  27774);
+        HttpsServer server = HttpsServer.create(address, 0);
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+
+        char[] password = "password".toCharArray();
+        KeyStore ks = KeyStore.getInstance("JKS");
+        FileInputStream fis = new FileInputStream("examplekey.jks");
+        ks.load(fis, password);
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        kmf.init(ks, password);
+
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+        tmf.init(ks);
+
+        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+        server.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
+            public void configure(HttpsParameters params){
+                try{
+                    SSLContext context = SSLContext.getDefault();
+                    SSLEngine engine = context.createSSLEngine();
+                    params.setNeedClientAuth(false);
+                    params.setCipherSuites(engine.getEnabledCipherSuites());
+                    params.setProtocols(engine.getEnabledProtocols());
+
+                    SSLParameters defaultSSLParameters = context.getDefaultSSLParameters();
+                    params.setSSLParameters(defaultSSLParameters);
+                } catch (NoSuchAlgorithmException nsae){
+                    logger.logError("Secure server start error.");
+                }
+            }
+
+        });
 
         server.createContext("/auth", new SecureServerHandler(new UserAuthorizatorTestImpl(), preparedMessages));
         server.setExecutor(null);

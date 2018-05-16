@@ -4,15 +4,21 @@ import cz.vutbr.fit.openmrdp.communication.MessageReceiverImpl;
 import cz.vutbr.fit.openmrdp.communication.MessageSenderImpl;
 import cz.vutbr.fit.openmrdp.communication.MessageService;
 import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
+import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 import cz.vutbr.fit.openmrdp.logger.MrdpLogger;
 import cz.vutbr.fit.openmrdp.messages.*;
 import cz.vutbr.fit.openmrdp.messages.address.AddressParser;
+import cz.vutbr.fit.openmrdp.query.QueryParser;
+import cz.vutbr.fit.openmrdp.query.QueryRaw;
+import cz.vutbr.fit.openmrdp.security.ConnectionTrustVerifier;
 import cz.vutbr.fit.openmrdp.server.AddressRetriever;
 import cz.vutbr.fit.openmrdp.server.MessageType;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.*;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 /**
@@ -53,6 +59,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         } catch (IOException e) {
             logger.logError("Message: " + e.getMessage());
             logger.logError("Body: " + e.toString());
+
             return e.getMessage();
         }
     }
@@ -80,9 +87,72 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         }
     }
 
+    @Override
+    public String identifyResource(String query) throws QuerySyntaxException, NetworkCommunicationException {
+        createAndSendIdentifyMessage(query);
+
+        try {
+            ConnectionInformationMessage responseMessage = receiveConnectionInformation();
+
+            URL url = createServerURL(responseMessage);
+            logger.logDebug(url.toString());
+
+            HttpURLConnection connection = initializeConnection(url);
+
+            connection.getResponseCode();
+
+            return getConnectionInformationString(connection.getInputStream());
+        } catch (InterruptedIOException e) {
+            return "No result for query: " + query;
+        } catch (IOException e) {
+            logger.logError("Message: " + e.getMessage());
+            logger.logError("Body: " + e.toString());
+
+            return e.getMessage();
+        }
+    }
+
+    @Override
+    public String identifyResource(String query, String login, String password) throws QuerySyntaxException, NetworkCommunicationException {
+        createAndSendIdentifyMessage(query);
+
+        try {
+            ConnectionInformationMessage responseMessage = receiveConnectionInformation();
+
+            URL url = createServerURL(responseMessage);
+
+            HttpsURLConnection connection = initializeSecureConnection(url, login, password);
+
+            connection.getResponseCode();
+
+            return getConnectionInformationString(connection.getInputStream());
+        } catch (InterruptedIOException e) {
+            return "No result for query: " + query;
+        } catch (IOException e) {
+            logger.logError("Message: " + e.getMessage());
+            logger.logError("Body: " + e.toString());
+            return e.getMessage();
+        }
+    }
+
     private void createAndSendLocateMessage(String resourceName) throws NetworkCommunicationException {
         BaseMessage locateMessage = MessageFactory.createLocateMessage(resourceName, callbackURI, getNextSequenceNumber());
         messageService.sendMRDPMessage(locateMessage);
+        sequenceNumber++;
+    }
+
+    private void createAndSendIdentifyMessage(String query) throws QuerySyntaxException, NetworkCommunicationException {
+        QueryRaw queryRaw = QueryParser.parseQuery(query);
+        MessageBody messageBody = new MessageBody(queryRaw.getConditions(), ContentType.PLANT_QUERY);
+        logger.logDebug(queryRaw.getConditions());
+        BaseMessage identifyMessage = MessageFactory.createIdentifyMessage(
+                queryRaw.getResourceName(),
+                callbackURI,
+                messageBody,
+                getNextSequenceNumber()
+        );
+
+        messageService.sendMRDPMessage(identifyMessage);
         sequenceNumber++;
     }
 
@@ -124,6 +194,13 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
     private HttpsURLConnection initializeSecureConnection(URL url, String login, String password) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+        connection.setHostnameVerifier((hostname, session) -> true);
+        try {
+            ConnectionTrustVerifier.trustSelfSignedCertificates(connection);
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            logger.logError("Trust modifier error.");
+        }
 
         sequenceNumber++;
         connection.setRequestMethod(MessageType.GET.getCode());
@@ -193,11 +270,6 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         in.close();
 
         return fromClient.toString();
-    }
-
-    @Override
-    public String identifyResource(String query) {
-        return null;
     }
 
     private long getNextSequenceNumber() {

@@ -41,8 +41,11 @@ final class QueryProcessor {
         Set<RDFTriple> triples = new HashSet<>();
 
         while (scanner.hasNextLine()){
-            RDFTriple triple = createRDFTripleFromQueryLine(scanner.nextLine());
-            triples.add(triple);
+            String line = scanner.nextLine();
+            if(!line.equals("")){
+                RDFTriple triple = createRDFTripleFromQueryLine(line);
+                triples.add(triple);
+            }
         }
 
         return triples;
@@ -52,6 +55,10 @@ final class QueryProcessor {
         String subject = queryLine.substring(0, queryLine.indexOf(' '));
         String predicate = queryLine.substring(queryLine.indexOf(' ') + 1, queryLine.lastIndexOf(' '));
         String object = queryLine.substring(queryLine.lastIndexOf(' ') + 1);
+
+        subject = subject.replaceAll("[\u0000-\u001f]", "");
+        predicate = predicate.replaceAll("[\u0000-\u001f]", "");
+        object = object.replaceAll("[\u0000-\u001f]", "");
 
         checkSubjectSyntax(subject);
         checkPredicateSyntax(predicate);
