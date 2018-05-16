@@ -4,6 +4,10 @@ import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
 
 /**
+ * The test implementation of the {@link MessageSender} interface.
+ *
+ * This implementation is used only in the test classes. Do not use this implementation in the production!
+ *
  * @author Jiri Koudelka
  * @since 17.03.2018.
  */

@@ -7,6 +7,8 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
+ * This object is used as a key into the map of prepared messages.
+ *
  * @author Jiri Koudelka
  * @since 30.04.2018
  */

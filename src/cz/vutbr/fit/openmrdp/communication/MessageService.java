@@ -7,6 +7,8 @@ import cz.vutbr.fit.openmrdp.messages.address.Address;
 import java.io.IOException;
 
 /**
+ * Service for message sending
+ *
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */

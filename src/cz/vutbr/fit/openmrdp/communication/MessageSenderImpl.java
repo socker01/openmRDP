@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 import java.net.*;
 
 /**
+ * The production implementation of the {@link MessageSender} interface
+ *
  * @author Jiri Koudelka
  * @since 05.02.2018.
  */
@@ -59,14 +61,11 @@ public final class MessageSenderImpl implements MessageSender{
 
         String ipAddress = hostAddress.substring(0, delimiterIndex);
         int port = Integer.parseInt(hostAddress.substring(delimiterIndex+1));
-        System.out.println("Send response to :" + ipAddress + " : port :" + port);
         Socket socket = new Socket(ipAddress, port);
-        System.out.println("socket created");
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
         out.println(message);
 
-        System.out.println("message seded");
         out.close();
         socket.close();
     }

@@ -1,6 +1,10 @@
 package cz.vutbr.fit.openmrdp.logger;
 
 /**
+ * The test implementation of the {@link MrdpLogger} interface.
+ *
+ * Use this implementation if you want to log every message into the standard output
+ *
  * @author Jiri Koudelka
  * @since 30.04.2018
  */

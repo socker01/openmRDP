@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
+ * This objects is used as a key into the map of already logged users.
+ *
  * @author Jiri Koudelka
  * @since 07.05.2018
  */
@@ -17,14 +19,6 @@ public final class ClientAccessMetadata {
         this.login = login;
         this.passwordHash = passwordHash;
         this.lastAccess = lastAccess;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
     }
 
     public Instant getLastAccess() {

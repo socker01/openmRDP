@@ -1,6 +1,8 @@
 package cz.vutbr.fit.openmrdp.communication;
 
 /**
+ * Network Communication Constants used in the communication package.
+ *
  * @author Jiri Koudelka
  * @since 08.02.2018.
  */

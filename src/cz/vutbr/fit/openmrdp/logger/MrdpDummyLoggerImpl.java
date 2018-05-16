@@ -1,6 +1,10 @@
 package cz.vutbr.fit.openmrdp.logger;
 
 /**
+ * The production implementation of the {@link MrdpLogger}.
+ *
+ * Use this logger if you don't want to log any information.
+ *
  * @author Jiri Koudelka
  * @since 07.05.2018
  */

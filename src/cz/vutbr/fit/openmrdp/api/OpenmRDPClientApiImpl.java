@@ -22,6 +22,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 /**
+ * The production implementation of the {@link OpenmRDPClientAPI}.
+ *
  * @author Jiri Koudelka
  * @since 17.03.2018.
  */
@@ -33,6 +35,12 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
     private final MrdpLogger logger;
 
+    /**
+     * Public constructor of the OpenmRDP client API
+     *
+     * @param callbackURI - URI where the client will be waiting for the response from the server
+     * @param logger - logger for logging of the errors
+     */
     public OpenmRDPClientApiImpl(String callbackURI, MrdpLogger logger) {
         messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
         this.callbackURI = callbackURI;

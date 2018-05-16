@@ -5,6 +5,10 @@ import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import java.io.IOException;
 
 /**
+ * Test iplementation of the {@link MessageReceiver}.
+ *
+ * This implementation is used only in tests. Do not use this implementation in the production code!
+ *
  * @author Jiri Koudelka
  * @since 17.03.2018.
  */

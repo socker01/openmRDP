@@ -9,6 +9,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 /**
+ * The production implementation of the {@link MessageReceiver}
+ *
  * @author Jiri Koudelka
  * @since 05.02.2018.
  */

@@ -43,6 +43,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * The production implementation of the {@link OpenmRDPServerAPI}.
+ *
  * @author Jiri Koudelka
  * @since 17.03.2018.
  */
@@ -57,6 +59,12 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
     private final Map<ClientEntry, BaseMessage> preparedMessages = new HashMap<>();
     private final MrdpLogger logger;
 
+    /**
+     * Public constructor of the OpenmRDP server API
+     *
+     * @param serverConfiguration - configuration parameters
+     * @param logger - logger for logging of the errors
+     */
     public OpenmRDPServerAPIImpl(ServerConfiguration serverConfiguration, MrdpLogger logger) {
         infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyProdService());
         messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
