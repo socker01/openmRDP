@@ -16,6 +16,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
+ * Secure server handler which implements {@link HttpHandler}.
+ *
+ * This handler is used for service of the HTTPS requests and authorize users.
+ *
  * @author Jiri Koudelka
  * @since 30.04.2018
  */

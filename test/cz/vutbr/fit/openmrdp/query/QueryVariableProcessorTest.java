@@ -77,9 +77,9 @@ public final class QueryVariableProcessorTest {
     public void findAllRelevantVariablesForQuery() {
         Query testQuery = createTestQuery();
 
-        Set<QueryVariable> foundedVariables = QueryVariableProcessor.identifyVariables(testQuery.getQueryTriples());
+        Set<QueryVariable> foundVariables = QueryVariableProcessor.identifyVariables(testQuery.getQueryTriples());
 
-        assertVariables(foundedVariables);
+        assertVariables(foundVariables);
     }
 
     @Test

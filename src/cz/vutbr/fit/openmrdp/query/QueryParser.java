@@ -3,15 +3,23 @@ package cz.vutbr.fit.openmrdp.query;
 import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 
 /**
+ * Parser for parsing of the identify query stored in the {@link String}.
+ *
  * @author Jiri Koudelka
  * @since 14.05.2018
  */
-//TODO: add test
 public final class QueryParser {
 
     private static final String IDENTIFY_COMMAND = "IDENTIFY";
     private static final String WHERE_COMMAND = "WHERE";
 
+    /**
+     * Parse identify query into the {@link QueryRaw} object
+     *
+     * @param query - Query in the {@link String} format
+     * @return - {@link QueryRaw} object
+     * @throws QuerySyntaxException - if the query doesn't have expected syntax
+     */
     public static QueryRaw parseQuery(String query) throws QuerySyntaxException {
         checkQuerySyntax(query);
 

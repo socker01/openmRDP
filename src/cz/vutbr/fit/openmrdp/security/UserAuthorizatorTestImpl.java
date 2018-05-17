@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Test implementation of the {@link UserAuthorizator}. This implementation validates users against the static {@link Map}.
+ *
+ * Do not use this implementation in the production code!
+ *
  * @author Jiri Koudelka
  * @since 25.04.2018
  */

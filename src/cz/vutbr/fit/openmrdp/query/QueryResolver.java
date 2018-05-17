@@ -12,6 +12,8 @@ import cz.vutbr.fit.openmrdp.model.base.VariableResourcePair;
 import java.util.*;
 
 /**
+ * {@link QueryResolver} resolves the identify queries and returns found resources.
+ *
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
@@ -23,6 +25,13 @@ public final class QueryResolver {
         this.infoManager = infoManager;
     }
 
+    /**
+     * Resolve identify query and find list of the resource names
+     *
+     * @param messageBody - {@link MessageBody} that contains identify query
+     * @param resourceToSearchName - the name of the resource you are looking for
+     * @return - {@link List} of found resources
+     */
     public List<String> resolveQuery(MessageBody messageBody, String resourceToSearchName) {
 
         Query query;

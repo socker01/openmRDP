@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Service used for manipulating with information in the {@link LocationTree}.
+ *
  * @author Jiri Koudelka
  * @since 09.03.2018.
  */
@@ -25,6 +27,11 @@ final class LocationTreeService {
         this.levelUpPredicate = levelUpPredicate;
     }
 
+    /**
+     * Create tree of the locations {@link LocationTree} from the list of location information.
+     *
+     * @param locationInformation - {@link java.util.List} of location information
+     */
     void createLocationTree(Set<RDFTriple> locationInformation) {
         addTopLevelLocations(findTopLevelLocationInformation(locationInformation));
 
@@ -76,17 +83,33 @@ final class LocationTreeService {
         return objects;
     }
 
+    /**
+     * Find resource in the {@link LocationTree}
+     *
+     * @param resourceName - name of the finding resource
+     * @return - Found resource location. Returns null if the resource is not int the {@link LocationTree}
+     */
     @Nullable
     String findResourceLocation(String resourceName) {
         return locationTree.findLocation(resourceName);
     }
 
+    /**
+     * Add location information into the location tree
+     *
+     * @param locationInformation - information to add
+     */
     void addLocationInformation(RDFTriple locationInformation) {
         if (locationInformation.getPredicate().equals(levelUpPredicate)) {
             locationTree.addLocation(locationInformation);
         }
     }
 
+    /**
+     * Remove location information from the location tree
+     *
+     * @param locationInformation - information to remove
+     */
     void removeLocationInformation(RDFTriple locationInformation){
         if (locationInformation.getPredicate().equals(levelUpPredicate)){
             locationTree.removeLocation(locationInformation);

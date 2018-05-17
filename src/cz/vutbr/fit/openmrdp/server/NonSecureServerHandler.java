@@ -12,6 +12,10 @@ import java.time.Instant;
 import java.util.Map;
 
 /**
+ * Non-secure server handler which implements {@link HttpHandler}.
+ *
+ * This handler is used for service of the HTTP requests
+ *
  * @author Jiri Koudelka
  * @since 29.04.2018
  */

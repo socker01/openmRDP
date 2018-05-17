@@ -15,7 +15,7 @@ public final class ReDELMessageParser {
 
     @NotNull
     private static String getLocation(String message) {
-        String parsedLocation = message.substring(message.indexOf(ReDELMessageBodyCreator.LOCATION_TAG) + ReDELMessageBodyCreator.LOCATION_TAG.length() + 1);
+        String parsedLocation = message.substring(message.indexOf(ReDELMessageBodyFactory.LOCATION_TAG) + ReDELMessageBodyFactory.LOCATION_TAG.length() + 1);
 
         return parsedLocation.substring(0, parsedLocation.indexOf("\"/>"));
     }

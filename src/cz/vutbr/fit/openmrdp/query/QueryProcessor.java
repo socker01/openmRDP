@@ -10,11 +10,20 @@ import java.util.Scanner;
 import java.util.Set;
 
 /**
+ * Processor which process {@link MessageBody} and create the {@link Query} object.
+ *
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
 final class QueryProcessor {
 
+    /**
+     * Process {@link MessageBody} and generate appropriate {@link Query} object
+     *
+     * @param messageBody - {@link MessageBody} object
+     * @return - {@link Query} object
+     * @throws QuerySyntaxException - if the query, stored in the messageBody, doesn't have expected syntax
+     */
     static Query processQuery(MessageBody messageBody) throws QuerySyntaxException {
         Set<RDFTriple> triples;
 

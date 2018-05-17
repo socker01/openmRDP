@@ -95,24 +95,24 @@ final class LocationTree extends Tree {
     }
 
     private void addLocationInformation(RDFTriple triple) {
-        Node foundedObject = findNodeInTree(root, triple.getObject());
-        if (foundedObject == null) {
+        Node foundObject = findNodeInTree(root, triple.getObject());
+        if (foundObject == null) {
             root.getChildren().add(new Node(triple.getSubject(), root));
         } else {
-            foundedObject.getChildren().add(new Node(triple.getSubject(), foundedObject));
+            foundObject.getChildren().add(new Node(triple.getSubject(), foundObject));
         }
     }
 
     @Nullable
     String findLocation(String resourceName) {
 
-        Node foundedResource = findNodeInTree(root, resourceName);
+        Node foundResource = findNodeInTree(root, resourceName);
 
-        if (foundedResource == null) {
+        if (foundResource == null) {
             return null;
         }
 
-        return constructResourcePath(foundedResource);
+        return constructResourcePath(foundResource);
     }
 
     private String constructResourcePath(Node locationNode) {

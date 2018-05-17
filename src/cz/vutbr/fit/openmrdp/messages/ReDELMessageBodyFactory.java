@@ -5,10 +5,12 @@ import cz.vutbr.fit.openmrdp.model.base.Resource;
 import java.util.List;
 
 /**
+ * Factory that creates ReDEL {@link MessageBody} object for List of the resources.
+ *
  * @author Jiri Koudelka
  * @since 24.03.2018.
  */
-final class ReDELMessageBodyCreator {
+final class ReDELMessageBodyFactory {
 
     private static final String XML_VERSION_AND_ENCODING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static final String REDEL_HEADER = "<redel xmlns=\"http://www.awareit.com/soam/2006/04/redel\"";

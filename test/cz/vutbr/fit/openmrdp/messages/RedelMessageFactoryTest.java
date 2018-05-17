@@ -26,7 +26,7 @@ public final class RedelMessageFactoryTest {
     private static final String TEST_RESOURCE_LOCATION = "urn:uuid:room/urn:uuid:box/urn:uuid:fuel";
     private static final String TEST_RESOURCE_NAME = "urn:uuid:fuel";
 
-    private static final String EXPECTED_MESSAGE_BODY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+    public static final String EXPECTED_MESSAGE_BODY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<redel xmlns=\"http://www.awareit.com/soam/2006/04/redel\"\n" +
             "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
             "xsi:schemaLocation=\"http://www.awareit.com/soam/2006/04/redel\n" +

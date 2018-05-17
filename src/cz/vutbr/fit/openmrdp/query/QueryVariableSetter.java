@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * This class is used for setting of potential values of variables.
+ *
  * @author Jiri Koudelka
  * @since 04.04.2018.
  */
@@ -20,6 +22,12 @@ final class QueryVariableSetter {
         this.query = query;
     }
 
+    /**
+     * Create {@link Set} of the potential values of variables
+     *
+     * @param variables - {@link List} of variables
+     * @return - {@link Set} of {@link RDFTriple} objects with the potential values
+     */
     Set<RDFTriple> substituteVariableValues(List<VariableResourcePair> variables) {
         Set<RDFTriple> triplesWithVariables = new HashSet<>();
 

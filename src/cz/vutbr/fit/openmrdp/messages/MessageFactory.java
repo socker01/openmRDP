@@ -55,7 +55,7 @@ public final class MessageFactory {
     public static BaseMessage createReDELResponse(ReDELResponseDTO responseDTO) {
         OperationLine operationLine = new OperationLine(OperationType.POST, responseDTO.getAddress().getEndPoint(), MessageProtocol.HTTP);
 
-        MessageBody messageBody = ReDELMessageBodyCreator.createRedelMessage(responseDTO.getResources());
+        MessageBody messageBody = ReDELMessageBodyFactory.createRedelMessage(responseDTO.getResources());
 
         Map<HeaderType, String> headers = createReDELMessageHeaders(responseDTO, messageBody);
 

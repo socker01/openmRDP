@@ -25,6 +25,7 @@ import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyProdService;
 import cz.vutbr.fit.openmrdp.security.AuthorizationLevel;
+import cz.vutbr.fit.openmrdp.security.SecurityConstants;
 import cz.vutbr.fit.openmrdp.security.UserAuthorizatorTestImpl;
 import cz.vutbr.fit.openmrdp.server.AddressRetriever;
 import cz.vutbr.fit.openmrdp.server.NonSecureServerHandler;
@@ -193,7 +194,7 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
         InetSocketAddress address = new InetSocketAddress(AddressRetriever.getLocalIpAddress(),  27774);
         HttpsServer server = HttpsServer.create(address, 0);
 
-        SSLContext sslContext = SSLContext.getInstance("TLS");
+        SSLContext sslContext = SSLContext.getInstance(SecurityConstants.SSL_CONTEXT);
 
         char[] password = "password".toCharArray();
         KeyStore ks = KeyStore.getInstance("JKS");

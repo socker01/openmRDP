@@ -27,14 +27,14 @@ public final class IdentifyMessageProcessor implements MessageProcessor {
     public BaseMessage processMessage(BaseMessage receivedMessage) throws AddressSyntaxException {
 
         QueryResolver queryResolver = new QueryResolver(infoManager);
-        List<String> foundedResources = queryResolver.resolveQuery(receivedMessage.getMessageBody(), receivedMessage.getResourceName());
+        List<String> foundResources = queryResolver.resolveQuery(receivedMessage.getMessageBody(), receivedMessage.getResourceName());
 
         ReDELResponseDTO responseDTO;
 
-        if (foundedResources.isEmpty()) {
+        if (foundResources.isEmpty()) {
             responseDTO = createReDELResponseForNonExistingResourceName(receivedMessage);
         } else {
-            responseDTO = createReDELResponseForFoundedResource(receivedMessage, foundedResources.get(0));
+            responseDTO = createReDELResponseForFoundResource(receivedMessage, foundResources.get(0));
         }
 
         return MessageFactory.createReDELResponse(responseDTO);
@@ -50,9 +50,9 @@ public final class IdentifyMessageProcessor implements MessageProcessor {
                 .build();
     }
 
-    private ReDELResponseDTO createReDELResponseForFoundedResource(BaseMessage receivedMessage, String foundedResource) throws AddressSyntaxException {
-        String foundedResourceLocation = infoManager.findResourceLocation(foundedResource);
-        Resource resource = new Resource(foundedResource, foundedResourceLocation);
+    private ReDELResponseDTO createReDELResponseForFoundResource(BaseMessage receivedMessage, String foundResource) throws AddressSyntaxException {
+        String foundResourceLocation = infoManager.findResourceLocation(foundResource);
+        Resource resource = new Resource(foundResource, foundResourceLocation);
 
         return new ReDELResponseDTO.Builder()
                 .withAddress(receivedMessage.getHostAddress())

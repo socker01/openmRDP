@@ -69,10 +69,10 @@ public final class QueryResolverTest {
     @Test
     public void resolveQuery(){
         MessageBody messageBody = new MessageBody(TEST_QUERY, ContentType.PLANT_QUERY);
-        List<String> foundedResources = queryResolver.resolveQuery(messageBody, "?material");
+        List<String> foundResources = queryResolver.resolveQuery(messageBody, "?material");
 
-        assertThat(foundedResources, hasSize(1));
-        assertThat(foundedResources, containsInAnyOrder("urn:uuid:fuel1"));
+        assertThat(foundResources, hasSize(1));
+        assertThat(foundResources, containsInAnyOrder("urn:uuid:fuel1"));
     }
 
     @Test(expected = QueryProcessingException.class)

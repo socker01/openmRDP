@@ -11,11 +11,21 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Processor which works with variables.
+ *
+ * This processor creates possible combinations of the variables and identifies the variable in the {@link RDFTriple}.
+ *
  * @author Jiri Koudelka
  * @since 04.04.2018.
  */
 final class QueryVariableProcessor {
 
+    /**
+     * Create matrix of the all possible variable combinations
+     *
+     * @param variables - {@link Set} of all variables
+     * @return - matrix of all possible variable combinations
+     */
     static List<List<VariableResourcePair>> prepareVariableCombinations(Set<QueryVariable> variables) {
 
         int numberOfCombinations = 1;
@@ -38,6 +48,12 @@ final class QueryVariableProcessor {
         return possibleCombinations;
     }
 
+    /**
+     * Identify variables in the {@link RDFTriple}
+     *
+     * @param triples - {@link RDFTriple}
+     * @return - {@link Set} of identified variables
+     */
     static Set<QueryVariable> identifyVariables(Set<RDFTriple> triples) {
         Set<QueryVariable> variables = new HashSet<>();
         for (RDFTriple triple : triples) {

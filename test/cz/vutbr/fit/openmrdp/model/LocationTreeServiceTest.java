@@ -25,6 +25,7 @@ public final class LocationTreeServiceTest {
     private static final String FUEL_RESOURCE_NAME = "urn:uuid:fuel1";
     private static final String TEST_RESOURCE_NAME = "urn:uuid:test";
     private static final String NON_EXISTING_RESOURCE_NAME = "urn:uuid:nonExistingResourceName";
+    private static final String NEW_TEST_RESOURCE = "urn:uuid:newTestResource";
 
     private final LocationTreeService service = new LocationTreeService(DEFAULT_DELIMITER, DEFAULT_LEVEL_UP_PATH_PREDICATE);
 
@@ -71,5 +72,17 @@ public final class LocationTreeServiceTest {
         service.addLocationInformation(newLocationInformation);
 
         assertThat(service.findResourceLocation(TEST_RESOURCE_NAME), is(nullValue()));
+    }
+
+    @Test
+    public void removeLocationFromTree(){
+        RDFTriple newLocationInformation = new RDFTriple(NEW_TEST_RESOURCE, "<loc:locatedIn>", FUEL_RESOURCE_NAME);
+        service.addLocationInformation(newLocationInformation);
+
+        assertThat(service.findResourceLocation(NEW_TEST_RESOURCE), is("urn:uuid:room1\\urn:uuid:box1\\urn:uuid:fuel1\\urn:uuid:newTestResource"));
+
+        service.removeLocationInformation(newLocationInformation);
+
+        assertThat(service.findResourceLocation(NEW_TEST_RESOURCE), is(nullValue()));
     }
 }

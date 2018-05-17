@@ -26,21 +26,21 @@ final class TransitivePredicateTree extends Tree {
     private void initializePredicateTree(List<Pair<String, String>> transitivePredicates) {
 
         for (Pair<String, String> transitivePredicate : transitivePredicates) {
-            Node foundedPredicate = findNodeInTree(root, transitivePredicate.getKey());
+            Node foundPredicate = findNodeInTree(root, transitivePredicate.getKey());
 
-            if (foundedPredicate == null) {
+            if (foundPredicate == null) {
                 createNewTransitivePredicate(transitivePredicate);
             } else {
-                addTransitiveRelation(transitivePredicate, foundedPredicate);
+                addTransitiveRelation(transitivePredicate, foundPredicate);
             }
         }
 
         createTransitivePredicateList();
     }
 
-    private void addTransitiveRelation(Pair<String, String> transitivePredicate, Node foundedPredicate) {
-        Node transitiveRelation = new Node(transitivePredicate.getValue(), foundedPredicate);
-        foundedPredicate.getChildren().add(transitiveRelation);
+    private void addTransitiveRelation(Pair<String, String> transitivePredicate, Node foundPredicate) {
+        Node transitiveRelation = new Node(transitivePredicate.getValue(), foundPredicate);
+        foundPredicate.getChildren().add(transitiveRelation);
     }
 
     private void createNewTransitivePredicate(Pair<String, String> transitivePredicate) {

@@ -29,9 +29,9 @@ public class Tree {
             if (child.getData().equals(key)) {
                 return child;
             } else {
-                Node foundedNode = findNodeInTree(child, key);
-                if (foundedNode != null) {
-                    return foundedNode;
+                Node foundNode = findNodeInTree(child, key);
+                if (foundNode != null) {
+                    return foundNode;
                 }
             }
         }

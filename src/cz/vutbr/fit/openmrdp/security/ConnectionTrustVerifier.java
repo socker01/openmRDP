@@ -7,6 +7,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
 /**
+ * This verifier updates the {@link HttpsURLConnection} and allows communication with servers with self-signed certificates.
+ *
  * @author Jiri Koudelka
  * @since 15.05.2018
  */
@@ -15,6 +17,13 @@ public final class ConnectionTrustVerifier {
     private static final SelfSignedHostnameVerifier TRUSTING_HOSTNAME_VERIFIER = new SelfSignedHostnameVerifier();
     private static SSLSocketFactory factory;
 
+    /**
+     * Allow communication with servers with self-signed certificates
+     *
+     * @param conn - {@link HttpsURLConnection} used for communication
+     * @throws KeyManagementException - if there will be problem with initialization of the SSL context
+     * @throws NoSuchAlgorithmException - if the TLS instance of {@link SSLContext} wont be found
+     */
     public static void trustSelfSignedCertificates(HttpURLConnection conn) throws KeyManagementException, NoSuchAlgorithmException {
         HttpsURLConnection httpsConnection = (HttpsURLConnection) conn;
         SSLSocketFactory factory = initializeFactory();
