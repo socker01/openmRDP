@@ -32,7 +32,7 @@ public enum OperationType {
         return "OperationType";
     }
 
-    String getCode() {
+    public String getCode() {
         return code;
     }
 

@@ -1,5 +1,9 @@
 package cz.vutbr.fit.openmrdp.api;
 
+import com.google.common.base.Preconditions;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+import cz.vutbr.fit.openmrdp.communication.CommunicationConfigurationConstants;
 import cz.vutbr.fit.openmrdp.communication.MessageReceiverImpl;
 import cz.vutbr.fit.openmrdp.communication.MessageSenderImpl;
 import cz.vutbr.fit.openmrdp.communication.MessageService;
@@ -42,10 +46,10 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
      * @param callbackURI - URI where the client will be waiting for the response from the server
      * @param logger - logger for logging of the errors
      */
-    public OpenmRDPClientApiImpl(String callbackURI, MrdpLogger logger) {
+    public OpenmRDPClientApiImpl(@NotNull String callbackURI, @NotNull MrdpLogger logger) {
         messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
-        this.callbackURI = callbackURI;
-        this.logger = logger;
+        this.callbackURI = Preconditions.checkNotNull(callbackURI, "Callback URI cannot be null");
+        this.logger = Preconditions.checkNotNull(logger, "Logger cannot be null");
         this.debugMode = false;
     }
 
@@ -58,15 +62,22 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
      *      * @param logger - logger for logging of the errors
      * @param debugMode - debugMode flag. If the debugMode is true, client accept also self-signed certificates
      */
-    public OpenmRDPClientApiImpl(String callbackURI, MrdpLogger logger, boolean debugMode) {
+    public OpenmRDPClientApiImpl(@NotNull String callbackURI, @NotNull MrdpLogger logger, boolean debugMode) {
         messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
-        this.callbackURI = callbackURI;
-        this.logger = logger;
+        this.callbackURI = Preconditions.checkNotNull(callbackURI, "Callback URI cannot be null");
+        this.logger = Preconditions.checkNotNull(logger, "Logger cannot be null");
         this.debugMode = debugMode;
     }
 
     @Override
-    public String locateResource(String resourceName) throws NetworkCommunicationException {
+    @Nullable
+    public String locateResource(@NotNull String resourceName) throws NetworkCommunicationException {
+        if (resourceName == null){
+            logger.logError("Resource name cannot be null");
+
+            return null;
+        }
+
         createAndSendLocateMessage(resourceName);
 
         try {
@@ -81,7 +92,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
             return ReDELMessageParser.parseLocationFromRedelMessage(mRDPResponseRaw);
         } catch (InterruptedIOException e) {
-            return "No info about resource: " + resourceName;
+            return null;
         } catch (IOException e) {
             logger.logError("Message: " + e.getMessage());
             logger.logError("Body: " + e.toString());
@@ -91,7 +102,14 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
     }
 
     @Override
-    public String locateResource(String resourceName, String login, String password) throws NetworkCommunicationException {
+    @Nullable
+    public String locateResource(@Nullable String resourceName, @Nullable String login, @Nullable String password)
+            throws NetworkCommunicationException {
+
+        if (isSomeParameterNull(resourceName, login, password)){
+            return null;
+        }
+
         createAndSendLocateMessage(resourceName);
         try {
             ConnectionInformationMessage responseMessage = receiveConnectionInformation();
@@ -105,16 +123,46 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
             return ReDELMessageParser.parseLocationFromRedelMessage(mRDPResponseRaw);
         } catch (InterruptedIOException e) {
-            return "No info about resource: " + resourceName;
+            return null;
         } catch (IOException e) {
             logger.logError("Message: " + e.getMessage());
             logger.logError("Body: " + e.toString());
+
             return e.getMessage();
         }
     }
 
+    private boolean isSomeParameterNull(String resourceName, String login, String password) {
+        if (resourceName == null){
+            logger.logError("Resource name cannot be null");
+
+            return true;
+        }
+
+        if (login == null){
+            logger.logError("Login cannot be null");
+
+            return true;
+        }
+
+        if (password == null){
+            logger.logError("Password cannot be null");
+
+            return true;
+        }
+
+        return false;
+    }
+
     @Override
-    public String identifyResource(String query) throws QuerySyntaxException, NetworkCommunicationException {
+    @Nullable
+    public String identifyResource(@NotNull String query) throws QuerySyntaxException, NetworkCommunicationException {
+        if (query == null){
+            logger.logError("Identify query cannot be null");
+
+            return null;
+        }
+
         createAndSendIdentifyMessage(query);
 
         try {
@@ -129,7 +177,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
             return getConnectionInformationString(connection.getInputStream());
         } catch (InterruptedIOException e) {
-            return "No result for query: " + query;
+            return null;
         } catch (IOException e) {
             logger.logError("Message: " + e.getMessage());
             logger.logError("Body: " + e.toString());
@@ -139,7 +187,13 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
     }
 
     @Override
-    public String identifyResource(String query, String login, String password) throws QuerySyntaxException, NetworkCommunicationException {
+    @Nullable
+    public String identifyResource(@NotNull String query, @NotNull String login, @NotNull String password)
+            throws QuerySyntaxException, NetworkCommunicationException {
+        if (isSomeParameterNull(query, login, password)) {
+            return null;
+        }
+
         createAndSendIdentifyMessage(query);
 
         try {
@@ -153,10 +207,11 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
             return getConnectionInformationString(connection.getInputStream());
         } catch (InterruptedIOException e) {
-            return "No result for query: " + query;
+            return null;
         } catch (IOException e) {
             logger.logError("Message: " + e.getMessage());
             logger.logError("Body: " + e.toString());
+
             return e.getMessage();
         }
     }
@@ -210,7 +265,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
         sequenceNumber++;
         connection.setRequestMethod(MessageType.GET.getCode());
-        connection.setRequestProperty(HeaderType.USER_AGENT.getHeaderCode(), "Mozilla/5.0");
+        connection.setRequestProperty(HeaderType.USER_AGENT.getHeaderCode(), CommunicationConfigurationConstants.USER_AGENT);
         connection.setRequestProperty(HeaderType.NSEQ.getHeaderCode(), String.valueOf(sequenceNumber));
         connection.setRequestProperty(HeaderType.CLIENT_ADDRESS.getHeaderCode(), callbackURI);
         connection.setRequestProperty(HeaderType.HOST.getHeaderCode(), AddressRetriever.getLocalIpAddress());
@@ -233,7 +288,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
         sequenceNumber++;
         connection.setRequestMethod(MessageType.GET.getCode());
-        connection.setRequestProperty(HeaderType.USER_AGENT.getHeaderCode(), "Mozilla/5.0");
+        connection.setRequestProperty(HeaderType.USER_AGENT.getHeaderCode(), CommunicationConfigurationConstants.USER_AGENT);
         connection.setRequestProperty(HeaderType.NSEQ.getHeaderCode(), String.valueOf(sequenceNumber));
         connection.setRequestProperty(HeaderType.CLIENT_ADDRESS.getHeaderCode(), callbackURI);
         connection.setRequestProperty(HeaderType.HOST.getHeaderCode(), AddressRetriever.getLocalIpAddress());
@@ -244,7 +299,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
     private String encodeCredentials(String login, String password) {
         try {
-            return Base64.getEncoder().encodeToString((login + ":" + password).getBytes("UTF-8"));
+            return Base64.getEncoder().encodeToString((login + ":" + password).getBytes(CommunicationConfigurationConstants.DEFAULT_CHARSET));
         } catch (UnsupportedEncodingException e) {
             logger.logError(e.getMessage());
         }
@@ -266,15 +321,16 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
     }
 
     private String getResponseFromServer() throws IOException {
+        //TODO magic number - weird
         ServerSocket serverSocket = new ServerSocket(27741);
-        serverSocket.setSoTimeout(10000);
+        serverSocket.setSoTimeout(CommunicationConfigurationConstants.DEFAULT_SOCKET_TIMEOUT);
         Socket clientSocket = null;
         String serverResponse;
         try {
             clientSocket = serverSocket.accept();
             serverResponse = parseResponse(clientSocket);
         } catch (InterruptedIOException exc) {
-            logger.logInfo("No response from servers.");
+            logger.logInfo("No response from servers");
             throw exc;
         } finally {
             if (clientSocket != null) {

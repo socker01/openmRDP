@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.api;
 
+import com.google.common.base.Preconditions;
+import com.sun.istack.internal.NotNull;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
@@ -26,7 +28,6 @@ import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyProdService;
 import cz.vutbr.fit.openmrdp.security.AuthorizationLevel;
 import cz.vutbr.fit.openmrdp.security.SecurityConstants;
-import cz.vutbr.fit.openmrdp.security.UserAuthorizatorTestImpl;
 import cz.vutbr.fit.openmrdp.server.AddressRetriever;
 import cz.vutbr.fit.openmrdp.server.NonSecureServerHandler;
 import cz.vutbr.fit.openmrdp.server.SecureServerHandler;
@@ -66,13 +67,13 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
      * @param serverConfiguration - configuration parameters
      * @param logger - logger for logging of the errors
      */
-    public OpenmRDPServerAPIImpl(ServerConfiguration serverConfiguration, MrdpLogger logger) {
+    public OpenmRDPServerAPIImpl(@NotNull ServerConfiguration serverConfiguration, @NotNull MrdpLogger logger) {
         infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyProdService());
         messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
         locateMessageProcessor = new LocateMessageProcessor(infoManager);
         identifyMessageProcessor = new IdentifyMessageProcessor(infoManager);
-        this.serverConfiguration = serverConfiguration;
-        this.logger = logger;
+        this.serverConfiguration = Preconditions.checkNotNull(serverConfiguration, "Server configuration cannot be null");
+        this.logger = Preconditions.checkNotNull(logger, "Logger cannot be null");
     }
 
     @Override
@@ -174,37 +175,41 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
     }
 
     @Override
-    public void addInformationToInformationBase(RDFTriple information) {
+    public void addInformationToInformationBase(@NotNull RDFTriple information) {
+        Preconditions.checkNotNull(information, "Information to add cannot be null");
         infoManager.addInformationToBase(information);
     }
 
     @Override
-    public void removeInformationFromInformationBase(RDFTriple information) {
+    public void removeInformationFromInformationBase(@NotNull RDFTriple information) {
+        Preconditions.checkNotNull(information, "Information to remove cannot be null");
         infoManager.removeInformationFromBase(information);
     }
 
-    private boolean isMessageAlreadyProcessed(String clientAddress, Integer receivedSeqNum) {
+    private boolean isMessageAlreadyProcessed(@NotNull String clientAddress, @NotNull Integer receivedSeqNum) {
         Integer sequenceNumber;
         sequenceNumber = clientSequenceNumbers.get(clientAddress);
 
         return sequenceNumber != null && receivedSeqNum <= sequenceNumber;
     }
 
-    private void startSecureServerListener() throws IOException, NoSuchAlgorithmException, KeyStoreException, CertificateException, UnrecoverableKeyException, KeyManagementException {
-        InetSocketAddress address = new InetSocketAddress(AddressRetriever.getLocalIpAddress(),  27774);
+    private void startSecureServerListener() throws IOException, NoSuchAlgorithmException, KeyStoreException,
+            CertificateException, UnrecoverableKeyException, KeyManagementException {
+        InetSocketAddress address = new InetSocketAddress(AddressRetriever.getLocalIpAddress(),  serverConfiguration.getPort());
         HttpsServer server = HttpsServer.create(address, 0);
 
         SSLContext sslContext = SSLContext.getInstance(SecurityConstants.SSL_CONTEXT);
 
+        //TODO password and certificate name
         char[] password = "password".toCharArray();
-        KeyStore ks = KeyStore.getInstance("JKS");
+        KeyStore ks = KeyStore.getInstance(SecurityConstants.KEY_STORE);
         FileInputStream fis = new FileInputStream("examplekey.jks");
         ks.load(fis, password);
 
-        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(SecurityConstants.SUN_X_509);
         kmf.init(ks, password);
 
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(SecurityConstants.SUN_X_509);
         tmf.init(ks);
 
         sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
@@ -226,7 +231,7 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
 
         });
 
-        server.createContext("/auth", new SecureServerHandler(
+        server.createContext(MessageFactory.COMMUNICATION_ENDPOINT, new SecureServerHandler(
                 serverConfiguration.getSecurityConfiguration().getUserAuthorizator(),
                 preparedMessages)
         );
@@ -235,10 +240,10 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
     }
 
     private void startNonSecureServerListener() throws IOException {
-        InetSocketAddress address = new InetSocketAddress(27774);
+        InetSocketAddress address = new InetSocketAddress(serverConfiguration.getPort());
         HttpServer server = HttpServer.create(address, 0);
 
-        server.createContext("/auth", new NonSecureServerHandler(preparedMessages));
+        server.createContext(MessageFactory.COMMUNICATION_ENDPOINT, new NonSecureServerHandler(preparedMessages));
         server.setExecutor(null);
         server.start();
     }

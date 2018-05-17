@@ -2,12 +2,15 @@ package cz.vutbr.fit.openmrdp.messages.dto;
 
 import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
 import cz.vutbr.fit.openmrdp.model.base.Resource;
 
 import java.util.List;
 
 /**
+ * Data Transfer Object which is used for storing of ReDEL message related data
+ *
  * @author Jiri Koudelka
  * @since 18.03.2018.
  */
@@ -25,6 +28,7 @@ public final class ReDELResponseDTO {
         this.resources = Preconditions.checkNotNull(builder.resources);
     }
 
+    @Nullable
     public int getSequenceNumber() {
         return sequenceNumber;
     }

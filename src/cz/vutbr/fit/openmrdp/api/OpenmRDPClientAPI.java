@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.api;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
 import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 
@@ -17,7 +19,8 @@ public interface OpenmRDPClientAPI {
      * @return - URL with resource path
      * @throws NetworkCommunicationException - if there will be some problem with network
      */
-    String locateResource(String resourceName) throws NetworkCommunicationException;
+    @Nullable
+    String locateResource(@NotNull String resourceName) throws NetworkCommunicationException;
 
     /**
      * Locate resource specified in parameter. This method communicates only in secure mode.
@@ -27,7 +30,8 @@ public interface OpenmRDPClientAPI {
      * @return - URL with resource path
      * @throws NetworkCommunicationException - if there will be some problem with network
      */
-    String locateResource(String resourceName, String login, String password) throws NetworkCommunicationException;
+    @Nullable
+    String locateResource(@NotNull String resourceName, @NotNull String login, @NotNull String password) throws NetworkCommunicationException;
 
     /**
      * Identify resource which is requested in the query parameter. This method communicates only in non-secure mode.
@@ -37,7 +41,8 @@ public interface OpenmRDPClientAPI {
      * @throws QuerySyntaxException - if the query haven't expected syntax
      * @throws NetworkCommunicationException - if there will be some problem with network
      */
-    String identifyResource(String query) throws QuerySyntaxException, NetworkCommunicationException;
+    @Nullable
+    String identifyResource(@NotNull String query) throws QuerySyntaxException, NetworkCommunicationException;
 
     /**
      * Identify resource which is requested in the query parameter. This method communicates only in non-secure mode.
@@ -49,5 +54,7 @@ public interface OpenmRDPClientAPI {
      * @throws QuerySyntaxException - if the query haven't expected syntax
      * @throws NetworkCommunicationException - if there will be some problem with network
      */
-    String identifyResource(String query, String login, String password) throws QuerySyntaxException, NetworkCommunicationException;
+    @Nullable
+    String identifyResource(@NotNull String query, @NotNull String login, @NotNull String password)
+            throws QuerySyntaxException, NetworkCommunicationException;
 }

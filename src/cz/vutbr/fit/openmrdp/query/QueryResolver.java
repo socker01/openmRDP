@@ -26,7 +26,7 @@ public final class QueryResolver {
     }
 
     /**
-     * Resolve identify query and find list of the resource names
+     * Resolve the identify query and find list of the resource names
      *
      * @param messageBody - {@link MessageBody} that contains identify query
      * @param resourceToSearchName - the name of the resource you are looking for

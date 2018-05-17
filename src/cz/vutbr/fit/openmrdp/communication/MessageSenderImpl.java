@@ -1,11 +1,10 @@
 package cz.vutbr.fit.openmrdp.communication;
 
-import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.MessageSerializer;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.*;
@@ -19,7 +18,7 @@ import java.net.*;
 public final class MessageSenderImpl implements MessageSender{
 
     @Override
-    public void sendMRDPMessage(BaseMessage message) throws IOException {
+    public void sendMRDPMessage(@NotNull BaseMessage message) throws IOException {
         DatagramSocket udpSocket = new DatagramSocket();
 
         DatagramPacket packet = createMRDPPacket(message);
@@ -29,28 +28,6 @@ public final class MessageSenderImpl implements MessageSender{
         }
 
         udpSocket.close();
-    }
-
-    @Override
-    public void sendReDELMessage(BaseMessage message) throws IOException {
-        URL url;
-        try {
-            String rawUrl = message.getHostAddress().getCompleteAddress();
-            url = new URL(rawUrl);
-        } catch (AddressSyntaxException e) {
-            throw new MalformedURLException(e.getMessage());
-        }
-
-        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-        connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-        connection.setDoOutput(true);
-        DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
-        writer.writeBytes(message.getMessageBody().getQuery());
-        writer.flush();
-        writer.close();
     }
 
     @Override

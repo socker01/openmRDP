@@ -14,6 +14,8 @@ import java.util.Map;
 public final class MessageFactory {
 
     public static final long MAX_SEQUENCE_NUMBER = 2147483648L;    //TCP standard - 2^31
+    public static final String COMMUNICATION_ENDPOINT = "/auth";
+
     private static final String SEQUENCE_NUMBER_TAG = "NSEQ";
 
     static final String SERVER_TAG = "SERVER";
@@ -74,7 +76,9 @@ public final class MessageFactory {
     }
 
     public static String generateConnectionMessage(ServerConfiguration serverConfiguration, int sequenceNumber, String protocol, String authorizationLevel){
-        String message = SERVER_TAG + ": " + serverConfiguration.getIpAddress() + ":" + serverConfiguration.getPort() + "/auth. has information for you.";
+        String message = SERVER_TAG + ": " + serverConfiguration.getIpAddress() + ":"
+                + serverConfiguration.getPort()
+                + COMMUNICATION_ENDPOINT + ". has information for you.";
         message += "\n" + SEQUENCE_NUMBER_TAG + ": " + sequenceNumber;
         message += "\n" + PROTOCOL_TAG + ": " + protocol;
         message += "\n" + AUTHORIZATION_TAG + ": " + authorizationLevel;

@@ -5,11 +5,20 @@ import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 
 /**
+ * Parser that creates {@link Address} object from {@link String} address.
+ *
  * @author Jiri Koudelka
  * @since 18.03.2018.
  */
 public final class AddressParser {
 
+    /**
+     * Parse {@link String} address and create appropriate {@link Address} object
+     *
+     * @param hostAddress - host address stored in the {@link String} object
+     * @return - {@link Address}
+     * @throws AddressSyntaxException - if the address syntax is not correct
+     */
     public static Address parseAddressHostAndEndpoint(String hostAddress) throws AddressSyntaxException {
         checkCorrectSyntax(hostAddress);
 
@@ -43,6 +52,11 @@ public final class AddressParser {
         return new Address(hostName, endPoint);
     }
 
+    /**
+     * Parse port from address string
+     * @param address - address stored in the {@link String}
+     * @return - {@link Integer}
+     */
     @Nullable
     public static Integer parsePort(@NotNull String address){
         address = removeProtocol(address);
@@ -65,9 +79,13 @@ public final class AddressParser {
         return address;
     }
 
+    /**
+     * Remove endpoint, port and protocol from original address
+     * @param address - {@link String}
+     * @return - {@link String}
+     */
     public static String parseAddressWithoutPort(@NotNull String address){
         address = removeProtocol(address);
-        System.out.println("addressWithoutProtocol: " + address);
 
         int delimiterIndex = address.indexOf(":");
         if (delimiterIndex != -1){
@@ -77,6 +95,11 @@ public final class AddressParser {
         return address;
     }
 
+    /**
+     * Parse endpoint from address string
+     * @param address - {@link String}
+     * @return - {@link String}
+     */
     public static String parseEndpoint(@NotNull String address){
         address = removeProtocol(address);
 

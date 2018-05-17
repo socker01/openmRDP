@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.communication;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
 
@@ -19,15 +20,7 @@ interface MessageSender {
      * @param message - {@link BaseMessage} message to send
      * @throws IOException - if there will be problem with sending of the message
      */
-    void sendMRDPMessage(BaseMessage message) throws IOException;
-
-    /**
-     * Send ReDEL message with response
-     *
-     * @param message - {@link BaseMessage} message to send
-     * @throws IOException - if there will be problem with sending of the message
-     */
-    void sendReDELMessage(BaseMessage message) throws IOException;
+    void sendMRDPMessage(@NotNull BaseMessage message) throws IOException;
 
     /**
      * Send ConnectionInformation message with the information about connection
@@ -35,5 +28,5 @@ interface MessageSender {
      * @param message - {@link BaseMessage} message to send
      * @throws IOException - if there will be problem with sending of the message
      */
-    void sendInformationAboutConnection(Address clientAddress, String message) throws IOException;
+    void sendInformationAboutConnection(@NotNull Address clientAddress, @NotNull String message) throws IOException;
 }

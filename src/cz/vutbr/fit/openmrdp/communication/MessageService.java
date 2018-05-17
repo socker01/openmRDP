@@ -30,10 +30,6 @@ public final class MessageService {
         }
     }
 
-    public void sendReDELMessage(BaseMessage baseMessage) throws IOException {
-        messageSender.sendReDELMessage(baseMessage);
-    }
-
     public BaseMessage receiveMessage() throws NetworkCommunicationException {
         try {
             return messageReceiver.receiveMessages();

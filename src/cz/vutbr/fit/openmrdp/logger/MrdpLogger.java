@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.logger;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * The interface for the logging.
  *
@@ -12,17 +14,17 @@ public interface MrdpLogger {
      * Debug level log
      * @param message - message to log
      */
-    void logDebug(String message);
+    void logDebug(@NotNull String message);
 
     /**
      * Info level log
      * @param message - message to log
      */
-    void logInfo(String message);
+    void logInfo(@NotNull String message);
 
     /**
      * Error level log
      * @param error - error to log
      */
-    void logError(String error);
+    void logError(@NotNull String error);
 }

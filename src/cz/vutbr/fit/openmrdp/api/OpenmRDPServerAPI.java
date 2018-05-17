@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.api;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
@@ -25,12 +26,12 @@ public interface OpenmRDPServerAPI {
      *
      * @param information - {@link RDFTriple with information}
      */
-    void addInformationToInformationBase(RDFTriple information);
+    void addInformationToInformationBase(@NotNull RDFTriple information);
 
     /**
      * Remove information from the information base. This method also affect location tree and remove information from the informationBase.xml
      *
      * @param information - {@link RDFTriple with the information}
      */
-    void removeInformationFromInformationBase(RDFTriple information);
+    void removeInformationFromInformationBase(@NotNull RDFTriple information);
 }

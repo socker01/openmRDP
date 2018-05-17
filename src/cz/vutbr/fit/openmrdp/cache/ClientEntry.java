@@ -16,14 +16,16 @@ public final class ClientEntry {
     @NotNull
     private final String address;
     private final int sequenceNumber;
+    @NotNull
     private Instant created;
 
-    public ClientEntry(@NotNull String address, int sequenceNumber, Instant created) {
+    public ClientEntry(@NotNull String address, int sequenceNumber, @NotNull Instant created) {
         this.address = Preconditions.checkNotNull(address);
         this.sequenceNumber = sequenceNumber;
         this.created = created;
     }
 
+    @NotNull
     public Instant getCreated() {
         return created;
     }

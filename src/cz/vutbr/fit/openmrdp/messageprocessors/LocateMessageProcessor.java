@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.messageprocessors;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.MessageFactory;
@@ -12,19 +13,25 @@ import java.net.SocketException;
 import java.util.Collections;
 
 /**
+ * Production implementation of {@link MessageProcessor} interface.
+ *
+ * This processor is used for processing of the LOCATE messages.
+ *
  * @author Jiri Koudelka
  * @since 09.03.2018.
  */
 public final class LocateMessageProcessor implements MessageProcessor{
 
+    @NotNull
     private final InfoManager infoManager;
 
-    public LocateMessageProcessor(InfoManager infoManager) {
+    public LocateMessageProcessor(@NotNull InfoManager infoManager) {
         this.infoManager = infoManager;
     }
 
     @Override
-    public BaseMessage processMessage(BaseMessage locateMessage) throws AddressSyntaxException {
+    @NotNull
+    public BaseMessage processMessage(@NotNull BaseMessage locateMessage) throws AddressSyntaxException {
         String resourceLocation;
         try {
             resourceLocation = infoManager.findResourceLocation(locateMessage.getResourceName());

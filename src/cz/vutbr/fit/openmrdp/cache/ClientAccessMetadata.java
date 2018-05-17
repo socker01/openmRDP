@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.cache;
 
+import com.sun.istack.internal.NotNull;
+
 import java.time.Instant;
 import java.util.Objects;
 
@@ -11,16 +13,20 @@ import java.util.Objects;
  */
 public final class ClientAccessMetadata {
 
+    @NotNull
     private final String login;
+    @NotNull
     private final String passwordHash;
+    @NotNull
     private final Instant lastAccess;
 
-    public ClientAccessMetadata(String login, String passwordHash, Instant lastAccess) {
+    public ClientAccessMetadata(@NotNull String login, @NotNull String passwordHash, @NotNull Instant lastAccess) {
         this.login = login;
         this.passwordHash = passwordHash;
         this.lastAccess = lastAccess;
     }
 
+    @NotNull
     public Instant getLastAccess() {
         return lastAccess;
     }

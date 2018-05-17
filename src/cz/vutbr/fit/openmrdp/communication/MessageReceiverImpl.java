@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.communication;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.MessageDeserializer;
 
@@ -17,6 +18,7 @@ import java.net.MulticastSocket;
 public final class MessageReceiverImpl implements MessageReceiver {
 
     @Override
+    @NotNull
     public BaseMessage receiveMessages() throws IOException {
         InetAddress ipAddress = InetAddress.getByName(NetworkCommunicationConstants.MULTICAST_ADDRESS);
         MulticastSocket socket = createAndConfigureSocket(ipAddress);
@@ -31,12 +33,13 @@ public final class MessageReceiverImpl implements MessageReceiver {
         return receivedMessage;
     }
 
-    private void closeSocket(InetAddress ipAddress, MulticastSocket socket) throws IOException {
+    private void closeSocket(@NotNull InetAddress ipAddress, @NotNull MulticastSocket socket) throws IOException {
         socket.leaveGroup(ipAddress);
         socket.close();
     }
 
-    private static MulticastSocket createAndConfigureSocket(InetAddress ipAddress) throws IOException {
+    @NotNull
+    private static MulticastSocket createAndConfigureSocket(@NotNull InetAddress ipAddress) throws IOException {
         MulticastSocket socket = new MulticastSocket(NetworkCommunicationConstants.PORT);
         socket.joinGroup(ipAddress);
 

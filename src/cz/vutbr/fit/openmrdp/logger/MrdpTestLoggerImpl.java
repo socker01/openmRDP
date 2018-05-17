@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.logger;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * The test implementation of the {@link MrdpLogger} interface.
  *
@@ -10,17 +12,17 @@ package cz.vutbr.fit.openmrdp.logger;
  */
 public final class MrdpTestLoggerImpl implements MrdpLogger {
     @Override
-    public void logDebug(String message) {
+    public void logDebug(@NotNull String message) {
         System.out.println("DEBUG: " + message);
     }
 
     @Override
-    public void logInfo(String message) {
+    public void logInfo(@NotNull String message) {
         System.out.println("INFO: " + message);
     }
 
     @Override
-    public void logError(String error) {
+    public void logError(@NotNull String error) {
         System.out.println("ERROR: " + error);
     }
 }

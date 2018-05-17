@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.messageprocessors;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
 import cz.vutbr.fit.openmrdp.messages.MessageFactory;
@@ -12,19 +13,25 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Production implementation of {@link MessageProcessor} interface.
+ *
+ * This processor is used for processing of the IDENTIFY messages.
+ *
  * @author Jiri Koudelka
  * @since 27.03.2018.
  */
 public final class IdentifyMessageProcessor implements MessageProcessor {
 
+    @NotNull
     private final InfoManager infoManager;
 
-    public IdentifyMessageProcessor(InfoManager infoManager) {
+    public IdentifyMessageProcessor(@NotNull InfoManager infoManager) {
         this.infoManager = infoManager;
     }
 
     @Override
-    public BaseMessage processMessage(BaseMessage receivedMessage) throws AddressSyntaxException {
+    @NotNull
+    public BaseMessage processMessage(@NotNull BaseMessage receivedMessage) throws AddressSyntaxException {
 
         QueryResolver queryResolver = new QueryResolver(infoManager);
         List<String> foundResources = queryResolver.resolveQuery(receivedMessage.getMessageBody(), receivedMessage.getResourceName());
@@ -40,7 +47,8 @@ public final class IdentifyMessageProcessor implements MessageProcessor {
         return MessageFactory.createReDELResponse(responseDTO);
     }
 
-    private ReDELResponseDTO createReDELResponseForNonExistingResourceName(BaseMessage receivedMessage) throws AddressSyntaxException {
+    @NotNull
+    private ReDELResponseDTO createReDELResponseForNonExistingResourceName(@NotNull BaseMessage receivedMessage) throws AddressSyntaxException {
         Resource resource = new Resource(null, null);
 
         return new ReDELResponseDTO.Builder()
@@ -50,7 +58,9 @@ public final class IdentifyMessageProcessor implements MessageProcessor {
                 .build();
     }
 
-    private ReDELResponseDTO createReDELResponseForFoundResource(BaseMessage receivedMessage, String foundResource) throws AddressSyntaxException {
+    @NotNull
+    private ReDELResponseDTO createReDELResponseForFoundResource(@NotNull BaseMessage receivedMessage, @NotNull String foundResource)
+            throws AddressSyntaxException {
         String foundResourceLocation = infoManager.findResourceLocation(foundResource);
         Resource resource = new Resource(foundResource, foundResourceLocation);
 

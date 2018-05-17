@@ -3,6 +3,8 @@ package cz.vutbr.fit.openmrdp.messages;
 import com.google.common.annotations.VisibleForTesting;
 
 /**
+ * The enumeration that represents the type of the content.
+ *
  * @author Jiri Koudelka
  * @since 27.01.2018.
  */
