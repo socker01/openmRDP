@@ -31,9 +31,10 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
     private final MessageService messageService;
     private final String callbackURI;
-    private long sequenceNumber = 0;
-
     private final MrdpLogger logger;
+    private final boolean debugMode;
+
+    private long sequenceNumber = 0;
 
     /**
      * Public constructor of the OpenmRDP client API
@@ -45,6 +46,23 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
         this.callbackURI = callbackURI;
         this.logger = logger;
+        this.debugMode = false;
+    }
+
+    /**
+     * Public constructor of the OpenmRDP client API with possibility to set debugMode flag.
+     *
+     * If the debug mode is set to true, the client accept also secure servers with self-signed certificates
+     *
+     * @param callbackURI - URI where the client will be waiting for the response from the server
+     *      * @param logger - logger for logging of the errors
+     * @param debugMode - debugMode flag. If the debugMode is true, client accept also self-signed certificates
+     */
+    public OpenmRDPClientApiImpl(String callbackURI, MrdpLogger logger, boolean debugMode) {
+        messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
+        this.callbackURI = callbackURI;
+        this.logger = logger;
+        this.debugMode = debugMode;
     }
 
     @Override
@@ -203,11 +221,14 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
     private HttpsURLConnection initializeSecureConnection(URL url, String login, String password) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
-        connection.setHostnameVerifier((hostname, session) -> true);
-        try {
-            ConnectionTrustVerifier.trustSelfSignedCertificates(connection);
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            logger.logError("Trust modifier error.");
+        if (debugMode)
+        {
+            connection.setHostnameVerifier((hostname, session) -> true);
+            try {
+                ConnectionTrustVerifier.trustSelfSignedCertificates(connection);
+            } catch (KeyManagementException | NoSuchAlgorithmException e) {
+                logger.logError("Connection Trust modifier error: " + e.getMessage());
+            }
         }
 
         sequenceNumber++;

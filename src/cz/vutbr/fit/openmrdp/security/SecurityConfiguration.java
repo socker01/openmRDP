@@ -11,16 +11,23 @@ public final class SecurityConfiguration {
    @Nullable
    private final UserAuthorizator userAuthorizator;
 
-    SecurityConfiguration(boolean supportSecureConnection, @Nullable UserAuthorizator userAuthorizator) {
+   private final boolean debugMode;
+
+    SecurityConfiguration(boolean supportSecureConnection, @Nullable UserAuthorizator userAuthorizator, boolean debugMode) {
         this.supportSecureConnection = supportSecureConnection;
         this.userAuthorizator = userAuthorizator;
-    }
-
-    public boolean authorizeUser(String login, String password){
-        return userAuthorizator.authorizeUser(login, password);
+        this.debugMode = debugMode;
     }
 
     public boolean isSecureConnectionSupported() {
         return supportSecureConnection;
+    }
+
+    public UserAuthorizator getUserAuthorizator() {
+        return userAuthorizator;
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
     }
 }

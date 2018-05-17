@@ -225,7 +225,10 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
 
         });
 
-        server.createContext("/auth", new SecureServerHandler(new UserAuthorizatorTestImpl(), preparedMessages));
+        server.createContext("/auth", new SecureServerHandler(
+                serverConfiguration.getSecurityConfiguration().getUserAuthorizator(),
+                preparedMessages)
+        );
         server.setExecutor(null);
         server.start();
     }

@@ -39,6 +39,6 @@ public final class QueryParser {
     private static String parseConditions(String query){
         int whereCommandIndex = query.indexOf(WHERE_COMMAND);
 
-        return query.substring(whereCommandIndex + WHERE_COMMAND.length());
+        return query.substring(whereCommandIndex + 1 + WHERE_COMMAND.length());
     }
 }
