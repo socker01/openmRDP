@@ -12,18 +12,21 @@ public interface MrdpLogger {
 
     /**
      * Debug level log
+     *
      * @param message - message to log
      */
     void logDebug(@NotNull String message);
 
     /**
      * Info level log
+     *
      * @param message - message to log
      */
     void logInfo(@NotNull String message);
 
     /**
      * Error level log
+     *
      * @param error - error to log
      */
     void logError(@NotNull String error);

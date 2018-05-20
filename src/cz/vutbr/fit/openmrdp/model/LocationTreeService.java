@@ -17,6 +17,8 @@ import java.util.Set;
  */
 final class LocationTreeService {
 
+    private static final int MAXIMUM_ITERATION = 100;
+
     private LocationTree locationTree;
     private final String levelUpPredicate;
     private Map<String, Set<RDFTriple>> objectLocationMap;
@@ -30,16 +32,21 @@ final class LocationTreeService {
     /**
      * Create tree of the locations {@link LocationTree} from the list of location information.
      *
-     * @param locationInformation - {@link java.util.List} of location information
+     * @param locationInformation - {@link java.util.List} of locations information
      */
     void createLocationTree(Set<RDFTriple> locationInformation) {
         addTopLevelLocations(findTopLevelLocationInformation(locationInformation));
 
-        //TODO: 5?!?!?
-        // Opakuj algoritmus od kroku 2, dokud se přidávají nové informace do stromu nebo se strom mení
-        for (int i = 0; i < 5; i++) {
+        Set<RDFTriple> previousLeafLocationsInformation = new HashSet<>();
+        for (int i = 0; i < MAXIMUM_ITERATION; i++) {
             Set<String> locationLeafs = locationTree.getLeafs();
             Set<RDFTriple> leafLocationsInformation = findLocationsInformationForLeafs(locationLeafs);
+
+            if (previousLeafLocationsInformation.containsAll(leafLocationsInformation)) {
+                break;
+            } else {
+                previousLeafLocationsInformation = leafLocationsInformation;
+            }
 
             for (RDFTriple leafLocationInformation : leafLocationsInformation) {
                 locationTree.addLocation(leafLocationInformation);

@@ -24,14 +24,17 @@ public final class ConnectionInformationMessage {
         this.authorizationLevel = Preconditions.checkNotNull(authorizationLevel);
     }
 
+    @NotNull
     public String getServerAddress() {
         return serverAddress;
     }
 
+    @NotNull
     public MessageProtocol getMessageProtocol() {
         return messageProtocol;
     }
 
+    @NotNull
     public AuthorizationLevel getAuthorizationLevel() {
         return authorizationLevel;
     }

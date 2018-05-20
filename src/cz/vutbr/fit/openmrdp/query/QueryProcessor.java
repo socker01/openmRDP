@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.query;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
@@ -24,7 +25,8 @@ final class QueryProcessor {
      * @return - {@link Query} object
      * @throws QuerySyntaxException - if the query, stored in the messageBody, doesn't have expected syntax
      */
-    static Query processQuery(MessageBody messageBody) throws QuerySyntaxException {
+    @NotNull
+    static Query processQuery(@NotNull MessageBody messageBody) throws QuerySyntaxException {
         Set<RDFTriple> triples;
 
         try{
@@ -40,12 +42,19 @@ final class QueryProcessor {
         return new Query(triples, messageBody.getContentType());
     }
 
+    /**
+     * Implementation of processing of the SPARQL queries will be implemented in the next version
+     *
+     * @param query - query to process
+     * @return - {@link Set} of {@link RDFTriple}
+     */
     @SuppressWarnings("unused")
-    private static Set<RDFTriple> processSparqlQuery(String query){
+    private static Set<RDFTriple> processSparqlQuery(@NotNull String query){
         throw new UnsupportedOperationException("The library does not support SPARQL query yet");
     }
 
-    private static Set<RDFTriple> processPlantQuery(String query) throws QuerySyntaxException {
+    @NotNull
+    private static Set<RDFTriple> processPlantQuery(@NotNull String query) throws QuerySyntaxException {
         Scanner scanner = new Scanner(query);
         Set<RDFTriple> triples = new HashSet<>();
 
@@ -60,7 +69,8 @@ final class QueryProcessor {
         return triples;
     }
 
-    private static RDFTriple createRDFTripleFromQueryLine(String queryLine) throws QuerySyntaxException {
+    @NotNull
+    private static RDFTriple createRDFTripleFromQueryLine(@NotNull String queryLine) throws QuerySyntaxException {
         String subject = queryLine.substring(0, queryLine.indexOf(' '));
         String predicate = queryLine.substring(queryLine.indexOf(' ') + 1, queryLine.lastIndexOf(' '));
         String object = queryLine.substring(queryLine.lastIndexOf(' ') + 1);
@@ -76,19 +86,19 @@ final class QueryProcessor {
         return new RDFTriple(subject, predicate, object);
     }
 
-    private static void checkSubjectSyntax(String subject) throws QuerySyntaxException {
+    private static void checkSubjectSyntax(@NotNull String subject) throws QuerySyntaxException {
         if(subject == null || subject.length() == 0){
             throw new QuerySyntaxException("Query syntax error: Missing subject.");
         }
     }
 
-    private static void checkObjectSyntax(String object) throws QuerySyntaxException {
+    private static void checkObjectSyntax(@NotNull String object) throws QuerySyntaxException {
         if(object == null || object.length() == 0){
             throw new QuerySyntaxException("Query syntax error: Missing object.");
         }
     }
 
-    private static void checkPredicateSyntax(String predicate) throws QuerySyntaxException {
+    private static void checkPredicateSyntax(@NotNull String predicate) throws QuerySyntaxException {
         if(predicate == null || predicate.length() == 0){
             throw new QuerySyntaxException("Query syntax error: Missing predicate.");
         }

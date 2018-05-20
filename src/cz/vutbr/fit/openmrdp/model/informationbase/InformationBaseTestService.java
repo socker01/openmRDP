@@ -1,11 +1,16 @@
 package cz.vutbr.fit.openmrdp.model.informationbase;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Test implementation of the {@link InformationBaseService} interface.
+ *
+ * Do not use this implementation in the production code.
+ *
  * @author Jiri Koudelka
  * @since 01.03.2018.
  */
@@ -28,6 +33,7 @@ public final class InformationBaseTestService implements InformationBaseService 
 
     private Set<RDFTriple> addedInformation = new HashSet<>();
 
+    @NotNull
     @Override
     public Set<RDFTriple> loadInformationBase() {
         Set<RDFTriple> testInformationBase = new HashSet<>();
@@ -53,12 +59,12 @@ public final class InformationBaseTestService implements InformationBaseService 
     }
 
     @Override
-    public void addInformationToBase(RDFTriple triple) {
+    public void addInformationToBase(@NotNull RDFTriple triple) {
         addedInformation.add(triple);
     }
 
     @Override
-    public void removeInformationFromBase(RDFTriple triple) {
+    public void removeInformationFromBase(@NotNull RDFTriple triple) {
         addedInformation.remove(triple);
     }
 }

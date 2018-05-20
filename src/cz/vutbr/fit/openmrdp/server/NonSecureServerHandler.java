@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.server;
 
+import com.google.common.base.Preconditions;
+import com.sun.istack.internal.NotNull;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import cz.vutbr.fit.openmrdp.cache.ClientEntry;
@@ -23,14 +25,15 @@ public final class NonSecureServerHandler implements HttpHandler {
 
     private static final int NON_SECURE_GET_MESSAGES_COUNT = 2;
 
+    @NotNull
     private final Map<ClientEntry, BaseMessage> preparedMessages;
 
-    public NonSecureServerHandler(Map<ClientEntry, BaseMessage> preparedMessages) {
-        this.preparedMessages = preparedMessages;
+    public NonSecureServerHandler(@NotNull Map<ClientEntry, BaseMessage> preparedMessages) {
+        this.preparedMessages = Preconditions.checkNotNull(preparedMessages);
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void handle(@NotNull HttpExchange httpExchange) throws IOException {
         String clientAddress = String.valueOf(httpExchange.getRequestHeaders().get(HeaderType.CLIENT_ADDRESS.getHeaderCode()).get(0));
         int sequenceNumber = Integer.parseInt(httpExchange.getRequestHeaders().get(HeaderType.NSEQ.getHeaderCode()).get(0));
 

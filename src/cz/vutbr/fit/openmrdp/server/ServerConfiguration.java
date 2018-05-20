@@ -5,6 +5,8 @@ import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.security.SecurityConfiguration;
 
 /**
+ * Configuration object which contains all preferences used by server.
+ *
  * @author Jiri Koudelka
  * @since 29.04.2018
  */
@@ -21,14 +23,17 @@ public final class ServerConfiguration {
         this.securityConfiguration = Preconditions.checkNotNull(securityConfiguration);
     }
 
+    @NotNull
     public String getIpAddress() {
         return ipAddress;
     }
 
+    @NotNull
     public int getPort() {
         return port;
     }
 
+    @NotNull
     public SecurityConfiguration getSecurityConfiguration() {
         return securityConfiguration;
     }

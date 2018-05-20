@@ -15,7 +15,7 @@ import java.net.*;
  * @author Jiri Koudelka
  * @since 05.02.2018.
  */
-public final class MessageSenderImpl implements MessageSender{
+public final class MessageSenderImpl implements MessageSender {
 
     @Override
     public void sendMRDPMessage(@NotNull BaseMessage message) throws IOException {
@@ -31,13 +31,13 @@ public final class MessageSenderImpl implements MessageSender{
     }
 
     @Override
-    public void sendInformationAboutConnection(Address clientAddress, String message) throws IOException {
+    public void sendInformationAboutConnection(@NotNull Address clientAddress, @NotNull String message) throws IOException {
         String hostAddress = clientAddress.getHostAddress();
 
         int delimiterIndex = hostAddress.indexOf(":");
 
         String ipAddress = hostAddress.substring(0, delimiterIndex);
-        int port = Integer.parseInt(hostAddress.substring(delimiterIndex+1));
+        int port = Integer.parseInt(hostAddress.substring(delimiterIndex + 1));
         Socket socket = new Socket(ipAddress, port);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
@@ -47,7 +47,8 @@ public final class MessageSenderImpl implements MessageSender{
         socket.close();
     }
 
-    private DatagramPacket createMRDPPacket(BaseMessage message) throws UnknownHostException {
+    @NotNull
+    private DatagramPacket createMRDPPacket(@NotNull BaseMessage message) throws UnknownHostException {
         String rawMessage = MessageSerializer.serializeMessage(message);
         byte[] messageByteArray = rawMessage.getBytes();
 

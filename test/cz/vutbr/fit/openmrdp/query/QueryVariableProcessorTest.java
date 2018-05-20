@@ -6,10 +6,7 @@ import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import cz.vutbr.fit.openmrdp.model.base.VariableResourcePair;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -91,8 +88,11 @@ public final class QueryVariableProcessorTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void prepareVariableCombinations() {
         List<List<VariableResourcePair>> variableResourcePairs = QueryVariableProcessor.prepareVariableCombinations(createTestQueryVariableSet());
+
+        variableResourcePairs.forEach(Collections::sort);
 
         assertThat(variableResourcePairs, hasSize(6));
         assertThat(variableResourcePairs.contains(EXPECTED_RESOURCE_PAIR_1), is(true));

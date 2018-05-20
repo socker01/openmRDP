@@ -17,29 +17,10 @@ public class Main {
 
     public static void main(String[] args) throws NetworkCommunicationException, SocketException {
 
-//        InfoManager manager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyProdService());
-//        IdentifyMessageProcessor processor = new IdentifyMessageProcessor(manager);
-//
-//        String query = "?material <loc:locatedIn> ?room" + "\n" +
-//                "?material rdf:type mat:inflammableThing" + "\n" +
-//                "urn:uuid:drill1 <loc:locatedIn> ?room" + "\n" +
-//                "urn:uuid:drill1 task:drilling ?sur" + "\n" +
-//                "?sur rdf:type mat:metallicThing";
-//
-//        MessageBody body = new MessageBody(query, ContentType.PLANT_QUERY);
-//        BaseMessage message = MessageFactory.createIdentifyMessage("?material", "test/end", body, 1);
-//        try {
-//            processor.processMessage(message);
-//        } catch (AddressSyntaxException e) {
-//            e.printStackTrace();
-//        }
-//
-//        System.out.println("test");
-
-//        OpenmRDPClientAPI api = new OpenmRDPClientApiImpl("testCallbackURI");
-
-//        SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createNonSecureSecurityConfiguration();
-        SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createSecureSecurityConfiguration(new UserAuthorizatorTestImpl());
+//        SecurityConfiguration securityConfiguration =
+//                SecurityConfigurationFactory.createSecureSecurityConfiguration(new UserAuthorizatorTestImpl(),
+//                        "examplekey.jks", "password");
+        SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createNonSecureSecurityConfiguration();
         ServerConfiguration serverConfiguration = new ServerConfiguration(AddressRetriever.getLocalIpAddress(), 27774, securityConfiguration);
         OpenmRDPServerAPI api = new OpenmRDPServerAPIImpl(serverConfiguration, new MrdpTestLoggerImpl());
 

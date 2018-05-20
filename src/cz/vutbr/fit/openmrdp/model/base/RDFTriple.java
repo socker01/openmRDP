@@ -1,10 +1,13 @@
 package cz.vutbr.fit.openmrdp.model.base;
 
+import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
 
 import java.util.Objects;
 
 /**
+ * Object which represents RDF triple
+ *
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
@@ -18,19 +21,22 @@ public final class RDFTriple {
     private final String object;
 
     public RDFTriple(@NotNull String subject, @NotNull String predicate, @NotNull String object) {
-        this.subject = subject;
-        this.predicate = predicate;
-        this.object = object;
+        this.subject = Preconditions.checkNotNull(subject);
+        this.predicate = Preconditions.checkNotNull(predicate);
+        this.object = Preconditions.checkNotNull(object);
     }
 
+    @NotNull
     public String getSubject() {
         return subject;
     }
 
+    @NotNull
     public String getPredicate() {
         return predicate;
     }
 
+    @NotNull
     public String getObject() {
         return object;
     }
@@ -43,7 +49,7 @@ public final class RDFTriple {
         return object.startsWith("?");
     }
 
-    public boolean hasTwoVariables(){
+    public boolean hasTwoVariables() {
         return isObjectVariable() && isSubjectVariable();
     }
 

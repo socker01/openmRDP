@@ -6,7 +6,7 @@ package cz.vutbr.fit.openmrdp.exceptions;
  */
 public final class NetworkCommunicationException extends Exception {
 
-    public NetworkCommunicationException(String message, Throwable throwable){
+    public NetworkCommunicationException(String message, Throwable throwable) {
         super(message, throwable);
     }
 }

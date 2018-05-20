@@ -1,6 +1,8 @@
 package cz.vutbr.fit.openmrdp.server;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.sun.istack.internal.NotNull;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import cz.vutbr.fit.openmrdp.cache.ClientAccessMetadata;
@@ -13,11 +15,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Secure server handler which implements {@link HttpHandler}.
- *
+ * <p>
  * This handler is used for service of the HTTPS requests and authorize users.
  *
  * @author Jiri Koudelka
@@ -25,18 +31,21 @@ import java.util.*;
  */
 public final class SecureServerHandler implements HttpHandler {
 
+    @NotNull
     private final Map<String, List<ClientAccessMetadata>> authorizedUsers;
+    @NotNull
     private final UserAuthorizator userAuthorizator;
+    @NotNull
     private final Map<ClientEntry, BaseMessage> preparedMessages;
 
-    public SecureServerHandler(UserAuthorizator userAuthorizator, Map<ClientEntry, BaseMessage> preparedMessages) {
+    public SecureServerHandler(@NotNull UserAuthorizator userAuthorizator, @NotNull Map<ClientEntry, BaseMessage> preparedMessages) {
         this.authorizedUsers = new HashMap<>();
-        this.userAuthorizator = userAuthorizator;
-        this.preparedMessages = preparedMessages;
+        this.userAuthorizator = Preconditions.checkNotNull(userAuthorizator);
+        this.preparedMessages = Preconditions.checkNotNull(preparedMessages);
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void handle(@NotNull HttpExchange httpExchange) throws IOException {
         invalidateLongTimeLoggedUsers();
         String clientAddress = String.valueOf(httpExchange.getRequestHeaders().get(HeaderType.CLIENT_ADDRESS.getHeaderCode()).get(0));
         int sequenceNumber = Integer.parseInt(httpExchange.getRequestHeaders().get(HeaderType.NSEQ.getHeaderCode()).get(0));
@@ -64,25 +73,24 @@ public final class SecureServerHandler implements HttpHandler {
     private void invalidateLongTimeLoggedUsers() {
         for (String clientAddress : authorizedUsers.keySet()) {
             List<ClientAccessMetadata> clientAccessMetadataList = authorizedUsers.get(clientAddress);
-
-            List<ClientAccessMetadata> metadataToRemove = new ArrayList<>();
-            for (ClientAccessMetadata clientAccessMetadata : clientAccessMetadataList) {
-                if (clientAccessMetadata.getLastAccess().toEpochMilli() < Instant.now().minus(30, ChronoUnit.MINUTES).toEpochMilli()) {
-                    metadataToRemove.add(clientAccessMetadata);
-                }
-            }
+            List<ClientAccessMetadata> metadataToRemove = clientAccessMetadataList
+                    .stream()
+                    .filter(clientAccessMetadata -> clientAccessMetadata.getLastAccess().toEpochMilli()
+                            < Instant.now().minus(30, ChronoUnit.MINUTES).toEpochMilli())
+                    .collect(Collectors.toList());
 
             clientAccessMetadataList.removeAll(metadataToRemove);
         }
     }
 
-    private String getDecodedAuthorizationString(HttpExchange httpExchange) {
+    @NotNull
+    private String getDecodedAuthorizationString(@NotNull HttpExchange httpExchange) {
         String encodedAuthString = String.valueOf(httpExchange.getRequestHeaders().get(HeaderType.AUTHORIZATION.getHeaderCode()).get(0));
 
         return new String(Base64.getDecoder().decode(encodedAuthString));
     }
 
-    private boolean authenticateUser(String authString, String clientAddress) {
+    private boolean authenticateUser(@NotNull String authString, @NotNull String clientAddress) {
         int delimiterIndex = authString.indexOf(":");
         String login = authString.substring(0, delimiterIndex);
         String password = authString.substring(delimiterIndex + 1);

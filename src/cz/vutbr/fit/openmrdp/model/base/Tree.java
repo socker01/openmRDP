@@ -1,11 +1,16 @@
 package cz.vutbr.fit.openmrdp.model.base;
 
+import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Own implementation of the tree object.
+ * <p>
+ * This object is open for inheritance.
+ *
  * @author Jiri Koudelka
  * @since 07.04.2018.
  */
@@ -13,12 +18,12 @@ public class Tree {
 
     protected Node root;
 
-    public Tree(String rootValue) {
+    public Tree(@NotNull String rootValue) {
         this.root = new Node(rootValue, null);
     }
 
     @Nullable
-    protected Node findNodeInTree(Node node, String key) {
+    protected Node findNodeInTree(@NotNull Node node, @NotNull String key) {
         Set<Node> children = node.getChildren();
 
         if (children.isEmpty()) {

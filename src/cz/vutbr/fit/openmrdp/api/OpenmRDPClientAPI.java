@@ -15,6 +15,7 @@ public interface OpenmRDPClientAPI {
 
     /**
      * Locate resource specified in parameter. This method communicate only in non-secure mode.
+     *
      * @param resourceName - resource to locate
      * @return - URL with resource path
      * @throws NetworkCommunicationException - if there will be some problem with network
@@ -24,9 +25,10 @@ public interface OpenmRDPClientAPI {
 
     /**
      * Locate resource specified in parameter. This method communicates only in secure mode.
+     *
      * @param resourceName - resource to locate
-     * @param login - user login
-     * @param password - user password
+     * @param login        - user login
+     * @param password     - user password
      * @return - URL with resource path
      * @throws NetworkCommunicationException - if there will be some problem with network
      */
@@ -35,10 +37,11 @@ public interface OpenmRDPClientAPI {
 
     /**
      * Identify resource which is requested in the query parameter. This method communicates only in non-secure mode.
+     *
      * @param query - query for resolve
      * @return - If the server knows the location of resolved resource, returns the resource URL.
-     *      If not, the server returns the name of the resolved resource.
-     * @throws QuerySyntaxException - if the query haven't expected syntax
+     * If not, the server returns the name of the resolved resource.
+     * @throws QuerySyntaxException          - if the query haven't expected syntax
      * @throws NetworkCommunicationException - if there will be some problem with network
      */
     @Nullable
@@ -46,12 +49,13 @@ public interface OpenmRDPClientAPI {
 
     /**
      * Identify resource which is requested in the query parameter. This method communicates only in non-secure mode.
-     * @param query - query for resolve
-     * @param login - user login
+     *
+     * @param query    - query for resolve
+     * @param login    - user login
      * @param password - user password
      * @return - If the server knows the location of resolved resource, returns the resource URL.
-     *      If not, the server returns the name of the resolved resource.
-     * @throws QuerySyntaxException - if the query haven't expected syntax
+     * If not, the server returns the name of the resolved resource.
+     * @throws QuerySyntaxException          - if the query haven't expected syntax
      * @throws NetworkCommunicationException - if there will be some problem with network
      */
     @Nullable

@@ -1,7 +1,9 @@
 package cz.vutbr.fit.openmrdp.messages;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -12,7 +14,7 @@ import java.nio.charset.Charset;
  * @since 27.01.2018.
  */
 public final class MessageBody {
-    @NotNull
+    @Nullable
     private final String query;
     @NotNull
     private final ContentType contentType;
@@ -21,12 +23,12 @@ public final class MessageBody {
     static final String DEFAULT_QUERY_CHARSET = "UTF-8";
 
     @VisibleForTesting
-    public MessageBody(@NotNull String query, @NotNull ContentType contentType) {
+    public MessageBody(@Nullable String query, @NotNull ContentType contentType) {
         this.query = query;
-        this.contentType = contentType;
+        this.contentType = Preconditions.checkNotNull(contentType);
     }
 
-    @NotNull
+    @Nullable
     public String getQuery() {
         return query;
     }

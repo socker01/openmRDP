@@ -14,7 +14,7 @@ public interface UserAuthorizator {
     /**
      * Authorize user
      *
-     * @param login - user login
+     * @param login    - user login
      * @param password - user password
      * @return - true if the credentials are correct, false if not
      */

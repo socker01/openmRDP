@@ -1,6 +1,7 @@
 package cz.vutbr.fit.openmrdp.model.informationbase;
 
 import com.google.common.collect.Sets;
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.InformationBaseException;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import org.jdom.Document;
@@ -18,6 +19,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Production service for loading of information base from informationBase.xml file.
+ *
  * @author Jiri Koudelka
  * @since 01.03.2018.
  */
@@ -44,12 +47,13 @@ public final class InformationBaseProdService implements InformationBaseService 
             List list = rootNode.getChildren(INFORMATION_NODE);
 
             return loadTriplesFromDocument(list);
-        } catch (InformationBaseException ibe){
+        } catch (InformationBaseException ibe) {
             return Sets.newHashSet();
         }
     }
 
-    private Document getDocument(File xmlFile) {
+    @NotNull
+    private Document getDocument(@NotNull File xmlFile) {
         SAXBuilder builder = new SAXBuilder();
 
         Document document;
@@ -62,7 +66,8 @@ public final class InformationBaseProdService implements InformationBaseService 
         return document;
     }
 
-    private Set<RDFTriple> loadTriplesFromDocument(List informationElements) {
+    @NotNull
+    private Set<RDFTriple> loadTriplesFromDocument(@NotNull List informationElements) {
         Set<RDFTriple> loadedTriples = new HashSet<>();
 
         for (Object nodeObject : informationElements) {
@@ -82,7 +87,7 @@ public final class InformationBaseProdService implements InformationBaseService 
 
     @Override
     @SuppressWarnings("unchecked")
-    public void addInformationToBase(RDFTriple triple) {
+    public void addInformationToBase(@NotNull RDFTriple triple) {
         File xmlFile = new File(INFORMATION_BASE_FILE_PATH);
         if (!xmlFile.exists()) {
             createNewInformationBaseFile(triple);
@@ -98,9 +103,9 @@ public final class InformationBaseProdService implements InformationBaseService 
     }
 
     @Override
-    public void removeInformationFromBase(RDFTriple triple){
+    public void removeInformationFromBase(@NotNull RDFTriple triple) {
         File xmlFile = new File(INFORMATION_BASE_FILE_PATH);
-        if (!xmlFile.exists()){
+        if (!xmlFile.exists()) {
             return;
         }
 
@@ -109,12 +114,12 @@ public final class InformationBaseProdService implements InformationBaseService 
         Element rootNode = document.getRootElement();
         List list = rootNode.getChildren(INFORMATION_NODE);
 
-        for (Object element : list){
+        for (Object element : list) {
             Element element1 = (Element) element;
 
-            if(element1.getChildText(SUBJECT_PROPERTY).equals(triple.getSubject())
-                && element1.getChildText(PREDICATE_PROPERTY).equals(triple.getPredicate())
-                && element1.getChildText(OBJECT_PROPERTY).equals(triple.getObject())){
+            if (element1.getChildText(SUBJECT_PROPERTY).equals(triple.getSubject())
+                    && element1.getChildText(PREDICATE_PROPERTY).equals(triple.getPredicate())
+                    && element1.getChildText(OBJECT_PROPERTY).equals(triple.getObject())) {
 
                 rootNode.removeContent(element1);
             }
@@ -123,7 +128,8 @@ public final class InformationBaseProdService implements InformationBaseService 
         writeChangesToFile(document);
     }
 
-    private Element createNewXMLElement(RDFTriple triple) {
+    @NotNull
+    private Element createNewXMLElement(@NotNull RDFTriple triple) {
         Element newInformationElement = new Element(INFORMATION_NODE);
 
         Element subject = new Element(SUBJECT_PROPERTY);
@@ -142,7 +148,7 @@ public final class InformationBaseProdService implements InformationBaseService 
         return newInformationElement;
     }
 
-    private void writeChangesToFile(Document document) {
+    private void writeChangesToFile(@NotNull Document document) {
         XMLOutputter xmlOutputter = new XMLOutputter();
         xmlOutputter.setFormat(Format.getPrettyFormat());
 
@@ -160,7 +166,7 @@ public final class InformationBaseProdService implements InformationBaseService 
         }
     }
 
-    private void createNewInformationBaseFile(RDFTriple triple) {
+    private void createNewInformationBaseFile(@NotNull RDFTriple triple) {
         Element informationBaseElement = new Element(INFORMATION_BASE_ROOT_NODE);
         Document document = new Document(informationBaseElement);
 

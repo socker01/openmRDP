@@ -4,7 +4,7 @@ import com.sun.istack.internal.NotNull;
 
 /**
  * The test implementation of the {@link MrdpLogger} interface.
- *
+ * <p>
  * Use this implementation if you want to log every message into the standard output
  *
  * @author Jiri Koudelka

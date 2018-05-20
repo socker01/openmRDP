@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Production implementation of {@link MessageProcessor} interface.
- *
+ * <p>
  * This processor is used for processing of the IDENTIFY messages.
  *
  * @author Jiri Koudelka

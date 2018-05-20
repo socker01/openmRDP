@@ -19,24 +19,26 @@ public final class AddressParser {
      * @return - {@link Address}
      * @throws AddressSyntaxException - if the address syntax is not correct
      */
-    public static Address parseAddressHostAndEndpoint(String hostAddress) throws AddressSyntaxException {
+    @NotNull
+    public static Address parseAddressHostAndEndpoint(@NotNull String hostAddress) throws AddressSyntaxException {
         checkCorrectSyntax(hostAddress);
 
         return parseHostAddress(hostAddress);
     }
 
-    private static void checkCorrectSyntax(String hostAddress) throws AddressSyntaxException {
-        if(!hostAddress.contains("/")){
+    private static void checkCorrectSyntax(@NotNull String hostAddress) throws AddressSyntaxException {
+        if (!hostAddress.contains("/")) {
             throw new AddressSyntaxException("Host Address does not have correct syntax.");
         }
     }
 
-    private static Address parseHostAddress(String hostAddress) {
+    @NotNull
+    private static Address parseHostAddress(@NotNull String hostAddress) {
         int protocolDelimiterIndex;
         int endpointDelimiterIndex;
         String hostName;
 
-        if(hostAddress.contains("//")){
+        if (hostAddress.contains("//")) {
             protocolDelimiterIndex = hostAddress.indexOf("//");
             endpointDelimiterIndex = hostAddress.indexOf("/", protocolDelimiterIndex + 2);
 
@@ -54,25 +56,27 @@ public final class AddressParser {
 
     /**
      * Parse port from address string
+     *
      * @param address - address stored in the {@link String}
      * @return - {@link Integer}
      */
     @Nullable
-    public static Integer parsePort(@NotNull String address){
+    public static Integer parsePort(@NotNull String address) {
         address = removeProtocol(address);
         address = removeEndpoint(address);
         int delimiterIndex = address.indexOf(":");
 
-        if(delimiterIndex != -1){
+        if (delimiterIndex != -1) {
             return Integer.parseInt(address.substring(delimiterIndex + 1));
         }
 
         return null;
     }
 
-    private static String removeEndpoint(String address) {
+    @NotNull
+    private static String removeEndpoint(@NotNull String address) {
         int endpointDelimiter = address.indexOf("/");
-        if (endpointDelimiter != -1){
+        if (endpointDelimiter != -1) {
             return address.substring(0, endpointDelimiter);
         }
 
@@ -81,14 +85,16 @@ public final class AddressParser {
 
     /**
      * Remove endpoint, port and protocol from original address
+     *
      * @param address - {@link String}
      * @return - {@link String}
      */
-    public static String parseAddressWithoutPort(@NotNull String address){
+    @NotNull
+    public static String parseAddressWithoutPort(@NotNull String address) {
         address = removeProtocol(address);
 
         int delimiterIndex = address.indexOf(":");
-        if (delimiterIndex != -1){
+        if (delimiterIndex != -1) {
             return address.substring(0, delimiterIndex);
         }
 
@@ -97,14 +103,16 @@ public final class AddressParser {
 
     /**
      * Parse endpoint from address string
+     *
      * @param address - {@link String}
      * @return - {@link String}
      */
-    public static String parseEndpoint(@NotNull String address){
+    @NotNull
+    public static String parseEndpoint(@NotNull String address) {
         address = removeProtocol(address);
 
         int endpointDelimiter = address.indexOf("/");
-        if (endpointDelimiter != -1){
+        if (endpointDelimiter != -1) {
             return address.substring(endpointDelimiter);
         }
 
@@ -112,9 +120,10 @@ public final class AddressParser {
 
     }
 
+    @NotNull
     private static String removeProtocol(@NotNull String address) {
         int protocolDelimiter = address.indexOf("//");
-        if (protocolDelimiter != -1){
+        if (protocolDelimiter != -1) {
             return address.substring(protocolDelimiter + 2);
         }
 

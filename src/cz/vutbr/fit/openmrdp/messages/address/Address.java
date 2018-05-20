@@ -29,8 +29,4 @@ public final class Address {
     public String getEndPoint() {
         return endPoint;
     }
-
-    public String getCompleteAddress(){
-        return hostAddress + "/" + endPoint;
-    }
 }

@@ -1,6 +1,8 @@
 package cz.vutbr.fit.openmrdp.query;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.QueryProcessingException;
 import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
@@ -10,6 +12,7 @@ import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import cz.vutbr.fit.openmrdp.model.base.VariableResourcePair;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * {@link QueryResolver} resolves the identify queries and returns found resources.
@@ -19,20 +22,22 @@ import java.util.*;
  */
 public final class QueryResolver {
 
+    @NotNull
     private final InfoManager infoManager;
 
-    public QueryResolver(InfoManager infoManager) {
-        this.infoManager = infoManager;
+    public QueryResolver(@NotNull InfoManager infoManager) {
+        this.infoManager = Preconditions.checkNotNull(infoManager);
     }
 
     /**
      * Resolve the identify query and find list of the resource names
      *
-     * @param messageBody - {@link MessageBody} that contains identify query
+     * @param messageBody          - {@link MessageBody} that contains identify query
      * @param resourceToSearchName - the name of the resource you are looking for
      * @return - {@link List} of found resources
      */
-    public List<String> resolveQuery(MessageBody messageBody, String resourceToSearchName) {
+    @NotNull
+    public List<String> resolveQuery(@NotNull MessageBody messageBody, @NotNull String resourceToSearchName) {
 
         Query query;
         try {
@@ -44,7 +49,6 @@ public final class QueryResolver {
         Set<QueryVariable> variables = QueryVariableProcessor.identifyVariables(query.getQueryTriples());
         Map<RDFTriple, Set<RDFTriple>> matchingPatterns = findAllMatchingPatterns(query.getQueryTriples());
 
-        //TODO: maybe some refactor
         if (setPossibleValuesToVariables(variables, matchingPatterns)) {
             return Collections.emptyList();
         }
@@ -64,7 +68,7 @@ public final class QueryResolver {
         return correctResourcesNames;
     }
 
-    private boolean setPossibleValuesToVariables(Set<QueryVariable> variables, Map<RDFTriple, Set<RDFTriple>> matchingPatterns) {
+    private boolean setPossibleValuesToVariables(@NotNull Set<QueryVariable> variables, @NotNull Map<RDFTriple, Set<RDFTriple>> matchingPatterns) {
         for (RDFTriple findingTriple : matchingPatterns.keySet()) {
             if (findingTriple.hasTwoVariables()) {
                 findAndAddResourcesToSubjectVariable(variables, matchingPatterns, findingTriple);
@@ -83,32 +87,28 @@ public final class QueryResolver {
         return false;
     }
 
-    private Map<RDFTriple, Set<RDFTriple>> findAllMatchingPatterns(Set<RDFTriple> locatingTriples) {
-
-        Map<RDFTriple, Set<RDFTriple>> allMatchingPatterns = new HashMap<>();
-
-        for (RDFTriple triple : locatingTriples) {
-            Set<RDFTriple> matchingTriples = infoManager.findMatchingPatterns(triple);
-            allMatchingPatterns.put(triple, matchingTriples);
-        }
-
-        return allMatchingPatterns;
+    @NotNull
+    private Map<RDFTriple, Set<RDFTriple>> findAllMatchingPatterns(@NotNull Set<RDFTriple> locatingTriples) {
+        return locatingTriples.stream().collect(Collectors.toMap(v -> v, infoManager::findMatchingPatterns));
     }
 
-    private void findAndAddResourcesToSubjectVariable(Set<QueryVariable> variables, Map<RDFTriple, Set<RDFTriple>> matchingPatterns, RDFTriple findingTriple) {
+    private void findAndAddResourcesToSubjectVariable(@NotNull Set<QueryVariable> variables, @NotNull Map<RDFTriple, Set<RDFTriple>> matchingPatterns,
+                                                      @NotNull RDFTriple findingTriple) {
         Set<String> resources = findValidResourcesForSubjectVariable(matchingPatterns.get(findingTriple));
         QueryVariable subjectVariable = findVariableByName(findingTriple.getSubject(), variables);
         addAppropriateResourceToSubjectVariable(subjectVariable, resources);
     }
 
-    private void findAndAddResourcesToObjectVariable(Set<QueryVariable> variables, Map<RDFTriple, Set<RDFTriple>> matchingPatterns, RDFTriple findingTriple) {
+    private void findAndAddResourcesToObjectVariable(@NotNull Set<QueryVariable> variables, @NotNull Map<RDFTriple, Set<RDFTriple>> matchingPatterns,
+                                                     @NotNull RDFTriple findingTriple) {
         Set<String> resources = findValidResourcesForObjectVariable(matchingPatterns.get(findingTriple));
         QueryVariable objectVariable = findVariableByName(findingTriple.getObject(), variables);
         addAppropriateResourceToObjectVariable(objectVariable, resources);
     }
 
+    @NotNull
     @VisibleForTesting
-    Set<String> findValidResourcesForSubjectVariable(Set<RDFTriple> rdfTriples) {
+    Set<String> findValidResourcesForSubjectVariable(@NotNull Set<RDFTriple> rdfTriples) {
         Set<String> resourceNames = new HashSet<>();
         for (RDFTriple triple : rdfTriples) {
             resourceNames.add(triple.getSubject());
@@ -117,8 +117,9 @@ public final class QueryResolver {
         return resourceNames;
     }
 
+    @NotNull
     @VisibleForTesting
-    Set<String> findValidResourcesForObjectVariable(Set<RDFTriple> rdfTriples) {
+    Set<String> findValidResourcesForObjectVariable(@NotNull Set<RDFTriple> rdfTriples) {
         Set<String> resourceNames = new HashSet<>();
         for (RDFTriple triple : rdfTriples) {
             resourceNames.add(triple.getObject());
@@ -127,17 +128,16 @@ public final class QueryResolver {
         return resourceNames;
     }
 
-    private QueryVariable findVariableByName(String objectVariableName, Set<QueryVariable> variables) {
-        for (QueryVariable variable : variables) {
-            if (variable.getVariableName().equals(objectVariableName)) {
-                return variable;
-            }
-        }
-
-        throw new QueryProcessingException("Exception during query processing");
+    @NotNull
+    private QueryVariable findVariableByName(@NotNull String objectVariableName, @NotNull Set<QueryVariable> variables) {
+        return variables
+                .stream()
+                .filter(queryVariable -> queryVariable.getVariableName().equals(objectVariableName))
+                .findFirst()
+                .orElseThrow(() -> new QueryProcessingException("Exception during query processing"));
     }
 
-    private void addAppropriateResourceToSubjectVariable(QueryVariable subjectVariable, Set<String> validResources) {
+    private void addAppropriateResourceToSubjectVariable(@NotNull QueryVariable subjectVariable, @NotNull Set<String> validResources) {
         for (String validResource : validResources) {
             if (!subjectVariable.getResourceName().contains(validResource)) {
                 subjectVariable.getResourceName().add(validResource);
@@ -145,7 +145,7 @@ public final class QueryResolver {
         }
     }
 
-    private void addAppropriateResourceToObjectVariable(QueryVariable objectVariable, Set<String> validResources) {
+    private void addAppropriateResourceToObjectVariable(@NotNull QueryVariable objectVariable, @NotNull Set<String> validResources) {
         for (String validResource : validResources) {
             if (!objectVariable.getResourceName().contains(validResource)) {
                 objectVariable.getResourceName().add(validResource);
@@ -153,8 +153,9 @@ public final class QueryResolver {
         }
     }
 
+    @NotNull
     @VisibleForTesting
-    boolean verifyFact(RDFTriple findingTriple, Set<RDFTriple> rdfTriples) {
+    boolean verifyFact(@NotNull RDFTriple findingTriple, @NotNull Set<RDFTriple> rdfTriples) {
         return rdfTriples.size() == 1 && rdfTriples.contains(findingTriple);
     }
 }

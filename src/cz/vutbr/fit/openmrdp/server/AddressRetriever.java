@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.server;
 
+import com.sun.istack.internal.NotNull;
+
 import java.net.*;
 import java.util.Enumeration;
 
@@ -17,6 +19,7 @@ public final class AddressRetriever {
      * @return - IP address of local machine
      * @throws SocketException - if there will be some problem with network
      */
+    @NotNull
     public static String getLocalIpAddress() throws SocketException {
         String resultIpv6 = "";
         String resultIpv4 = "";

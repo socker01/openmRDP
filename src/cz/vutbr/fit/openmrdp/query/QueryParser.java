@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.query;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.QuerySyntaxException;
 
 /**
@@ -20,7 +21,8 @@ public final class QueryParser {
      * @return - {@link QueryRaw} object
      * @throws QuerySyntaxException - if the query doesn't have expected syntax
      */
-    public static QueryRaw parseQuery(String query) throws QuerySyntaxException {
+    @NotNull
+    public static QueryRaw parseQuery(@NotNull String query) throws QuerySyntaxException {
         checkQuerySyntax(query);
 
         String variableName = parseVariable(query);
@@ -29,13 +31,14 @@ public final class QueryParser {
         return new QueryRaw(variableName, conditions);
     }
 
-    private static void checkQuerySyntax(String query) throws QuerySyntaxException {
+    private static void checkQuerySyntax(@NotNull String query) throws QuerySyntaxException {
         if(!query.toUpperCase().contains(IDENTIFY_COMMAND) || !query.toUpperCase().contains(WHERE_COMMAND)){
             throw new QuerySyntaxException("Query does not have expected syntax.");
         }
     }
 
-    private static String parseVariable(String query) {
+    @NotNull
+    private static String parseVariable(@NotNull String query) {
         query = query.replaceFirst(IDENTIFY_COMMAND, "");
         query = query.substring(1);
 
@@ -44,7 +47,8 @@ public final class QueryParser {
         return query.substring(0, spaceIndex);
     }
 
-    private static String parseConditions(String query){
+    @NotNull
+    private static String parseConditions(@NotNull String query){
         int whereCommandIndex = query.indexOf(WHERE_COMMAND);
 
         return query.substring(whereCommandIndex + 1 + WHERE_COMMAND.length());

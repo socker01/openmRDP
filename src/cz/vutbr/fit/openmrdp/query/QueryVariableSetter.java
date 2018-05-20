@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.query;
 
+import com.google.common.base.Preconditions;
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.QueryProcessingException;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
 import cz.vutbr.fit.openmrdp.model.base.VariableResourcePair;
@@ -16,10 +18,11 @@ import java.util.Set;
  */
 final class QueryVariableSetter {
 
+    @NotNull
     private final Query query;
 
-    QueryVariableSetter(Query query) {
-        this.query = query;
+    QueryVariableSetter(@NotNull Query query) {
+        this.query = Preconditions.checkNotNull(query);
     }
 
     /**
@@ -28,7 +31,8 @@ final class QueryVariableSetter {
      * @param variables - {@link List} of variables
      * @return - {@link Set} of {@link RDFTriple} objects with the potential values
      */
-    Set<RDFTriple> substituteVariableValues(List<VariableResourcePair> variables) {
+    @NotNull
+    Set<RDFTriple> substituteVariableValues(@NotNull List<VariableResourcePair> variables) {
         Set<RDFTriple> triplesWithVariables = new HashSet<>();
 
         for (RDFTriple findingTriple : query.getQueryTriples()) {
@@ -42,7 +46,8 @@ final class QueryVariableSetter {
         return triplesWithVariables;
     }
 
-    private RDFTriple substituteVariablesWithValues(RDFTriple findingTriple, List<VariableResourcePair> variables) {
+    @NotNull
+    private RDFTriple substituteVariablesWithValues(@NotNull RDFTriple findingTriple, @NotNull List<VariableResourcePair> variables) {
         String substitutedSubject = getSubstitutedSubject(findingTriple, variables);
         String substitutedObject = getSubstitutedObject(findingTriple, variables);
 
@@ -57,7 +62,8 @@ final class QueryVariableSetter {
         throw new IllegalStateException("There is no variable to substitute");
     }
 
-    private String getSubstitutedObject(RDFTriple findingTriple, List<VariableResourcePair> variables) {
+    @NotNull
+    private String getSubstitutedObject(@NotNull RDFTriple findingTriple, @NotNull List<VariableResourcePair> variables) {
         String substitutedObject = null;
         if (findingTriple.isObjectVariable()) {
             substitutedObject = findVariableByName(findingTriple.getObject(), variables);
@@ -66,7 +72,8 @@ final class QueryVariableSetter {
         return substitutedObject;
     }
 
-    private String getSubstitutedSubject(RDFTriple findingTriple, List<VariableResourcePair> variables) {
+    @NotNull
+    private String getSubstitutedSubject(@NotNull RDFTriple findingTriple, @NotNull List<VariableResourcePair> variables) {
         String substitutedSubject = null;
         if (findingTriple.isSubjectVariable()) {
             substitutedSubject = findVariableByName(findingTriple.getSubject(), variables);
@@ -75,13 +82,12 @@ final class QueryVariableSetter {
         return substitutedSubject;
     }
 
-    private String findVariableByName(String variableName, List<VariableResourcePair> variables) {
-        for (VariableResourcePair pair : variables) {
-            if (pair.getVariableName().equals(variableName)) {
-                return pair.getResourceName();
-            }
-        }
-
-        throw new QueryProcessingException("Invalid variable name in variable substitution process");
+    @NotNull
+    private String findVariableByName(@NotNull String variableName, @NotNull List<VariableResourcePair> variables) {
+        return variables.stream()
+                .filter(v -> v.getVariableName().equals(variableName))
+                .findFirst()
+                .orElseThrow(() -> new QueryProcessingException("Invalid variable name in variable substitution process"))
+                .getResourceName();
     }
 }

@@ -1,6 +1,7 @@
 package cz.vutbr.fit.openmrdp.messages;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.exceptions.AddressSyntaxException;
@@ -25,8 +26,8 @@ public final class BaseMessage {
     private final MessageBody body;
 
     BaseMessage(@NotNull OperationLine operationLine, @NotNull Map<HeaderType, String> headers, @Nullable MessageBody body) {
-        this.operationLine = operationLine;
-        this.headers = headers;
+        this.operationLine = Preconditions.checkNotNull(operationLine);
+        this.headers = Preconditions.checkNotNull(headers);
         this.body = body;
     }
 
@@ -36,6 +37,7 @@ public final class BaseMessage {
     }
 
     @VisibleForTesting
+    @NotNull
     public Map<HeaderType, String> getHeaders() {
         return headers;
     }

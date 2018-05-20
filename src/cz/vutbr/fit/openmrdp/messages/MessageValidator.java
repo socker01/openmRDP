@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.MessageDeserializeException;
 
 /**
@@ -12,13 +13,13 @@ import cz.vutbr.fit.openmrdp.exceptions.MessageDeserializeException;
  */
 final class MessageValidator {
 
-    static void validateReDELMessage(String message) {
+    static void validateReDELMessage(@NotNull String message) {
         if (!message.contains(ReDELMessageBodyFactory.LOCATION_TAG)) {
             throw new MessageDeserializeException("Response from the server doesn't have expected body: " + message);
         }
     }
 
-    static void validateConnectionInformationMessage(String message){
+    static void validateConnectionInformationMessage(@NotNull String message){
         if (!message.contains(MessageFactory.SERVER_TAG)
                 || !message.contains(MessageFactory.PROTOCOL_TAG)
                 || !message.contains(MessageFactory.AUTHORIZATION_TAG)) {

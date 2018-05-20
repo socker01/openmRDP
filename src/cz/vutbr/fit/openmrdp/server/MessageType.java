@@ -1,6 +1,8 @@
 package cz.vutbr.fit.openmrdp.server;
 
 /**
+ * Enumeration of the HTTP message types.
+ *
  * @author Jiri Koudelka
  * @since 30.04.2018
  */

@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.model.base.Resource;
 
 import java.util.List;
@@ -20,7 +21,8 @@ final class ReDELMessageBodyFactory {
     private static final String RESOURCE_TAG = "<resource uri";
     static final String LOCATION_TAG = "<location url=";
 
-    static MessageBody createRedelMessage(List<Resource> resources) {
+    @NotNull
+    static MessageBody createRedelMessage(@NotNull List<Resource> resources) {
         StringBuilder builder = new StringBuilder();
 
         if (!resources.isEmpty()){
@@ -58,7 +60,7 @@ final class ReDELMessageBodyFactory {
         return new MessageBody(finalMessage, ContentType.REDEL);
     }
 
-    private static boolean hasResourceInformation(String finalMessage){
+    private static boolean hasResourceInformation(@NotNull String finalMessage){
         return finalMessage.contains(RESOURCE_TAG);
     }
 }

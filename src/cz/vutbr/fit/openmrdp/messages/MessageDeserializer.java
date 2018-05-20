@@ -1,6 +1,7 @@
 package cz.vutbr.fit.openmrdp.messages;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import cz.vutbr.fit.openmrdp.exceptions.MessageDeserializeException;
 import cz.vutbr.fit.openmrdp.security.AuthorizationLevel;
 
@@ -10,12 +11,22 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
+ * This class is used for deserialization of string messages into the {@link BaseMessage} objects.
+ *
  * @author Jiri Koudelka
  * @since 10.02.2018.
  */
 public final class MessageDeserializer {
 
-    public static BaseMessage deserializeMessage(String serializedMessage) throws MessageDeserializeException {
+    /**
+     * Deserialize String message into the {@link BaseMessage} object
+     *
+     * @param serializedMessage - Message stored in the {@link String}
+     * @return - {@link BaseMessage} deserialized message
+     * @throws MessageDeserializeException - if the message doesn't have expected body
+     */
+    @NotNull
+    public static BaseMessage deserializeMessage(@NotNull String serializedMessage) throws MessageDeserializeException {
         try {
             return deserialize(serializedMessage);
         } catch (IllegalArgumentException iae) {
@@ -25,7 +36,8 @@ public final class MessageDeserializer {
         }
     }
 
-    private static BaseMessage deserialize(String serializedMessage) {
+    @NotNull
+    private static BaseMessage deserialize(@NotNull String serializedMessage) {
 
         Scanner scanner = new Scanner(serializedMessage);
 
@@ -44,7 +56,8 @@ public final class MessageDeserializer {
         return new BaseMessage(operationLine, messageHeaders, messageBody);
     }
 
-    private static MessageBody createMessageBody(String query) {
+    @Nullable
+    private static MessageBody createMessageBody(@Nullable String query) {
         MessageBody messageBody = null;
         if (query != null) {
             messageBody = new MessageBody(query, ContentType.PLANT_QUERY);
@@ -53,7 +66,8 @@ public final class MessageDeserializer {
         return messageBody;
     }
 
-    private static OperationLine getOperationLine(String operationLineRaw) {
+    @NotNull
+    private static OperationLine getOperationLine(@NotNull String operationLineRaw) {
         String operationRaw = operationLineRaw.substring(0, operationLineRaw.indexOf(' '));
         OperationType operationType = OperationType.fromString(operationRaw);
 
@@ -64,19 +78,22 @@ public final class MessageDeserializer {
         return new OperationLine(operationType, resourceName, messageProtocol);
     }
 
-    private static String getResourceName(String operationLineRaw) {
+    @NotNull
+    private static String getResourceName(@NotNull String operationLineRaw) {
         String resourceName = operationLineRaw.substring(operationLineRaw.indexOf(' '), operationLineRaw.lastIndexOf(' '));
 
         return resourceName.substring(1);
     }
 
-    private static MessageProtocol getMessageProtocol(String operationLineRaw) {
+    @NotNull
+    private static MessageProtocol getMessageProtocol(@NotNull String operationLineRaw) {
         String messageProtocolRaw = operationLineRaw.substring(operationLineRaw.lastIndexOf(' ') + 1);
 
         return MessageProtocol.fromString(messageProtocolRaw);
     }
 
-    private static Map<HeaderType, String> getHeadersForOperation(Scanner scanner, OperationType operationType) {
+    @NotNull
+    private static Map<HeaderType, String> getHeadersForOperation(@NotNull Scanner scanner, @NotNull OperationType operationType) {
         Map<HeaderType, String> messageHeaders = new HashMap<>();
 
         for (int i = 0; i < operationType.getHeadersCount(); i++) {
@@ -91,26 +108,29 @@ public final class MessageDeserializer {
         return messageHeaders;
     }
 
-    private static HeaderType getHeaderType(String headerLine) {
+    @NotNull
+    private static HeaderType getHeaderType(@NotNull String headerLine) {
         String headerTypeRaw = headerLine.substring(0, headerLine.indexOf(':'));
 
         return HeaderType.fromString(headerTypeRaw);
     }
 
-    private static String getHeaderValue(String headerLine) {
+    @NotNull
+    private static String getHeaderValue(@NotNull String headerLine) {
         return headerLine.substring(headerLine.indexOf(' ') + 1);
     }
 
-    private static String getMessageBody(Scanner scanner) {
+    @Nullable
+    private static String getMessageBody(@NotNull Scanner scanner) {
         StringBuilder queryBuilder = new StringBuilder();
 
         scanner.nextLine();
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if(!line.equals("")){
+            if (!line.equals("")) {
                 queryBuilder.append(line);
-                if(scanner.hasNextLine()){
+                if (scanner.hasNextLine()) {
                     queryBuilder.append("\n");
                 }
             }
@@ -120,7 +140,7 @@ public final class MessageDeserializer {
     }
 
     @NotNull
-    public static ConnectionInformationMessage deserializeMRDPServerResponseMessage(String message) {
+    public static ConnectionInformationMessage deserializeMRDPServerResponseMessage(@NotNull String message) {
         MessageValidator.validateConnectionInformationMessage(message);
         String serverAddress = getServerAddress(message);
         MessageProtocol protocol = getCommunicationProtocol(message);
@@ -130,7 +150,7 @@ public final class MessageDeserializer {
     }
 
     @NotNull
-    private static MessageProtocol getCommunicationProtocol(String message) {
+    private static MessageProtocol getCommunicationProtocol(@NotNull String message) {
         if (message.contains(MessageFactory.PROTOCOL_TAG + ": HTTPS")) {
             return MessageProtocol.HTTPS;
         } else {
@@ -139,7 +159,7 @@ public final class MessageDeserializer {
     }
 
     @NotNull
-    private static AuthorizationLevel getAuthorizationLevel(String message) {
+    private static AuthorizationLevel getAuthorizationLevel(@NotNull String message) {
         if (message.contains(MessageFactory.AUTHORIZATION_TAG + ": " + AuthorizationLevel.NONE.getCode())) {
             return AuthorizationLevel.NONE;
         } else {
@@ -148,7 +168,7 @@ public final class MessageDeserializer {
     }
 
     @NotNull
-    private static String getServerAddress(String message) {
+    private static String getServerAddress(@NotNull String message) {
         String parsedMessage = message.substring(MessageFactory.SERVER_TAG.length() + 3);
         int indexOfEnd = parsedMessage.indexOf(". ");
 

@@ -16,25 +16,29 @@ public final class SecurityConfigurationFactory {
      * @param userAuthorizator - {@link UserAuthorizator} for user authorization
      * @return - {@link SecurityConfiguration}
      */
-    public static SecurityConfiguration createSecureSecurityConfiguration(@NotNull UserAuthorizator userAuthorizator) {
-        return new SecurityConfiguration(true, userAuthorizator, false);
-    }
-
-    /**
-     * Create instance of {@link SecurityConfiguration} for secure communication with debug flag
-     *
-     * @param userAuthorizator - {@link UserAuthorizator} for user authorization
-     * @return - {@link SecurityConfiguration}
-     */
-    public static SecurityConfiguration createDebugSecureSecurityConfiguration(@NotNull UserAuthorizator userAuthorizator) {
-        return new SecurityConfiguration(true, userAuthorizator, true);
+    @NotNull
+    public static SecurityConfiguration createSecureSecurityConfiguration(@NotNull UserAuthorizator userAuthorizator,
+                                                                          @NotNull String keyStorePath,
+                                                                          @NotNull String keyStorePassword) {
+        return new SecurityConfiguration.Builder()
+                .withSupportSecureConnection(true)
+                .withUserAuthorizator(userAuthorizator)
+                .withKeyStorePath(keyStorePath)
+                .withKeyStorePassword(keyStorePassword)
+                .build();
     }
 
     /**
      * Create instance of {@link SecurityConfiguration} for non-secure communication
      * @return - {@link SecurityConfiguration}
      */
+    @NotNull
     public static SecurityConfiguration createNonSecureSecurityConfiguration() {
-        return new SecurityConfiguration(false, null, false);
+        return new SecurityConfiguration.Builder()
+                .withSupportSecureConnection(false)
+                .withUserAuthorizator(null)
+                .withKeyStorePath(null)
+                .withKeyStorePassword(null)
+                .build();
     }
 }

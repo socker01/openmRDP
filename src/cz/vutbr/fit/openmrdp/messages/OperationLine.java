@@ -1,31 +1,41 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.sun.istack.internal.NotNull;
+
 import java.util.Objects;
 
 /**
+ * Object of {@link OperationLine} type represents first line in the LOCATE or IDENTIFY messages.
+ *
  * @author Jiri Koudelka
  * @since 27.01.2018.
  */
 final class OperationLine {
 
+    @NotNull
     private final OperationType operationType;
+    @NotNull
     private final String resourceName;
+    @NotNull
     private final MessageProtocol protocol;
 
-    OperationLine(OperationType operationType, String resourceName, MessageProtocol protocol) {
+    OperationLine(@NotNull OperationType operationType, @NotNull String resourceName, @NotNull MessageProtocol protocol) {
         this.operationType = operationType;
         this.resourceName = resourceName;
         this.protocol = protocol;
     }
 
+    @NotNull
     String createOperationLineString(){
         return operationType.getCode() + " " + resourceName + " " + protocol.getProtocolCode();
     }
 
+    @NotNull
     OperationType getOperationType() {
         return operationType;
     }
 
+    @NotNull
     String getResourceName() {
         return resourceName;
     }

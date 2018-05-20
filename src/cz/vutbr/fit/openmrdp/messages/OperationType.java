@@ -1,6 +1,12 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.sun.istack.internal.NotNull;
+
+import java.util.Arrays;
+
 /**
+ * Enumeration of operation types used by OpenmRDP
+ *
  * @author Jiri Koudelka
  * @since 26.01.2018.
  */
@@ -12,26 +18,25 @@ public enum OperationType {
     private final String code;
     private final int headersCount;
 
-    OperationType(String code, int headersCount) {
+    OperationType(@NotNull String code, @NotNull int headersCount) {
         this.code = code;
         this.headersCount = headersCount;
     }
 
-    static OperationType fromString(String code){
-        for (OperationType type : OperationType.values()){
-            if (type.getCode().equals(code)){
-
-                return type;
-            }
-        }
-
-        throw new IllegalArgumentException(String.format("There is no value with name '%s' in Enum %s", code, getEnumName()));
+    @NotNull
+    static OperationType fromString(@NotNull String code){
+        return Arrays.stream(OperationType.values())
+                .filter(operationType -> operationType.getCode().equals(code))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(String.format("There is no value with name '%s' in Enum %s", code, getEnumName())));
     }
 
+    @NotNull
     private static String getEnumName(){
         return "OperationType";
     }
 
+    @NotNull
     public String getCode() {
         return code;
     }

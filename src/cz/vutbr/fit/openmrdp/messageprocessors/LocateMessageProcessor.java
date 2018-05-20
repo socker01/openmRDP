@@ -14,13 +14,13 @@ import java.util.Collections;
 
 /**
  * Production implementation of {@link MessageProcessor} interface.
- *
+ * <p>
  * This processor is used for processing of the LOCATE messages.
  *
  * @author Jiri Koudelka
  * @since 09.03.2018.
  */
-public final class LocateMessageProcessor implements MessageProcessor{
+public final class LocateMessageProcessor implements MessageProcessor {
 
     @NotNull
     private final InfoManager infoManager;
@@ -35,7 +35,7 @@ public final class LocateMessageProcessor implements MessageProcessor{
         String resourceLocation;
         try {
             resourceLocation = infoManager.findResourceLocation(locateMessage.getResourceName());
-            if(resourceLocation != null){
+            if (resourceLocation != null) {
                 resourceLocation = AddressRetriever.getLocalIpAddress() + "/" + resourceLocation;
             }
         } catch (SocketException e) {

@@ -1,5 +1,9 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.sun.istack.internal.NotNull;
+
+import java.util.Arrays;
+
 /**
  * @author Jiri Koudelka
  * @since 26.01.2018.
@@ -22,22 +26,20 @@ public enum HeaderType {
         this.headerCode = headerCode;
     }
 
-    static HeaderType fromString(String headerCode){
-        for (HeaderType headerType : HeaderType.values()){
-            if(headerType.getHeaderCode().equals(headerCode)){
-
-                return headerType;
-            }
-        }
-
-        throw new IllegalArgumentException(String.format("There is no value with name '%s' in Enum %s", headerCode, getEnumName()));
+    @NotNull
+    static HeaderType fromString(@NotNull String headerCode) {
+        return Arrays.stream(HeaderType.values())
+                .filter(headerType -> headerType.getHeaderCode().equals(headerCode))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(String.format("There is no value with name '%s' in Enum %s", headerCode, getEnumName())));
     }
 
-    private static String getEnumName()
-    {
+    @NotNull
+    private static String getEnumName() {
         return "HeaderType";
     }
 
+    @NotNull
     public String getHeaderCode() {
         return headerCode;
     }

@@ -37,6 +37,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
     private final String callbackURI;
     private final MrdpLogger logger;
     private final boolean debugMode;
+    private final int clientPort;
 
     private long sequenceNumber = 0;
 
@@ -44,35 +45,41 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
      * Public constructor of the OpenmRDP client API
      *
      * @param callbackURI - URI where the client will be waiting for the response from the server
-     * @param logger - logger for logging of the errors
+     * @param logger      - logger for logging of the errors
      */
     public OpenmRDPClientApiImpl(@NotNull String callbackURI, @NotNull MrdpLogger logger) {
         messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
         this.callbackURI = Preconditions.checkNotNull(callbackURI, "Callback URI cannot be null");
         this.logger = Preconditions.checkNotNull(logger, "Logger cannot be null");
         this.debugMode = false;
+
+        Integer port = AddressParser.parsePort(callbackURI);
+        this.clientPort = port != null ? port : CommunicationConfigurationConstants.DEFAULT_CONNECTION_INFORMATION_PORT;
     }
 
     /**
      * Public constructor of the OpenmRDP client API with possibility to set debugMode flag.
-     *
+     * <p>
      * If the debug mode is set to true, the client accept also secure servers with self-signed certificates
      *
      * @param callbackURI - URI where the client will be waiting for the response from the server
-     *      * @param logger - logger for logging of the errors
-     * @param debugMode - debugMode flag. If the debugMode is true, client accept also self-signed certificates
+     *                    * @param logger - logger for logging of the errors
+     * @param debugMode   - debugMode flag. If the debugMode is true, client accept also self-signed certificates
      */
     public OpenmRDPClientApiImpl(@NotNull String callbackURI, @NotNull MrdpLogger logger, boolean debugMode) {
         messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
         this.callbackURI = Preconditions.checkNotNull(callbackURI, "Callback URI cannot be null");
         this.logger = Preconditions.checkNotNull(logger, "Logger cannot be null");
         this.debugMode = debugMode;
+
+        Integer port = AddressParser.parsePort(callbackURI);
+        this.clientPort = port != null ? port : CommunicationConfigurationConstants.DEFAULT_CONNECTION_INFORMATION_PORT;
     }
 
     @Override
     @Nullable
     public String locateResource(@NotNull String resourceName) throws NetworkCommunicationException {
-        if (resourceName == null){
+        if (resourceName == null) {
             logger.logError("Resource name cannot be null");
 
             return null;
@@ -97,7 +104,9 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
             logger.logError("Message: " + e.getMessage());
             logger.logError("Body: " + e.toString());
 
-            return e.getMessage();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            return errors.toString();
         }
     }
 
@@ -106,7 +115,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
     public String locateResource(@Nullable String resourceName, @Nullable String login, @Nullable String password)
             throws NetworkCommunicationException {
 
-        if (isSomeParameterNull(resourceName, login, password)){
+        if (isSomeParameterNull(resourceName, login, password)) {
             return null;
         }
 
@@ -132,32 +141,10 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         }
     }
 
-    private boolean isSomeParameterNull(String resourceName, String login, String password) {
-        if (resourceName == null){
-            logger.logError("Resource name cannot be null");
-
-            return true;
-        }
-
-        if (login == null){
-            logger.logError("Login cannot be null");
-
-            return true;
-        }
-
-        if (password == null){
-            logger.logError("Password cannot be null");
-
-            return true;
-        }
-
-        return false;
-    }
-
     @Override
     @Nullable
     public String identifyResource(@NotNull String query) throws QuerySyntaxException, NetworkCommunicationException {
-        if (query == null){
+        if (query == null) {
             logger.logError("Identify query cannot be null");
 
             return null;
@@ -216,6 +203,28 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         }
     }
 
+    private boolean isSomeParameterNull(String resourceName, String login, String password) {
+        if (resourceName == null) {
+            logger.logError("Resource name cannot be null");
+
+            return true;
+        }
+
+        if (login == null) {
+            logger.logError("Login cannot be null");
+
+            return true;
+        }
+
+        if (password == null) {
+            logger.logError("Password cannot be null");
+
+            return true;
+        }
+
+        return false;
+    }
+
     private void createAndSendLocateMessage(String resourceName) throws NetworkCommunicationException {
         BaseMessage locateMessage = MessageFactory.createLocateMessage(resourceName, callbackURI, getNextSequenceNumber());
         messageService.sendMRDPMessage(locateMessage);
@@ -252,9 +261,9 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
         URL url;
         if (port != null) {
-            url = new URL(responseMessage.getMessageProtocol().getName(), serverURL, port, endpoint);
+            url = new URL(responseMessage.getMessageProtocol().getName().toLowerCase(), serverURL, port, endpoint);
         } else {
-            url = new URL(responseMessage.getMessageProtocol().getName(), serverURL, endpoint);
+            url = new URL(responseMessage.getMessageProtocol().getName().toLowerCase(), serverURL, endpoint);
         }
 
         return url;
@@ -276,8 +285,8 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
     private HttpsURLConnection initializeSecureConnection(URL url, String login, String password) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
-        if (debugMode)
-        {
+        if (debugMode) {
+            logger.logDebug("trust updated.");
             connection.setHostnameVerifier((hostname, session) -> true);
             try {
                 ConnectionTrustVerifier.trustSelfSignedCertificates(connection);
@@ -321,8 +330,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
     }
 
     private String getResponseFromServer() throws IOException {
-        //TODO magic number - weird
-        ServerSocket serverSocket = new ServerSocket(27741);
+        ServerSocket serverSocket = new ServerSocket(clientPort);
         serverSocket.setSoTimeout(CommunicationConfigurationConstants.DEFAULT_SOCKET_TIMEOUT);
         Socket clientSocket = null;
         String serverResponse;

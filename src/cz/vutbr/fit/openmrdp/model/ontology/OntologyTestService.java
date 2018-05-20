@@ -1,16 +1,22 @@
 package cz.vutbr.fit.openmrdp.model.ontology;
 
+import com.sun.istack.internal.NotNull;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The test implementation of the {@link OntologyService}. This implementation loads information from static lists or variables.
+ * <p>
+ * Do not use this implementation in the prodution code!
+ *
  * @author Jiri Koudelka
  * @since 06.04.2018.
  */
 public class OntologyTestService implements OntologyService {
 
+    @NotNull
     @Override
     public OntologyInformation loadOntology() {
         String levelUpPredicate = "<loc:locatedIn>";
@@ -27,7 +33,8 @@ public class OntologyTestService implements OntologyService {
                 .build();
     }
 
-    private List<Pair<String, String>> createTransitivePairs(){
+    @NotNull
+    private List<Pair<String, String>> createTransitivePairs() {
         List<Pair<String, String>> transitivePairs = new ArrayList<>();
 
         Pair<String, String> transitivePair1 = new Pair<>("rdf:type", "rdf:subtype");

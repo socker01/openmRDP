@@ -18,6 +18,7 @@ public final class ReDELResponseDTO {
 
     @NotNull
     private final Address address;
+    @Nullable
     private final Integer sequenceNumber;
     @NotNull
     private final List<Resource> resources;
@@ -39,31 +40,31 @@ public final class ReDELResponseDTO {
     }
 
     @NotNull
-    public List<Resource> getResources(){
+    public List<Resource> getResources() {
         return resources;
     }
 
-    public static class Builder{
+    public static class Builder {
         private Address address;
         private Integer sequenceNumber;
         private List<Resource> resources;
 
-        public Builder withAddress(Address address){
+        public Builder withAddress(Address address) {
             this.address = address;
             return this;
         }
 
-        public Builder withSequenceNumber(Integer sequenceNumber){
+        public Builder withSequenceNumber(Integer sequenceNumber) {
             this.sequenceNumber = sequenceNumber;
             return this;
         }
 
-        public Builder withResource(List<Resource> resource){
+        public Builder withResource(List<Resource> resource) {
             this.resources = resource;
             return this;
         }
 
-        public ReDELResponseDTO build(){
+        public ReDELResponseDTO build() {
             return new ReDELResponseDTO(this);
         }
     }

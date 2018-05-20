@@ -65,7 +65,7 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
      * Public constructor of the OpenmRDP server API
      *
      * @param serverConfiguration - configuration parameters
-     * @param logger - logger for logging of the errors
+     * @param logger              - logger for logging of the errors
      */
     public OpenmRDPServerAPIImpl(@NotNull ServerConfiguration serverConfiguration, @NotNull MrdpLogger logger) {
         infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyProdService());
@@ -195,15 +195,14 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
 
     private void startSecureServerListener() throws IOException, NoSuchAlgorithmException, KeyStoreException,
             CertificateException, UnrecoverableKeyException, KeyManagementException {
-        InetSocketAddress address = new InetSocketAddress(AddressRetriever.getLocalIpAddress(),  serverConfiguration.getPort());
+        InetSocketAddress address = new InetSocketAddress(AddressRetriever.getLocalIpAddress(), serverConfiguration.getPort());
         HttpsServer server = HttpsServer.create(address, 0);
 
         SSLContext sslContext = SSLContext.getInstance(SecurityConstants.SSL_CONTEXT);
 
-        //TODO password and certificate name
-        char[] password = "password".toCharArray();
+        char[] password = serverConfiguration.getSecurityConfiguration().getKeyStorePassword().toCharArray();
         KeyStore ks = KeyStore.getInstance(SecurityConstants.KEY_STORE);
-        FileInputStream fis = new FileInputStream("examplekey.jks");
+        FileInputStream fis = new FileInputStream(serverConfiguration.getSecurityConfiguration().getKeyStorePath());
         ks.load(fis, password);
 
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(SecurityConstants.SUN_X_509);
@@ -214,8 +213,8 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
 
         sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
         server.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
-            public void configure(HttpsParameters params){
-                try{
+            public void configure(HttpsParameters params) {
+                try {
                     SSLContext context = SSLContext.getDefault();
                     SSLEngine engine = context.createSSLEngine();
                     params.setNeedClientAuth(false);
@@ -224,7 +223,7 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
 
                     SSLParameters defaultSSLParameters = context.getDefaultSSLParameters();
                     params.setSSLParameters(defaultSSLParameters);
-                } catch (NoSuchAlgorithmException nsae){
+                } catch (NoSuchAlgorithmException nsae) {
                     logger.logError("Secure server start error.");
                 }
             }

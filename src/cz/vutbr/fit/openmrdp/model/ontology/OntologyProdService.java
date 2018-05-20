@@ -1,5 +1,6 @@
 package cz.vutbr.fit.openmrdp.model.ontology;
 
+import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.OntologyException;
 import javafx.util.Pair;
 import org.jdom.Document;
@@ -14,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * The production implementation of the {@link OntologyService}. This implementation loads information from ontology.xml file.
+ *
  * @author Jiri Koudelka
  * @since 12.04.2018
  */
@@ -28,6 +31,7 @@ public final class OntologyProdService implements OntologyService {
     private static final String DELIMITER = "Delimiter";
     private static final String ONTOLOGY_FILE_PATH = System.getProperty("user.dir") + File.separator + "ontology.xml";
 
+    @NotNull
     @Override
     public OntologyInformation loadOntology() {
         try {
@@ -54,7 +58,7 @@ public final class OntologyProdService implements OntologyService {
                     .withLevelUpPredicate(levelUpPredicate)
                     .withTransitivePredicates(transitivePredicates)
                     .build();
-        }catch (OntologyException oe){
+        } catch (OntologyException oe) {
             return new OntologyInformation.Builder()
                     .withDelimiter(null)
                     .withLevelDownPredicate(null)
@@ -64,10 +68,11 @@ public final class OntologyProdService implements OntologyService {
         }
     }
 
-    private List<Pair<String, String>> createTransitivePredicates(List transitivePredicatesList) {
+    @NotNull
+    private List<Pair<String, String>> createTransitivePredicates(@NotNull List transitivePredicatesList) {
         List<Pair<String, String>> transitivePredicates = new ArrayList<>();
 
-        for (Object transitivePredicate : transitivePredicatesList){
+        for (Object transitivePredicate : transitivePredicatesList) {
             Element transPredicateElement = (Element) transitivePredicate;
 
             String parent = transPredicateElement.getChildText(PARENT);
@@ -80,12 +85,14 @@ public final class OntologyProdService implements OntologyService {
         return transitivePredicates;
     }
 
+    @NotNull
     private OntologyInformation createEmptyOntology() {
         return new OntologyInformation.Builder()
                 .withTransitivePredicates(Collections.emptyList())
                 .build();
     }
 
+    @NotNull
     private Document getDocument(File ontologyXml) {
         SAXBuilder builder = new SAXBuilder();
 

@@ -1,6 +1,7 @@
 package cz.vutbr.fit.openmrdp.messages;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.sun.istack.internal.NotNull;
 
 /**
  * The enumeration that represents the type of the content.
@@ -19,6 +20,7 @@ public enum ContentType {
         this.code = code;
     }
 
+    @NotNull
     @VisibleForTesting
     public String getCode() {
         return code;

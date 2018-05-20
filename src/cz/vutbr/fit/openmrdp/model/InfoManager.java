@@ -10,8 +10,13 @@ import cz.vutbr.fit.openmrdp.model.ontology.OntologyService;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
+ * Singleton Information Manager that contains loaded information about information base and provides these information to other classes.
+ * <p>
+ * Information manager can verify facts and add or remove information to or from information base.
+ *
  * @author Jiri Koudelka
  * @since 15.02.2018.
  */
@@ -20,22 +25,28 @@ public final class InfoManager {
     private static InfoManager instance = null;
 
     private boolean initialized = false;
+    @NotNull
     private Set<RDFTriple> informationBase = new HashSet<>();
+    @NotNull
     private final InformationBaseService informationBaseService;
+    @NotNull
     private final LocationTreeService locationTreeService;
+    @NotNull
     private final InformationBaseCreator informationBaseCreator;
+    @NotNull
     private final String locationPredicate;
 
-    private InfoManager(InformationBaseService informationBaseService, OntologyService ontologyService) {
-        this.informationBaseService = informationBaseService;
-        this.informationBaseCreator = new InformationBaseCreator(informationBaseService, ontologyService);
+    private InfoManager(@NotNull InformationBaseService informationBaseService, @NotNull OntologyService ontologyService) {
+        this.informationBaseService = Preconditions.checkNotNull(informationBaseService);
+        this.informationBaseCreator = new InformationBaseCreator(informationBaseService, Preconditions.checkNotNull(ontologyService));
         this.locationPredicate = informationBaseCreator.getLevelUpPredicate();
         this.locationTreeService = new LocationTreeService(informationBaseCreator.getDelimiter(), informationBaseCreator.getLevelUpPredicate());
 
         createInformationBase();
     }
 
-    public static InfoManager getInfoManager(InformationBaseService informationBaseService, OntologyService ontologyService) {
+    @NotNull
+    public static InfoManager getInfoManager(@NotNull InformationBaseService informationBaseService, @NotNull OntologyService ontologyService) {
         if (instance == null) {
             instance = new InfoManager(informationBaseService, ontologyService);
         }
@@ -52,24 +63,17 @@ public final class InfoManager {
         }
     }
 
+    @NotNull
     private Set<RDFTriple> getLocationInformation() {
-        Set<RDFTriple> locationInformation = new HashSet<>();
-
-        for (RDFTriple triple : informationBase) {
-            if (triple.getPredicate().equals(locationPredicate)) {
-                locationInformation.add(triple);
-            }
-        }
-
-        return locationInformation;
+        return informationBase.stream().filter(t -> t.getPredicate().equals(locationPredicate)).collect(Collectors.toSet());
     }
 
-    private boolean isPredicateLocation(String predicate) {
+    private boolean isPredicateLocation(@NotNull String predicate) {
         return predicate.equals(locationPredicate) || predicate.equals(informationBaseCreator.getLevelDownPredicate());
     }
 
-    public void removeInformationFromBase(RDFTriple information){
-        if(isPredicateLocation(information.getPredicate())) {
+    public void removeInformationFromBase(@NotNull RDFTriple information) {
+        if (isPredicateLocation(information.getPredicate())) {
             RDFTriple symmetricalTriple = informationBaseCreator.createSymmetricalLocationInformation(information);
             removeInformation(symmetricalTriple);
         }
@@ -78,15 +82,15 @@ public final class InfoManager {
 
     }
 
-    private void removeInformation(RDFTriple information) {
-        if(informationBase.contains(information)){
+    private void removeInformation(@NotNull RDFTriple information) {
+        if (informationBase.contains(information)) {
             informationBase.remove(information);
             informationBaseService.removeInformationFromBase(information);
             locationTreeService.removeLocationInformation(information);
         }
     }
 
-    public void addInformationToBase(RDFTriple information) {
+    public void addInformationToBase(@NotNull RDFTriple information) {
         if (isPredicateLocation(information.getPredicate())) {
             RDFTriple symmetricalTriple = informationBaseCreator.createSymmetricalLocationInformation(information);
             createAndAddInformation(symmetricalTriple);
@@ -95,7 +99,7 @@ public final class InfoManager {
         createAndAddInformation(information);
     }
 
-    private void createAndAddInformation(RDFTriple information) {
+    private void createAndAddInformation(@NotNull RDFTriple information) {
         if (!informationBase.contains(information)) {
             informationBase.add(information);
             informationBaseService.addInformationToBase(information);
@@ -103,20 +107,12 @@ public final class InfoManager {
         }
     }
 
-    public Set<RDFTriple> findMatchingPatterns(RDFTriple findingTriple) {
-
-        Set<RDFTriple> matchingPatterns = new HashSet<>();
-
-        for (RDFTriple triple : informationBase) {
-            if (triple.equals(findingTriple)
-                    || matchWithVariableInObject(triple, findingTriple)
-                    || matchWithVariableInSubject(triple, findingTriple)
-                    || matchWithTwoVariables(triple, findingTriple)) {
-                matchingPatterns.add(triple);
-            }
-        }
-
-        return matchingPatterns;
+    @NotNull
+    public Set<RDFTriple> findMatchingPatterns(@NotNull RDFTriple findingTriple) {
+        return informationBase.stream().filter(i -> i.equals(findingTriple)
+                || matchWithVariableInObject(i, findingTriple)
+                || matchWithVariableInSubject(i, findingTriple)
+                || matchWithTwoVariables(i, findingTriple)).collect(Collectors.toSet());
     }
 
     @Nullable
@@ -125,29 +121,29 @@ public final class InfoManager {
         return locationTreeService.findResourceLocation(resourceName);
     }
 
-    private boolean matchWithVariableInObject(RDFTriple referenceTriple, RDFTriple findingTriple) {
+    private boolean matchWithVariableInObject(@NotNull RDFTriple referenceTriple, @NotNull RDFTriple findingTriple) {
         return referenceTriple.getObject().equals(findingTriple.getObject())
                 && referenceTriple.getPredicate().equals(findingTriple.getPredicate())
                 && findingTriple.isSubjectVariable();
     }
 
-    private boolean matchWithVariableInSubject(RDFTriple referenceTriple, RDFTriple findingTriple) {
+    private boolean matchWithVariableInSubject(@NotNull RDFTriple referenceTriple, @NotNull RDFTriple findingTriple) {
         return findingTriple.isObjectVariable()
                 && referenceTriple.getPredicate().equals(findingTriple.getPredicate())
                 && referenceTriple.getSubject().equals(findingTriple.getSubject());
     }
 
-    private boolean matchWithTwoVariables(RDFTriple referenceTriple, RDFTriple findingTriple) {
+    private boolean matchWithTwoVariables(@NotNull RDFTriple referenceTriple, @NotNull RDFTriple findingTriple) {
         return findingTriple.isObjectVariable()
                 && findingTriple.getPredicate().equals(referenceTriple.getPredicate())
                 && findingTriple.isSubjectVariable();
     }
 
-    private boolean verifyFact(RDFTriple factToVerify) {
+    private boolean verifyFact(@NotNull RDFTriple factToVerify) {
         return informationBase.contains(factToVerify);
     }
 
-    public boolean verifyFacts(Set<RDFTriple> factsToVerify) {
+    public boolean verifyFacts(@NotNull Set<RDFTriple> factsToVerify) {
         for (RDFTriple fact : factsToVerify) {
             if (!verifyFact(fact)) {
                 return false;

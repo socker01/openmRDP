@@ -1,5 +1,7 @@
 package cz.vutbr.fit.openmrdp.security;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.net.ssl.*;
 import java.net.HttpURLConnection;
 import java.security.KeyManagementException;
@@ -21,20 +23,21 @@ public final class ConnectionTrustVerifier {
      * Allow communication with servers with self-signed certificates
      *
      * @param conn - {@link HttpsURLConnection} used for communication
-     * @throws KeyManagementException - if there will be problem with initialization of the SSL context
+     * @throws KeyManagementException   - if there will be problem with initialization of the SSL context
      * @throws NoSuchAlgorithmException - if the TLS instance of {@link SSLContext} wont be found
      */
-    public static void trustSelfSignedCertificates(HttpURLConnection conn) throws KeyManagementException, NoSuchAlgorithmException {
+    public static void trustSelfSignedCertificates(@NotNull HttpURLConnection conn) throws KeyManagementException, NoSuchAlgorithmException {
         HttpsURLConnection httpsConnection = (HttpsURLConnection) conn;
         SSLSocketFactory factory = initializeFactory();
         httpsConnection.setSSLSocketFactory(factory);
         httpsConnection.setHostnameVerifier(TRUSTING_HOSTNAME_VERIFIER);
     }
 
+    @NotNull
     private static synchronized SSLSocketFactory initializeFactory() throws NoSuchAlgorithmException, KeyManagementException {
         if (factory == null) {
             SSLContext ctx = SSLContext.getInstance(SecurityConstants.SSL_CONTEXT);
-            ctx.init(null, new TrustManager[]{ new AlwaysTrustManager() }, null);
+            ctx.init(null, new TrustManager[]{new AlwaysTrustManager()}, null);
 
             factory = ctx.getSocketFactory();
         }

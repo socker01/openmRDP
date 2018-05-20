@@ -17,7 +17,7 @@ public interface OpenmRDPServerAPI {
      * Start receiving of the mRDP messages
      *
      * @throws NetworkCommunicationException - if there will be some problem with network
-     * @throws AddressSyntaxException - if the client address have incorrect syntax
+     * @throws AddressSyntaxException        - if the client address have incorrect syntax
      */
     void receiveMessages() throws NetworkCommunicationException, AddressSyntaxException;
 

@@ -1,12 +1,23 @@
 package cz.vutbr.fit.openmrdp.messages;
 
+import com.sun.istack.internal.NotNull;
+
 /**
+ * This class is used for serializing of {@link BaseMessage} objects to the {@link} String
+ *
  * @author Jiri Koudelka
  * @since 05.02.2018.
  */
 public final class MessageSerializer {
 
-    public static String serializeMessage(BaseMessage message) {
+    /**
+     * Serialize IDENTIFY or LOCATE message to the {@link String}
+     *
+     * @param message - {@link BaseMessage} to serialize
+     * @return - {@link String}
+     */
+    @NotNull
+    public static String serializeMessage(@NotNull BaseMessage message) {
         StringBuilder serializedMessage = new StringBuilder();
 
         serializedMessage.append(message.getOperationLine().createOperationLineString());
