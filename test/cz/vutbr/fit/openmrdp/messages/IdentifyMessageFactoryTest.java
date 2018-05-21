@@ -20,7 +20,7 @@ public final class IdentifyMessageFactoryTest {
     private MessageBody messageBody = new MessageBody(MessageTestConstants.TEST_QUERY, ContentType.PLANT_QUERY);
 
     @Before
-    public void setUp(){
+    public void setUp() {
         message = MessageFactory.createIdentifyMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, messageBody, 1);
     }
 
@@ -34,7 +34,7 @@ public final class IdentifyMessageFactoryTest {
     }
 
     @Test
-    public void createIdentifyMessageHeaders(){
+    public void createIdentifyMessageHeaders() {
         assertThat(message.getHeaders().size(), is(4));
 
         assertThat(message.getHeaders().keySet(), hasItem(HeaderType.NSEQ));
@@ -47,7 +47,7 @@ public final class IdentifyMessageFactoryTest {
     }
 
     @Test
-    public void createLocateMessageBody(){
+    public void createLocateMessageBody() {
         assertThat(message.getBodyQuery(), is(MessageTestConstants.TEST_QUERY));
     }
 }

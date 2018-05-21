@@ -26,7 +26,7 @@ public final class RedelMessageFactoryTest {
     private static final String TEST_RESOURCE_LOCATION = "urn:uuid:room/urn:uuid:box/urn:uuid:fuel";
     private static final String TEST_RESOURCE_NAME = "urn:uuid:fuel";
 
-    public static final String EXPECTED_MESSAGE_BODY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+    static final String EXPECTED_MESSAGE_BODY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<redel xmlns=\"http://www.awareit.com/soam/2006/04/redel\"\n" +
             "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
             "xsi:schemaLocation=\"http://www.awareit.com/soam/2006/04/redel\n" +
@@ -108,7 +108,7 @@ public final class RedelMessageFactoryTest {
                 .build();
     }
 
-    private ReDELResponseDTO createReDELResponseWithEmptyResourceLocation(Address address){
+    private ReDELResponseDTO createReDELResponseWithEmptyResourceLocation(Address address) {
         Resource resource = new Resource(TEST_RESOURCE_NAME, null);
 
         return new ReDELResponseDTO.Builder()
@@ -118,7 +118,7 @@ public final class RedelMessageFactoryTest {
                 .build();
     }
 
-    private ReDELResponseDTO createReDELResponseWithEmptyResourceURI(Address address){
+    private ReDELResponseDTO createReDELResponseWithEmptyResourceURI(Address address) {
         Resource resource = new Resource(null, TEST_RESOURCE_LOCATION);
 
         return new ReDELResponseDTO.Builder()
@@ -128,7 +128,7 @@ public final class RedelMessageFactoryTest {
                 .build();
     }
 
-    private ReDELResponseDTO createReDELResponseWithTwoResources(Address address){
+    private ReDELResponseDTO createReDELResponseWithTwoResources(Address address) {
         List<Resource> resources = getResourcesList();
 
         return new ReDELResponseDTO.Builder()

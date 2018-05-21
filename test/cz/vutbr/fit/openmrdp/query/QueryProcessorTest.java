@@ -58,7 +58,7 @@ public final class QueryProcessorTest {
         assertThat(rdfTriples, hasItem(expectedTriple2));
     }
 
-    private MessageBody createMessageBody(){
+    private MessageBody createMessageBody() {
         String query = TEST_ROOM_VARIABLE + " " + TEST_PREDICATE + " " + TEST_BUILDING_VARIABLE +
                 "\n" + TEST_BUILDING_VARIABLE + " " + TEST_PREDICATE + " " + TEST_CITY;
 

@@ -20,7 +20,9 @@ import cz.vutbr.fit.openmrdp.server.MessageType;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -88,7 +90,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         createAndSendLocateMessage(resourceName);
 
         try {
-            ConnectionInformationMessage responseMessage = receiveConnectionInformation();
+            ConnectionInformationMessage responseMessage = messageService.receiveConnectionInformationMessage(clientPort, logger);
 
             URL url = createServerURL(responseMessage);
 
@@ -121,7 +123,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
         createAndSendLocateMessage(resourceName);
         try {
-            ConnectionInformationMessage responseMessage = receiveConnectionInformation();
+            ConnectionInformationMessage responseMessage = messageService.receiveConnectionInformationMessage(clientPort, logger);
 
             URL url = createServerURL(responseMessage);
 
@@ -153,7 +155,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         createAndSendIdentifyMessage(query);
 
         try {
-            ConnectionInformationMessage responseMessage = receiveConnectionInformation();
+            ConnectionInformationMessage responseMessage = messageService.receiveConnectionInformationMessage(clientPort, logger);
 
             URL url = createServerURL(responseMessage);
             logger.logDebug(url.toString());
@@ -184,7 +186,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         createAndSendIdentifyMessage(query);
 
         try {
-            ConnectionInformationMessage responseMessage = receiveConnectionInformation();
+            ConnectionInformationMessage responseMessage = messageService.receiveConnectionInformationMessage(clientPort, logger);
 
             URL url = createServerURL(responseMessage);
 
@@ -244,12 +246,6 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
         messageService.sendMRDPMessage(identifyMessage);
         sequenceNumber++;
-    }
-
-    private ConnectionInformationMessage receiveConnectionInformation() throws IOException {
-        String response = getResponseFromServer();
-
-        return MessageDeserializer.deserializeMRDPServerResponseMessage(response);
     }
 
     private URL createServerURL(ConnectionInformationMessage responseMessage) throws MalformedURLException {
@@ -327,42 +323,6 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         in.close();
 
         return response.toString();
-    }
-
-    private String getResponseFromServer() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(clientPort);
-        serverSocket.setSoTimeout(CommunicationConfigurationConstants.DEFAULT_SOCKET_TIMEOUT);
-        Socket clientSocket = null;
-        String serverResponse;
-        try {
-            clientSocket = serverSocket.accept();
-            serverResponse = parseResponse(clientSocket);
-        } catch (InterruptedIOException exc) {
-            logger.logInfo("No response from servers");
-            throw exc;
-        } finally {
-            if (clientSocket != null) {
-                clientSocket.close();
-            }
-            serverSocket.close();
-        }
-
-        return serverResponse;
-    }
-
-    private String parseResponse(Socket clientSocket) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-        StringBuilder fromClient = new StringBuilder();
-        String line;
-        while ((line = in.readLine()) != null) {
-            fromClient.append("\n");
-            fromClient.append(line);
-        }
-
-        in.close();
-
-        return fromClient.toString();
     }
 
     private long getNextSequenceNumber() {

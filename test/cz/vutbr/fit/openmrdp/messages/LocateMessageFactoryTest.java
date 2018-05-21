@@ -17,7 +17,7 @@ public final class LocateMessageFactoryTest {
     private BaseMessage message;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         message = MessageFactory.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, 1);
     }
 
@@ -31,7 +31,7 @@ public final class LocateMessageFactoryTest {
     }
 
     @Test
-    public void createLocateMessageHeaders(){
+    public void createLocateMessageHeaders() {
         assertThat(message.getHeaders().size(), is(OperationType.LOCATE.getHeadersCount()));
 
         assertThat(message.getHeaders().keySet(), hasItem(HeaderType.NSEQ));
@@ -39,7 +39,7 @@ public final class LocateMessageFactoryTest {
     }
 
     @Test
-    public void createLocateMessageBody(){
+    public void createLocateMessageBody() {
         assertThat(message.getBodyQuery(), is(nullValue()));
     }
 }

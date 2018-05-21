@@ -5,17 +5,15 @@ import cz.vutbr.fit.openmrdp.exceptions.QueryProcessingException;
 import cz.vutbr.fit.openmrdp.messages.ContentType;
 import cz.vutbr.fit.openmrdp.messages.MessageBody;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
-import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyTestService;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -54,7 +52,7 @@ public final class QueryResolverTest {
     }
 
     @Test
-    public void verifyFact(){
+    public void verifyFact() {
         Set<RDFTriple> matchingPatterns = Sets.newHashSet(TEST_QUERY_FACT);
 
         assertThat(queryResolver.verifyFact(TEST_QUERY_FACT, matchingPatterns), is(true));
@@ -67,7 +65,7 @@ public final class QueryResolverTest {
     }
 
     @Test
-    public void resolveQuery(){
+    public void resolveQuery() {
         MessageBody messageBody = new MessageBody(TEST_QUERY, ContentType.PLANT_QUERY);
         List<String> foundResources = queryResolver.resolveQuery(messageBody, "?material");
 
@@ -76,7 +74,7 @@ public final class QueryResolverTest {
     }
 
     @Test(expected = QueryProcessingException.class)
-    public void resolveQueryForNonExistingResource(){
+    public void resolveQueryForNonExistingResource() {
         MessageBody messageBody = new MessageBody(TEST_QUERY, ContentType.PLANT_QUERY);
         queryResolver.resolveQuery(messageBody, "?nonExists");
     }

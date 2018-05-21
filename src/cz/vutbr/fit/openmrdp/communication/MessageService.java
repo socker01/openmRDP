@@ -3,7 +3,9 @@ package cz.vutbr.fit.openmrdp.communication;
 import com.google.common.base.Preconditions;
 import com.sun.istack.internal.NotNull;
 import cz.vutbr.fit.openmrdp.exceptions.NetworkCommunicationException;
+import cz.vutbr.fit.openmrdp.logger.MrdpLogger;
 import cz.vutbr.fit.openmrdp.messages.BaseMessage;
+import cz.vutbr.fit.openmrdp.messages.ConnectionInformationMessage;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
 
 import java.io.IOException;
@@ -43,5 +45,15 @@ public final class MessageService {
 
     public void sendInfoAboutConnection(@NotNull Address clientAddress, @NotNull String message) throws IOException {
         messageSender.sendInformationAboutConnection(clientAddress, message);
+    }
+
+    @NotNull
+    public ConnectionInformationMessage receiveConnectionInformationMessage(int clientPort, @NotNull MrdpLogger logger)
+            throws NetworkCommunicationException {
+        try {
+            return messageReceiver.receiveConnectionInformationMessage(clientPort, logger);
+        } catch (IOException e) {
+            throw new NetworkCommunicationException(e.getMessage(), e.getCause());
+        }
     }
 }

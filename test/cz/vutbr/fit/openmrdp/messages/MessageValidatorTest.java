@@ -13,22 +13,22 @@ public class MessageValidatorTest {
             MessageFactory.AUTHORIZATION_TAG + ": None";
 
     @Test
-    public void validateConnectionInformationMessage(){
+    public void validateConnectionInformationMessage() {
         MessageValidator.validateConnectionInformationMessage(VALID_CONNECTION_INFORMATION_MESSAGE);
     }
 
     @Test(expected = MessageDeserializeException.class)
-    public void validateInvalidConnectionInformationMessage(){
+    public void validateInvalidConnectionInformationMessage() {
         MessageValidator.validateConnectionInformationMessage(INVALID_CONNECTION_INFORMATION_MESSAGE);
     }
 
     @Test
-    public void validateReDELMessage(){
+    public void validateReDELMessage() {
         MessageValidator.validateReDELMessage(RedelMessageFactoryTest.EXPECTED_MESSAGE_BODY);
     }
 
     @Test(expected = MessageDeserializeException.class)
-    public void validateInvalidReDELMessage(){
+    public void validateInvalidReDELMessage() {
         String invalidRedelMessage = RedelMessageFactoryTest.EXPECTED_MESSAGE_BODY.replace(ReDELMessageBodyFactory.LOCATION_TAG, "test");
         MessageValidator.validateReDELMessage(invalidRedelMessage);
     }

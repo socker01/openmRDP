@@ -17,7 +17,7 @@ import static org.junit.Assert.assertThat;
 public final class InformationBaseCreatorTest {
 
     @Test
-    public void testCreateTransitivePredicateTree(){
+    public void testCreateTransitivePredicateTree() {
         InformationBaseCreator informationBaseCreator = new InformationBaseCreator(new InformationBaseTestService(), new OntologyTestService());
 
         Set<RDFTriple> informationBase = informationBaseCreator.createInformationBase();

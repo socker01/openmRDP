@@ -27,7 +27,7 @@ public final class QueryVariableSetterTest {
     private static final RDFTriple EXPECTED_TRIPLE_2 = new RDFTriple("urn:uuid:room1", "loc:contains", "urn:uuid:box1");
 
     @Test
-    public void substituteQueryVariables(){
+    public void substituteQueryVariables() {
         Query query = new Query(Sets.newHashSet(TEST_TRIPLE_1, TEST_TRIPLE_2), ContentType.PLANT_QUERY);
         QueryVariableSetter queryVariableSetter = new QueryVariableSetter(query);
 
@@ -39,7 +39,7 @@ public final class QueryVariableSetterTest {
         assertThat(substitutedTriples, containsInAnyOrder(EXPECTED_TRIPLE_1, EXPECTED_TRIPLE_2));
     }
 
-    private List<VariableResourcePair> createVariableResourcePair(){
+    private List<VariableResourcePair> createVariableResourcePair() {
         List<VariableResourcePair> variableResourcePairs = new ArrayList<>();
         variableResourcePairs.add(new VariableResourcePair("?material", "urn:uuid:fuel1"));
         variableResourcePairs.add(new VariableResourcePair("?item", "urn:uuid:box1"));

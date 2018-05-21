@@ -56,7 +56,7 @@ public final class MessageDeserializerTest {
     }
 
     private void assertIdentifyOperationLine(BaseMessage deserializedMessage) {
-        OperationLine expectedOperationLine =  new OperationLine(OperationType.IDENTIFY, MessageTestConstants.TEST_RESOURCE_NAME, MessageProtocol.MRDP);
+        OperationLine expectedOperationLine = new OperationLine(OperationType.IDENTIFY, MessageTestConstants.TEST_RESOURCE_NAME, MessageProtocol.MRDP);
         assertThat(deserializedMessage.getOperationLine(), is(expectedOperationLine));
     }
 

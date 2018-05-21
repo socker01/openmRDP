@@ -69,7 +69,6 @@ public final class QueryVariableProcessorTest {
     }};
 
 
-
     @Test
     public void findAllRelevantVariablesForQuery() {
         Query testQuery = createTestQuery();

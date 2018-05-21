@@ -28,19 +28,19 @@ public final class InfoManagerTest {
     private InfoManager infoManager;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyTestService());
     }
 
     @Test
-    public void findMatchingPatternsForRoomVariable(){
+    public void findMatchingPatternsForRoomVariable() {
         Set<RDFTriple> matchingPatterns = infoManager.findMatchingPatterns(new RDFTriple("urn:uuid:drill1", "<loc:locatedIn>", "?room"));
         assertThat(matchingPatterns, hasSize(1));
         assertThat(matchingPatterns, containsInAnyOrder(TEST_TRIPLE_1));
     }
 
     @Test
-    public void findMatchingPatternsForTwoVariables(){
+    public void findMatchingPatternsForTwoVariables() {
         Set<RDFTriple> matchingPattern = infoManager.findMatchingPatterns(new RDFTriple("?item", "<loc:locatedIn>", "?room"));
 
         assertThat(matchingPattern, hasSize(4));
@@ -51,13 +51,13 @@ public final class InfoManagerTest {
     }
 
     @Test
-    public void findNonExistingMatchingPattern(){
+    public void findNonExistingMatchingPattern() {
         Set<RDFTriple> matchingPatterns = infoManager.findMatchingPatterns(new RDFTriple("urn:uuid:drill1", "<loc:has>", "?room"));
         assertThat(matchingPatterns, hasSize(0));
     }
 
     @Test
-    public void verifyFact(){
+    public void verifyFact() {
         assertThat(infoManager.verifyFacts(Sets.newHashSet(TEST_TRIPLE_1)), is(true));
 
         RDFTriple nonExistingTriple = new RDFTriple("aaa", "bbb", "ccc");
@@ -65,7 +65,7 @@ public final class InfoManagerTest {
     }
 
     @Test
-    public void addInformationToInformationModel(){
+    public void addInformationToInformationModel() {
         infoManager.addInformationToBase(TEST_TRIPLE_TO_ADD);
 
         assertThat(infoManager.findResourceLocation("urn:uuid:test"), is("urn:uuid:room1/urn:uuid:box1/urn:uuid:fuel1/urn:uuid:test"));

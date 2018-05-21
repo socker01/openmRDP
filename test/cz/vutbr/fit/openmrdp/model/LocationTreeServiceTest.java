@@ -58,7 +58,7 @@ public final class LocationTreeServiceTest {
     }
 
     @Test
-    public void addLocationInformation(){
+    public void addLocationInformation() {
         RDFTriple newLocationInformation = new RDFTriple(TEST_RESOURCE_NAME, "<loc:locatedIn>", FUEL_RESOURCE_NAME);
 
         service.addLocationInformation(newLocationInformation);
@@ -67,7 +67,7 @@ public final class LocationTreeServiceTest {
     }
 
     @Test
-    public void addLocationInformationWithContainsInfo(){
+    public void addLocationInformationWithContainsInfo() {
         RDFTriple newLocationInformation = new RDFTriple(FUEL_RESOURCE_NAME, "<loc:contains>", TEST_RESOURCE_NAME);
         service.addLocationInformation(newLocationInformation);
 
@@ -75,7 +75,7 @@ public final class LocationTreeServiceTest {
     }
 
     @Test
-    public void removeLocationFromTree(){
+    public void removeLocationFromTree() {
         RDFTriple newLocationInformation = new RDFTriple(NEW_TEST_RESOURCE, "<loc:locatedIn>", FUEL_RESOURCE_NAME);
         service.addLocationInformation(newLocationInformation);
 

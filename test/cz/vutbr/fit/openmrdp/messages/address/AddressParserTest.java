@@ -44,12 +44,12 @@ public final class AddressParserTest {
     }
 
     @Test
-    public void parseAddressWithPortAndProtocol(){
+    public void parseAddressWithPortAndProtocol() {
         testAddressParsing(HOST_ADDRESS_WITH_PORT);
         testAddressParsing(HOST_ADDRESS_WITH_PORT_WITHOUT_PROTOCOL);
     }
 
-    private void testAddressParsing(String address){
+    private void testAddressParsing(String address) {
         Integer parsedPort = AddressParser.parsePort(address);
         assertThat(parsedPort, is(27773));
 
@@ -61,13 +61,13 @@ public final class AddressParserTest {
     }
 
     @Test
-    public void parseAddressWithoutEndpoint(){
+    public void parseAddressWithoutEndpoint() {
         String endpoint = AddressParser.parseEndpoint(HOST_ADDRESS_WITHOUT_ENDPOINT);
         assertThat(endpoint, is("/"));
     }
 
     @Test
-    public void testParseAddressWithoutPort(){
+    public void testParseAddressWithoutPort() {
         Integer parsedPort = AddressParser.parsePort(HOST_ADDRESS_WITH_PROTOCOL);
         assertThat(parsedPort, is(nullValue()));
     }

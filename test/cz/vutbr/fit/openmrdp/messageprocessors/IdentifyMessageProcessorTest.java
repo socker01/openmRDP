@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Jiri Koudelka
@@ -38,7 +38,7 @@ public final class IdentifyMessageProcessorTest {
             "</redel>\n";
 
     @Before
-    public void init(){
+    public void init() {
         InfoManager infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyTestService());
         identifyMessageProcessor = new IdentifyMessageProcessor(infoManager);
     }

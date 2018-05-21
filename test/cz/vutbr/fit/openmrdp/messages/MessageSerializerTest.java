@@ -18,7 +18,7 @@ public final class MessageSerializerTest {
     private static final String EXPECTED_CALLBACK_HEADER = HeaderType.CALLBACK_URI.getHeaderCode() + ": " + MessageTestConstants.TEST_CALLBACK_URI;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         message = MessageFactory.createLocateMessage(MessageTestConstants.TEST_RESOURCE_NAME, MessageTestConstants.TEST_CALLBACK_URI, 1);
     }
 
