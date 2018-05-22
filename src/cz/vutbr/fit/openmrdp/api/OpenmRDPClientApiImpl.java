@@ -21,6 +21,7 @@ import cz.vutbr.fit.openmrdp.server.MessageType;
 import cz.vutbr.fit.openmrdp.server.ResponseCode;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLHandshakeException;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -102,7 +103,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
             String mRDPResponseRaw = getConnectionInformationString(connection.getInputStream());
 
             return ReDELMessageParser.parseLocationFromRedelMessage(mRDPResponseRaw);
-        } catch (InterruptedIOException e) {
+        } catch (InterruptedIOException | SSLHandshakeException e) {
             return null;
         } catch (IOException e) {
             logger.logError("Message: " + e.getMessage());
@@ -220,7 +221,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
             connection.getResponseCode();
 
             return getConnectionInformationString(connection.getInputStream());
-        } catch (InterruptedIOException e) {
+        } catch (InterruptedIOException | SSLHandshakeException e) {
             return null;
         } catch (IOException e) {
             logger.logError("Message: " + e.getMessage());

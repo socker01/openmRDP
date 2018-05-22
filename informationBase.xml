@@ -1,19 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <InformationBase>
   <Information>
-    <Subject>?room</Subject>
-    <Predicate>&lt;name&gt;</Predicate>
-    <Object>serviceRoom</Object>
+    <Subject>urn:uuid:drill1</Subject>
+    <Predicate>&lt;loc:locatedIn&gt;</Predicate>
+    <Object>urn:uuid:room1</Object>
   </Information>
   <Information>
-    <Subject>?room</Subject>
-    <Predicate>&lt;name&gt;</Predicate>
-    <Object>serviceRoom</Object>
+    <Subject>urn:uuid:box1</Subject>
+    <Predicate>&lt;loc:locatedIn&gt;</Predicate>
+    <Object>urn:uuid:room1</Object>
   </Information>
   <Information>
-    <Subject>?room</Subject>
-    <Predicate>&lt;name&gt;</Predicate>
-    <Object>serviceRoom</Object>
+    <Subject>urn:uuid:fuel1</Subject>
+    <Predicate>&lt;loc:locatedIn&gt;</Predicate>
+    <Object>urn:uuid:box1</Object>
+  </Information>
+  <Information>
+    <Subject>urn:uuid:fuel1</Subject>
+    <Predicate>&lt;loc:locatedIn&gt;</Predicate>
+    <Object>urn:uuid:room1</Object>
+  </Information>
+  <Information>
+    <Subject>fuel:chemicalFuel</Subject>
+    <Predicate>rdf:subtype</Predicate>
+    <Object>mat:inflammableThing</Object>
+  </Information>
+  <Information>
+    <Subject>urn:uuid:room1</Subject>
+    <Predicate>&lt;loc:contains&gt;</Predicate>
+    <Object>urn:uuid:drill1</Object>
+  </Information>
+  <Information>
+    <Subject>urn:uuid:room1</Subject>
+    <Predicate>&lt;loc:contains&gt;</Predicate>
+    <Object>urn:uuid:box1</Object>
+  </Information>
+  <Information>
+    <Subject>urn:uuid:room1</Subject>
+    <Predicate>&lt;loc:contains&gt;</Predicate>
+    <Object>urn:uuid:fuel1</Object>
+  </Information>
+  <Information>
+    <Subject>urn:uuid:surface1</Subject>
+    <Predicate>rdf:type</Predicate>
+    <Object>fur:steelShelf</Object>
+  </Information>
+  <Information>
+    <Subject>urn:uuid:drill1</Subject>
+    <Predicate>task:drilling</Predicate>
+    <Object>urn:uuid:surface1</Object>
+  </Information>
+  <Information>
+    <Subject>urn:uuid:fuel1</Subject>
+    <Predicate>rdf:type</Predicate>
+    <Object>fuel:chemicalFuel</Object>
+  </Information>
+  <Information>
+    <Subject>fur:steelShelf</Subject>
+    <Predicate>rdf:subtype</Predicate>
+    <Object>mat:metallicThing</Object>
+  </Information>
+  <Information>
+    <Subject>urn:uuid:fuel1</Subject>
+    <Predicate>rdf:type</Predicate>
+    <Object>mat:inflammableThing</Object>
+  </Information>
+  <Information>
+    <Subject>urn:uuid:box1</Subject>
+    <Predicate>&lt;loc:contains&gt;</Predicate>
+    <Object>urn:uuid:fuel1</Object>
   </Information>
 </InformationBase>
 

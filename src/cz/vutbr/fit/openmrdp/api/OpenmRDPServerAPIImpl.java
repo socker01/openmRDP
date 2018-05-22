@@ -24,7 +24,7 @@ import cz.vutbr.fit.openmrdp.messages.OperationType;
 import cz.vutbr.fit.openmrdp.messages.address.Address;
 import cz.vutbr.fit.openmrdp.model.InfoManager;
 import cz.vutbr.fit.openmrdp.model.base.RDFTriple;
-import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseTestService;
+import cz.vutbr.fit.openmrdp.model.informationbase.InformationBaseProdService;
 import cz.vutbr.fit.openmrdp.model.ontology.OntologyProdService;
 import cz.vutbr.fit.openmrdp.security.AuthorizationLevel;
 import cz.vutbr.fit.openmrdp.security.SecurityConstants;
@@ -68,7 +68,7 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
      * @param logger              - logger for logging of the errors
      */
     public OpenmRDPServerAPIImpl(@NotNull ServerConfiguration serverConfiguration, @NotNull MrdpLogger logger) {
-        infoManager = InfoManager.getInfoManager(new InformationBaseTestService(), new OntologyProdService());
+        infoManager = InfoManager.getInfoManager(new InformationBaseProdService(), new OntologyProdService());
         messageService = new MessageService(new MessageSenderImpl(), new MessageReceiverImpl());
         locateMessageProcessor = new LocateMessageProcessor(infoManager);
         identifyMessageProcessor = new IdentifyMessageProcessor(infoManager);
@@ -152,10 +152,13 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
                     }
                     messageService.sendInfoAboutConnection(hostAddress, message);
                 } catch (IOException ioexc) {
+                    preparedMessages.remove(new ClientEntry(clientAddress, sequenceNumber, Instant.now()));
+                    clientSequenceNumbers.remove(clientAddress);
                     logger.logError(ioexc.getMessage());
                 }
-            }else{
+            } else {
                 clientSequenceNumbers.remove(clientAddress);
+                preparedMessages.remove(new ClientEntry(clientAddress, sequenceNumber, Instant.now()));
             }
         }
     }
@@ -251,8 +254,9 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
 
     private void removeOldEntries() {
         for (ClientEntry entry : preparedMessages.keySet()) {
-            if (entry.getCreated().toEpochMilli() < Instant.now().minus(1, ChronoUnit.HOURS).toEpochMilli()) {
+            if (entry.getCreated().toEpochMilli() < Instant.now().minus(10, ChronoUnit.SECONDS).toEpochMilli()) {
                 preparedMessages.remove(entry);
+                clientSequenceNumbers.remove(entry.getAddress());
             }
         }
     }
