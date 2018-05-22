@@ -38,10 +38,15 @@ public final class SecureServerHandler implements HttpHandler {
     @NotNull
     private final Map<ClientEntry, BaseMessage> preparedMessages;
 
-    public SecureServerHandler(@NotNull UserAuthorizator userAuthorizator, @NotNull Map<ClientEntry, BaseMessage> preparedMessages) {
+    private final Map<String, Integer> sequenceNumbers;
+
+    public SecureServerHandler(@NotNull UserAuthorizator userAuthorizator,
+                               @NotNull Map<ClientEntry, BaseMessage> preparedMessages,
+                               @NotNull Map<String, Integer> sequenceNumbers) {
         this.authorizedUsers = new HashMap<>();
         this.userAuthorizator = Preconditions.checkNotNull(userAuthorizator);
         this.preparedMessages = Preconditions.checkNotNull(preparedMessages);
+        this.sequenceNumbers = Preconditions.checkNotNull(sequenceNumbers);
     }
 
     @Override
@@ -55,9 +60,9 @@ public final class SecureServerHandler implements HttpHandler {
 
         String authorizationString = getDecodedAuthorizationString(httpExchange);
 
+        ClientEntry key = new ClientEntry(clientAddress.substring(0, clientAddress.length() - 1), sequenceNumber - 2, Instant.now());
         String response;
         if (authenticateUser(authorizationString, clientAddress)) {
-            ClientEntry key = new ClientEntry(clientAddress.substring(0, clientAddress.length() - 1), sequenceNumber - 2, Instant.now());
             response = preparedMessages.get(key).getMessageBody().getQuery();
             httpExchange.sendResponseHeaders(ResponseCode.OK.getCode(), response.length());
         } else {
@@ -68,6 +73,9 @@ public final class SecureServerHandler implements HttpHandler {
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
+
+        preparedMessages.remove(key);
+        sequenceNumbers.remove(clientAddress.substring(0, clientAddress.length()-1));
     }
 
     private void invalidateLongTimeLoggedUsers() {

@@ -154,6 +154,8 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
                 } catch (IOException ioexc) {
                     logger.logError(ioexc.getMessage());
                 }
+            }else{
+                clientSequenceNumbers.remove(clientAddress);
             }
         }
     }
@@ -232,7 +234,7 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
 
         server.createContext(MessageFactory.COMMUNICATION_ENDPOINT, new SecureServerHandler(
                 serverConfiguration.getSecurityConfiguration().getUserAuthorizator(),
-                preparedMessages)
+                preparedMessages, clientSequenceNumbers)
         );
         server.setExecutor(null);
         server.start();
@@ -242,7 +244,7 @@ public final class OpenmRDPServerAPIImpl implements OpenmRDPServerAPI {
         InetSocketAddress address = new InetSocketAddress(serverConfiguration.getPort());
         HttpServer server = HttpServer.create(address, 0);
 
-        server.createContext(MessageFactory.COMMUNICATION_ENDPOINT, new NonSecureServerHandler(preparedMessages));
+        server.createContext(MessageFactory.COMMUNICATION_ENDPOINT, new NonSecureServerHandler(preparedMessages, clientSequenceNumbers));
         server.setExecutor(null);
         server.start();
     }

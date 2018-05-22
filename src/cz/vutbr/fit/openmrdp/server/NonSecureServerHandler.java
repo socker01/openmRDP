@@ -27,9 +27,12 @@ public final class NonSecureServerHandler implements HttpHandler {
 
     @NotNull
     private final Map<ClientEntry, BaseMessage> preparedMessages;
+    @NotNull
+    private final Map<String, Integer> sequenceNumbers;
 
-    public NonSecureServerHandler(@NotNull Map<ClientEntry, BaseMessage> preparedMessages) {
+    public NonSecureServerHandler(@NotNull Map<ClientEntry, BaseMessage> preparedMessages, @NotNull Map<String, Integer> sequenceNumbers) {
         this.preparedMessages = Preconditions.checkNotNull(preparedMessages);
+        this.sequenceNumbers = Preconditions.checkNotNull(sequenceNumbers);
     }
 
     @Override
@@ -49,5 +52,6 @@ public final class NonSecureServerHandler implements HttpHandler {
         os.close();
 
         preparedMessages.remove(key);
+        sequenceNumbers.remove(clientAddress.substring(0, clientAddress.length()-1));
     }
 }

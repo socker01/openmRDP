@@ -17,10 +17,10 @@ public class Main {
 
     public static void main(String[] args) throws NetworkCommunicationException, SocketException {
 
-//        SecurityConfiguration securityConfiguration =
-//                SecurityConfigurationFactory.createSecureSecurityConfiguration(new UserAuthorizatorTestImpl(),
-//                        "examplekey.jks", "password");
-        SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createNonSecureSecurityConfiguration();
+        SecurityConfiguration securityConfiguration =
+                SecurityConfigurationFactory.createSecureSecurityConfiguration(new UserAuthorizatorTestImpl(),
+                        "examplekey.jks", "password");
+//        SecurityConfiguration securityConfiguration = SecurityConfigurationFactory.createNonSecureSecurityConfiguration();
         ServerConfiguration serverConfiguration = new ServerConfiguration(AddressRetriever.getLocalIpAddress(), 27774, securityConfiguration);
         OpenmRDPServerAPI api = new OpenmRDPServerAPIImpl(serverConfiguration, new MrdpTestLoggerImpl());
 

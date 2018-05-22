@@ -14,9 +14,11 @@ import cz.vutbr.fit.openmrdp.messages.*;
 import cz.vutbr.fit.openmrdp.messages.address.AddressParser;
 import cz.vutbr.fit.openmrdp.query.QueryParser;
 import cz.vutbr.fit.openmrdp.query.QueryRaw;
+import cz.vutbr.fit.openmrdp.security.AuthorizationLevel;
 import cz.vutbr.fit.openmrdp.security.ConnectionTrustVerifier;
 import cz.vutbr.fit.openmrdp.server.AddressRetriever;
 import cz.vutbr.fit.openmrdp.server.MessageType;
+import cz.vutbr.fit.openmrdp.server.ResponseCode;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -127,15 +129,68 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
             URL url = createServerURL(responseMessage);
 
-            HttpsURLConnection connection = initializeSecureConnection(url, login, password);
+            String mRDPResponseRaw;
 
-            connection.getResponseCode();
-            String mRDPResponseRaw = getConnectionInformationString(connection.getInputStream());
+            if (responseMessage.getAuthorizationLevel() == AuthorizationLevel.REQUIRED) {
+                HttpsURLConnection connection = initializeSecureConnection(url, login, password);
+                if (connection.getResponseCode() != ResponseCode.OK.getCode()) {
+                    return getConnectionInformationString(connection.getErrorStream());
+                }
+                mRDPResponseRaw = getConnectionInformationString(connection.getInputStream());
+            } else {
+                HttpURLConnection connection = initializeConnection(url);
+                if (connection.getResponseCode() != ResponseCode.OK.getCode()) {
+                    return getConnectionInformationString(connection.getErrorStream());
+                }
+                mRDPResponseRaw = getConnectionInformationString(connection.getInputStream());
+            }
 
             return ReDELMessageParser.parseLocationFromRedelMessage(mRDPResponseRaw);
         } catch (InterruptedIOException e) {
             return null;
         } catch (IOException e) {
+            logger.logError("Message: " + e.getMessage());
+            logger.logError("Body: " + e.toString());
+
+            return e.getMessage();
+        }
+    }
+
+    @Override
+    @Nullable
+    public String locateResource(@Nullable String resourceName, @Nullable String authorizeHash)
+            throws NetworkCommunicationException {
+
+        if (isSomeParameterNull(resourceName, authorizeHash)) {
+            return null;
+        }
+
+        createAndSendLocateMessage(resourceName);
+        try {
+            ConnectionInformationMessage responseMessage = messageService.receiveConnectionInformationMessage(clientPort, logger);
+
+            URL url = createServerURL(responseMessage);
+
+            String mRDPResponseRaw;
+
+            if (responseMessage.getAuthorizationLevel() == AuthorizationLevel.REQUIRED) {
+                HttpsURLConnection connection = initializeSecureConnection(url, authorizeHash);
+                if (connection.getResponseCode() != ResponseCode.OK.getCode()) {
+                    return getConnectionInformationString(connection.getErrorStream());
+                }
+                mRDPResponseRaw = getConnectionInformationString(connection.getInputStream());
+            } else {
+                HttpURLConnection connection = initializeConnection(url);
+                if (connection.getResponseCode() != ResponseCode.OK.getCode()) {
+                    return getConnectionInformationString(connection.getErrorStream());
+                }
+                mRDPResponseRaw = getConnectionInformationString(connection.getInputStream());
+            }
+
+            return ReDELMessageParser.parseLocationFromRedelMessage(mRDPResponseRaw);
+        } catch (InterruptedIOException e) {
+            return null;
+        } catch (Exception e) {
             logger.logError("Message: " + e.getMessage());
             logger.logError("Body: " + e.toString());
 
@@ -190,11 +245,64 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
             URL url = createServerURL(responseMessage);
 
-            HttpsURLConnection connection = initializeSecureConnection(url, login, password);
+            InputStream receivedInputStream;
+            if (responseMessage.getAuthorizationLevel() == AuthorizationLevel.REQUIRED) {
+                HttpsURLConnection connection = initializeSecureConnection(url, login, password);
+                if (connection.getResponseCode() != ResponseCode.OK.getCode()) {
+                    return getConnectionInformationString(connection.getErrorStream());
+                }
+                receivedInputStream = connection.getInputStream();
+            } else {
+                HttpURLConnection connection = initializeConnection(url);
+                if (connection.getResponseCode() != ResponseCode.OK.getCode()) {
+                    return getConnectionInformationString(connection.getErrorStream());
+                }
+                receivedInputStream = connection.getInputStream();
+            }
 
-            connection.getResponseCode();
+            return getConnectionInformationString(receivedInputStream);
+        } catch (InterruptedIOException e) {
+            return null;
+        } catch (IOException e) {
+            logger.logError("Message: " + e.getMessage());
+            logger.logError("Body: " + e.toString());
 
-            return getConnectionInformationString(connection.getInputStream());
+            return e.getMessage();
+        }
+    }
+
+    @Override
+    @Nullable
+    public String identifyResource(@NotNull String query, @NotNull String authorizeHash)
+            throws QuerySyntaxException, NetworkCommunicationException {
+
+        if (isSomeParameterNull(query, authorizeHash)) {
+            return null;
+        }
+
+        createAndSendIdentifyMessage(query);
+
+        try {
+            ConnectionInformationMessage responseMessage = messageService.receiveConnectionInformationMessage(clientPort, logger);
+
+            URL url = createServerURL(responseMessage);
+
+            InputStream receivedInputStream;
+            if (responseMessage.getAuthorizationLevel() == AuthorizationLevel.REQUIRED) {
+                HttpsURLConnection connection = initializeSecureConnection(url, authorizeHash);
+                if (connection.getResponseCode() != ResponseCode.OK.getCode()) {
+                    return getConnectionInformationString(connection.getErrorStream());
+                }
+                receivedInputStream = connection.getInputStream();
+            } else {
+                HttpURLConnection connection = initializeConnection(url);
+                if (connection.getResponseCode() != ResponseCode.OK.getCode()) {
+                    return getConnectionInformationString(connection.getErrorStream());
+                }
+                receivedInputStream = connection.getInputStream();
+            }
+
+            return getConnectionInformationString(receivedInputStream);
         } catch (InterruptedIOException e) {
             return null;
         } catch (IOException e) {
@@ -220,6 +328,22 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
 
         if (password == null) {
             logger.logError("Password cannot be null");
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isSomeParameterNull(String resourceName, String authorizeHash) {
+        if (resourceName == null) {
+            logger.logError("Resource name cannot be null");
+
+            return true;
+        }
+
+        if (authorizeHash == null) {
+            logger.logError("Credentials cannot be null");
 
             return true;
         }
@@ -281,6 +405,20 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
     private HttpsURLConnection initializeSecureConnection(URL url, String login, String password) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
+        modifyTrust(connection);
+
+        sequenceNumber++;
+        connection.setRequestMethod(MessageType.GET.getCode());
+        connection.setRequestProperty(HeaderType.USER_AGENT.getHeaderCode(), CommunicationConfigurationConstants.USER_AGENT);
+        connection.setRequestProperty(HeaderType.NSEQ.getHeaderCode(), String.valueOf(sequenceNumber));
+        connection.setRequestProperty(HeaderType.CLIENT_ADDRESS.getHeaderCode(), callbackURI);
+        connection.setRequestProperty(HeaderType.HOST.getHeaderCode(), AddressRetriever.getLocalIpAddress());
+        connection.setRequestProperty(HeaderType.AUTHORIZATION.getHeaderCode(), encodeCredentials(login, password));
+
+        return connection;
+    }
+
+    private void modifyTrust(HttpsURLConnection connection) {
         if (debugMode) {
             logger.logDebug("trust updated.");
             connection.setHostnameVerifier((hostname, session) -> true);
@@ -290,6 +428,12 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
                 logger.logError("Connection Trust modifier error: " + e.getMessage());
             }
         }
+    }
+
+    private HttpsURLConnection initializeSecureConnection(URL url, String authorizeHash) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+        modifyTrust(connection);
 
         sequenceNumber++;
         connection.setRequestMethod(MessageType.GET.getCode());
@@ -297,7 +441,7 @@ public final class OpenmRDPClientApiImpl implements OpenmRDPClientAPI {
         connection.setRequestProperty(HeaderType.NSEQ.getHeaderCode(), String.valueOf(sequenceNumber));
         connection.setRequestProperty(HeaderType.CLIENT_ADDRESS.getHeaderCode(), callbackURI);
         connection.setRequestProperty(HeaderType.HOST.getHeaderCode(), AddressRetriever.getLocalIpAddress());
-        connection.setRequestProperty(HeaderType.AUTHORIZATION.getHeaderCode(), encodeCredentials(login, password));
+        connection.setRequestProperty(HeaderType.AUTHORIZATION.getHeaderCode(), authorizeHash);
 
         return connection;
     }
